@@ -1,0 +1,3946 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>教学质量监控与评价系统 · WBZY</title>
+  <style>
+    :root {
+      --bg: #f5f8fc;
+      --panel: #ffffff;
+      --panel2: #f8fbff;
+      --text: #172033;
+      --muted: #6b778c;
+      --line: #e7edf5;
+      --primary: #2f6df6;
+      --primary2: #5b8cff;
+      --success: #14a36d;
+      --warning: #f59e0b;
+      --danger: #e34d59;
+      --purple: #7b61ff;
+      --cyan: #18a7b5;
+      --shadow: 0 8px 28px rgba(33, 54, 92, .08);
+      --radius: 16px;
+    }
+
+    * {
+      box-sizing: border-box
+    }
+
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", Arial, sans-serif;
+      color: var(--text);
+      background: var(--bg);
+    }
+
+    button,
+    input,
+    select,
+    textarea {
+      font: inherit
+    }
+
+    .app {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 246px 1fr
+    }
+
+    aside {
+      background: linear-gradient(180deg, #0e1a33 0%, #142443 100%);
+      color: #d7e2f5;
+      padding: 22px 16px;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow: auto;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 4px 8px 24px
+    }
+
+    .logo {
+      width: 38px;
+      height: 38px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, #74a8ff, #2f6df6);
+      display: grid;
+      place-items: center;
+      color: white;
+      font-weight: 800;
+      box-shadow: 0 10px 26px rgba(47, 109, 246, .35)
+    }
+
+    .brand b {
+      font-size: 16px;
+      display: block;
+      color: #fff
+    }
+
+    .brand small {
+      color: #8fa4c6
+    }
+
+    .menu-title {
+      font-size: 12px;
+      color: #6f85a8;
+      padding: 14px 12px 6px;
+      letter-spacing: .06em
+    }
+
+    .nav-btn {
+      width: 100%;
+      border: 0;
+      background: transparent;
+      color: #cad7ed;
+      text-align: left;
+      padding: 11px 12px;
+      border-radius: 10px;
+      cursor: pointer;
+      margin: 3px 0;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      transition: .2s;
+    }
+
+    .nav-btn:hover {
+      background: rgba(255, 255, 255, .07)
+    }
+
+    .nav-btn.active {
+      background: linear-gradient(90deg, rgba(47, 109, 246, .38), rgba(47, 109, 246, .12));
+      color: #fff
+    }
+
+    .ico {
+      width: 22px;
+      text-align: center;
+      opacity: .95
+    }
+
+    main {
+      min-width: 0
+    }
+
+    header {
+      height: 72px;
+      background: rgba(255, 255, 255, .9);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 26px;
+      position: sticky;
+      top: 0;
+      z-index: 10
+    }
+
+    .header-title h1 {
+      font-size: 19px;
+      margin: 0 0 3px
+    }
+
+    .header-title small {
+      color: var(--muted)
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--muted);
+      font-size: 13px
+    }
+
+    .content {
+      padding: 24px 26px 40px;
+      max-width: 1600px;
+      margin: auto
+    }
+
+    .view {
+      display: none
+    }
+
+    .view.active {
+      display: block
+    }
+
+    .page-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 18px;
+      gap: 16px
+    }
+
+    .page-head h2 {
+      margin: 0 0 7px;
+      font-size: 24px
+    }
+
+    .page-head p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 14px
+    }
+
+    .btn {
+      border: 1px solid var(--line);
+      background: #fff;
+      color: var(--text);
+      padding: 9px 14px;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: .2s
+    }
+
+    .btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 16px rgba(33, 54, 92, .08)
+    }
+
+    .btn.primary {
+      background: var(--primary);
+      border-color: var(--primary);
+      color: #fff
+    }
+
+    .btn.success {
+      background: #eafaf4;
+      border-color: #ccefe0;
+      color: #0f8d5f
+    }
+
+    .btn.ghost {
+      background: transparent
+    }
+
+    .btn.sm {
+      padding: 6px 9px;
+      font-size: 12px;
+      border-radius: 8px
+    }
+
+    .grid {
+      display: grid;
+      gap: 16px
+    }
+
+    .kpis {
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      margin-bottom: 16px
+    }
+
+    .card {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+
+    .kpi {
+      padding: 18px;
+      position: relative;
+      overflow: hidden;
+      cursor: pointer
+    }
+
+    .kpi::after {
+      content: "";
+      position: absolute;
+      width: 90px;
+      height: 90px;
+      border-radius: 50%;
+      right: -25px;
+      top: -35px;
+      background: rgba(47, 109, 246, .06)
+    }
+
+    .kpi-label {
+      font-size: 13px;
+      color: var(--muted);
+      display: flex;
+      justify-content: space-between;
+      align-items: center
+    }
+
+    .kpi-value {
+      font-size: 27px;
+      font-weight: 750;
+      margin: 10px 0 6px
+    }
+
+    .trend {
+      font-size: 12px
+    }
+
+    .up {
+      color: var(--success)
+    }
+
+    .down {
+      color: var(--danger)
+    }
+
+    .two {
+      grid-template-columns: 1.35fr 1fr
+    }
+
+    .three {
+      grid-template-columns: 1.15fr 1fr .85fr
+    }
+
+    .card-head {
+      padding: 16px 18px 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px
+    }
+
+    .card-head h3 {
+      font-size: 16px;
+      margin: 0
+    }
+
+    .card-head small {
+      color: var(--muted)
+    }
+
+    .card-body {
+      padding: 16px 18px 18px
+    }
+
+    .status {
+      font-size: 12px;
+      padding: 4px 8px;
+      border-radius: 99px;
+      display: inline-block
+    }
+
+    .s-good {
+      background: #eafaf4;
+      color: #0c8a5b
+    }
+
+    .s-warn {
+      background: #fff6e5;
+      color: #b56b00
+    }
+
+    .s-bad {
+      background: #fff0f1;
+      color: #c83c47
+    }
+
+    .s-info {
+      background: #edf3ff;
+      color: #2f6df6
+    }
+
+    .s-draft {
+      background: #f4f2ff;
+      color: #6a50f3
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse
+    }
+
+    th,
+    td {
+      padding: 11px 10px;
+      border-bottom: 1px solid var(--line);
+      text-align: left;
+      font-size: 13px;
+      vertical-align: middle
+    }
+
+    th {
+      color: #637188;
+      font-weight: 650;
+      background: #fbfcfe;
+      position: sticky;
+      top: 0
+    }
+
+    tr:hover td {
+      background: #fbfdff
+    }
+
+    .score {
+      font-weight: 750
+    }
+
+    .progress {
+      height: 7px;
+      background: #edf1f6;
+      border-radius: 99px;
+      overflow: hidden
+    }
+
+    .progress i {
+      display: block;
+      height: 100%;
+      background: linear-gradient(90deg, var(--primary), #79a3ff);
+      border-radius: 99px
+    }
+
+    .mini-progress {
+      min-width: 100px
+    }
+
+    .chart-wrap {
+      height: 260px;
+      position: relative
+    }
+
+    canvas {
+      width: 100%;
+      height: 100%;
+      display: block
+    }
+
+    .legend {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+      font-size: 12px;
+      color: var(--muted)
+    }
+
+    .legend span::before {
+      content: "";
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      display: inline-block;
+      margin-right: 6px;
+      background: #2f6df6
+    }
+
+    .legend span:nth-child(2)::before {
+      background: #14a36d
+    }
+
+    .legend span:nth-child(3)::before {
+      background: #f59e0b
+    }
+
+    .legend span:nth-child(4)::before {
+      background: #7b61ff
+    }
+
+    .feed {
+      display: flex;
+      gap: 12px;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--line)
+    }
+
+    .feed:last-child {
+      border-bottom: 0
+    }
+
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      margin-top: 5px;
+      background: var(--primary);
+      box-shadow: 0 0 0 5px rgba(47, 109, 246, .08)
+    }
+
+    .feed b {
+      font-size: 13px
+    }
+
+    .feed p {
+      margin: 3px 0;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.55
+    }
+
+    .toolbar {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 14px
+    }
+
+    .toolbar input,
+    .toolbar select {
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: #fff;
+      padding: 9px 10px;
+      outline: none;
+    }
+
+    .toolbar .grow {
+      flex: 1;
+      min-width: 200px
+    }
+
+    .tabs {
+      display: flex;
+      gap: 8px;
+      border-bottom: 1px solid var(--line);
+      padding: 0 4px
+    }
+
+    .tab {
+      padding: 11px 13px;
+      border: 0;
+      background: none;
+      cursor: pointer;
+      color: var(--muted);
+      border-bottom: 2px solid transparent
+    }
+
+    .tab.active {
+      color: var(--primary);
+      font-weight: 650;
+      border-bottom-color: var(--primary)
+    }
+
+    .tab-panel {
+      display: none
+    }
+
+    .tab-panel.active {
+      display: block
+    }
+
+    .metric-row {
+      display: grid;
+      grid-template-columns: 160px 1fr 55px;
+      gap: 12px;
+      align-items: center;
+      margin: 13px 0
+    }
+
+    .metric-row label {
+      font-size: 13px;
+      color: #44516a
+    }
+
+    input[type=range] {
+      width: 100%
+    }
+
+    .avatar {
+      width: 34px;
+      height: 34px;
+      border-radius: 10px;
+      background: #eef3ff;
+      color: #315fbd;
+      display: grid;
+      place-items: center;
+      font-size: 12px;
+      font-weight: 700
+    }
+
+    .person {
+      display: flex;
+      gap: 10px;
+      align-items: center
+    }
+
+    .sub {
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 2px
+    }
+
+    .question {
+      border: 1px solid var(--line);
+      border-radius: 13px;
+      padding: 14px;
+      margin-bottom: 10px;
+      background: #fff
+    }
+
+    .qtop {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px
+    }
+
+    .qtitle {
+      font-size: 14px;
+      font-weight: 650;
+      line-height: 1.6
+    }
+
+    .qmeta {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      margin-top: 10px
+    }
+
+    .pill {
+      font-size: 12px;
+      padding: 4px 7px;
+      background: #f2f5fa;
+      border-radius: 8px;
+      color: #60708a
+    }
+
+    .difficulty {
+      display: flex;
+      gap: 3px;
+      align-items: center
+    }
+
+    .difficulty i {
+      width: 11px;
+      height: 5px;
+      border-radius: 4px;
+      background: #dce4f0
+    }
+
+    .difficulty i.on {
+      background: #f59e0b
+    }
+
+    .paper {
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 15px;
+      background: #fff;
+      transition: .2s
+    }
+
+    .paper:hover {
+      box-shadow: 0 8px 24px rgba(33, 54, 92, .08);
+      transform: translateY(-1px)
+    }
+
+    .paper h4 {
+      margin: 0 0 7px;
+      font-size: 14px
+    }
+
+    .paper p {
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.6;
+      margin: 6px 0
+    }
+
+    .paper-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px
+    }
+
+    .ai-box {
+      background: linear-gradient(135deg, #f3f7ff, #f8f4ff);
+      border: 1px solid #dfe8ff;
+      border-radius: 16px;
+      padding: 18px;
+      position: relative;
+      overflow: hidden
+    }
+
+    .ai-box::after {
+      content: "";
+      position: absolute;
+      right: 18px;
+      top: 10px
+    }
+
+    .ai-box h3 {
+      margin: 0 0 8px
+    }
+
+    .ai-box p {
+      font-size: 13px;
+      color: #52617a;
+      line-height: 1.7;
+      max-width: 900px
+    }
+
+    .ai-points {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-top: 12px
+    }
+
+    .ai-point {
+      padding: 10px;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, .75);
+      font-size: 12px;
+      color: #45526a
+    }
+
+    .notice {
+      border-left: 3px solid var(--warning);
+      background: #fffaf0;
+      padding: 12px 14px;
+      border-radius: 10px;
+      font-size: 13px;
+      color: #6c5324
+    }
+
+    .split {
+      display: grid;
+      grid-template-columns: 1fr 330px;
+      gap: 16px
+    }
+
+    .right-panel {
+      display: flex;
+      flex-direction: column;
+      gap: 16px
+    }
+
+    .statlist {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 9px
+    }
+
+    .statbox {
+      background: #f8faff;
+      border: 1px solid #edf1f7;
+      border-radius: 12px;
+      padding: 11px
+    }
+
+    .statbox b {
+      font-size: 19px
+    }
+
+    .statbox small {
+      display: block;
+      color: var(--muted);
+      margin-top: 4px
+    }
+
+    .empty {
+      padding: 40px;
+      text-align: center;
+      color: var(--muted)
+    }
+
+    .drawer-backdrop,
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(10, 20, 40, .35);
+      z-index: 50;
+      display: none
+    }
+
+    .drawer-backdrop.show,
+    .modal-backdrop.show {
+      display: block
+    }
+
+    .drawer {
+      position: fixed;
+      right: 0;
+      top: 0;
+      height: 100vh;
+      width: min(700px, 96vw);
+      background: #fff;
+      z-index: 51;
+      transform: translateX(100%);
+      transition: .25s;
+      padding: 22px;
+      overflow: auto;
+      box-shadow: -16px 0 40px rgba(10, 20, 40, .18)
+    }
+
+    .drawer.show {
+      transform: translateX(0)
+    }
+
+    .drawer-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px
+    }
+
+    .drawer-head h3 {
+      margin: 0
+    }
+
+    .x {
+      border: 0;
+      background: #f1f4f8;
+      width: 32px;
+      height: 32px;
+      border-radius: 9px;
+      cursor: pointer
+    }
+
+    .modal {
+      position: fixed;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -48%) scale(.97);
+      width: min(820px, 94vw);
+      max-height: 90vh;
+      overflow: auto;
+      background: #fff;
+      z-index: 61;
+      border-radius: 18px;
+      box-shadow: 0 24px 60px rgba(20, 30, 60, .25);
+      padding: 22px;
+      display: none
+    }
+
+    .modal.show {
+      display: block;
+      transform: translate(-50%, -50%) scale(1)
+    }
+
+    .modal-backdrop {
+      z-index: 60
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px
+    }
+
+    .field label {
+      display: block;
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 6px
+    }
+
+    .field input,
+    .field select,
+    .field textarea {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 10px;
+      outline: none;
+      background: #fff
+    }
+
+    .field textarea {
+      min-height: 90px;
+      resize: vertical
+    }
+
+    .toast {
+      position: fixed;
+      right: 22px;
+      bottom: 22px;
+      background: #172033;
+      color: #fff;
+      padding: 12px 16px;
+      border-radius: 12px;
+      z-index: 100;
+      opacity: 0;
+      transform: translateY(15px);
+      pointer-events: none;
+      transition: .25s;
+      box-shadow: 0 12px 28px rgba(0, 0, 0, .18);
+      font-size: 13px
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateY(0)
+    }
+
+    .chip-btn {
+      border: 1px solid var(--line);
+      background: #fff;
+      border-radius: 99px;
+      padding: 7px 10px;
+      cursor: pointer;
+      font-size: 12px
+    }
+
+    .chip-btn.active {
+      background: #edf3ff;
+      border-color: #cddcff;
+      color: #2f6df6
+    }
+
+    .rank {
+      font-weight: 800;
+      font-size: 15px
+    }
+
+    .rank.top {
+      color: #d58c00
+    }
+
+    .matrix {
+      overflow: auto
+    }
+
+    .matrix table {
+      min-width: 760px
+    }
+
+    .matrix td.center,
+    .matrix th.center {
+      text-align: center
+    }
+
+    .heat {
+      border-radius: 7px;
+      padding: 6px 5px;
+      text-align: center;
+      font-weight: 700
+    }
+
+    .h1 {
+      background: #e9f8f2;
+      color: #0f8b60
+    }
+
+    .h2 {
+      background: #f3f7e9;
+      color: #768515
+    }
+
+    .h3 {
+      background: #fff4dd;
+      color: #aa6d00
+    }
+
+    .h4 {
+      background: #ffeaec;
+      color: #c33c48
+    }
+
+    .timeline {
+      position: relative;
+      padding-left: 22px
+    }
+
+    .timeline::before {
+      content: "";
+      position: absolute;
+      left: 6px;
+      top: 7px;
+      bottom: 8px;
+      width: 2px;
+      background: #e5ebf4
+    }
+
+    .tl {
+      position: relative;
+      padding: 0 0 18px
+    }
+
+    .tl::before {
+      content: "";
+      position: absolute;
+      left: -20px;
+      top: 4px;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--primary)
+    }
+
+    .tl b {
+      font-size: 13px
+    }
+
+    .tl p {
+      font-size: 12px;
+      color: var(--muted);
+      margin: 4px 0;
+      line-height: 1.55
+    }
+
+    .score-ring {
+      width: 118px;
+      height: 118px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      background: conic-gradient(var(--primary) 0 318deg, #edf1f7 318deg 360deg);
+      margin: auto
+    }
+
+    .score-ring::after {
+      content: "";
+      width: 88px;
+      height: 88px;
+      border-radius: 50%;
+      background: #fff;
+      position: absolute
+    }
+
+    .score-ring span {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+      font-weight: 800;
+      font-size: 24px
+    }
+
+    .score-ring small {
+      display: block;
+      font-weight: 400;
+      color: var(--muted);
+      font-size: 11px
+    }
+
+    .scenario {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px
+    }
+
+    .scenario .card {
+      padding: 15px
+    }
+
+    .scenario b {
+      font-size: 13px
+    }
+
+    .scenario p {
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.55
+    }
+
+    .mobile-nav {
+      display: none
+    }
+
+    .inline-actions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap
+    }
+
+    .basket {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 7px 10px;
+      border-radius: 999px;
+      background: #edf3ff;
+      color: #2f6df6;
+      font-size: 12px
+    }
+
+    .hidden {
+      display: none !important
+    }
+
+    /* 题型与试卷规范化展示 */
+    .q-format {
+      margin-top: 12px;
+      padding: 14px;
+      background: #fbfcff;
+      border: 1px solid #e8edf6;
+      border-radius: 12px
+    }
+
+    .q-stem {
+      font-size: 14px;
+      line-height: 1.8;
+      font-weight: 650;
+      color: #202a3d
+    }
+
+    .option-list {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 9px 14px;
+      margin-top: 12px
+    }
+
+    .option {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      font-size: 13px;
+      line-height: 1.6;
+      padding: 8px 10px;
+      border: 1px solid #e5ebf4;
+      border-radius: 9px;
+      background: #fff
+    }
+
+    .choice-mark {
+      width: 18px;
+      height: 18px;
+      flex: 0 0 18px;
+      border: 1.5px solid #9aa8bd;
+      display: inline-grid;
+      place-items: center;
+      margin-top: 1px
+    }
+
+    .choice-mark.radio {
+      border-radius: 50%
+    }
+
+    .choice-mark.check {
+      border-radius: 4px
+    }
+
+    .blank-line {
+      display: inline-block;
+      min-width: 150px;
+      border-bottom: 1.5px solid #56647a;
+      height: 1.2em;
+      vertical-align: bottom;
+      margin: 0 4px
+    }
+
+    .fill-answer-row {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      margin-top: 12px;
+      font-size: 13px
+    }
+
+    .fill-answer-row .blank-line {
+      flex: 1;
+      max-width: 340px
+    }
+
+    .case-material {
+      margin-top: 12px;
+      background: #f6f8fb;
+      border-left: 4px solid #8496b4;
+      padding: 12px 14px;
+      border-radius: 8px;
+      font-size: 13px;
+      line-height: 1.75;
+      color: #3d4a60
+    }
+
+    .subquestion {
+      padding: 9px 0;
+      font-size: 13px;
+      line-height: 1.7
+    }
+
+    .answer-box {
+      height: 62px;
+      border: 1px dashed #bcc8d9;
+      border-radius: 8px;
+      margin: 8px 0 12px;
+      background: repeating-linear-gradient(to bottom, #fff 0, #fff 23px, #eef2f7 24px)
+    }
+
+    .answer-box.large {
+      height: 110px
+    }
+
+    .task-box {
+      margin-top: 12px;
+      border: 1px solid #dfe6f0;
+      border-radius: 10px;
+      overflow: hidden;
+      background: #fff
+    }
+
+    .task-box .task-title {
+      padding: 9px 12px;
+      background: #f4f7fb;
+      font-size: 13px;
+      font-weight: 700
+    }
+
+    .task-box ul,
+    .case-material ul {
+      margin: 8px 0 8px 20px;
+      padding: 0
+    }
+
+    .task-box li,
+    .case-material li {
+      font-size: 13px;
+      line-height: 1.7
+    }
+
+    .rubric-table {
+      width: 100%;
+      margin-top: 10px;
+      border-collapse: collapse
+    }
+
+    .rubric-table th,
+    .rubric-table td {
+      border: 1px solid #dfe6ef;
+      padding: 8px;
+      font-size: 12px;
+      position: static;
+      background: #fff
+    }
+
+    .rubric-table th {
+      background: #f6f8fb;
+      color: #4c5a70
+    }
+
+    .answer-key {
+      margin-top: 12px;
+      padding: 10px 12px;
+      border-radius: 9px;
+      background: #eef8f3;
+      border: 1px solid #d8efe4;
+      font-size: 12px;
+      line-height: 1.65;
+      color: #28664e
+    }
+
+    .exam-paper {
+      background: #fff;
+      border: 1px solid #dfe5ee;
+      border-radius: 4px;
+      padding: 32px 34px;
+      color: #111;
+      box-shadow: 0 4px 14px rgba(30, 45, 70, .06)
+    }
+
+    .exam-header {
+      text-align: center;
+      border-bottom: 2px solid #1f2937;
+      padding-bottom: 16px
+    }
+
+    .exam-header h2 {
+      font-family: "SimSun", "宋体", serif;
+      font-size: 24px;
+      margin: 0 0 8px;
+      letter-spacing: .05em
+    }
+
+    .exam-header .exam-sub {
+      font-size: 14px;
+      margin-top: 4px
+    }
+
+    .candidate-line {
+      display: flex;
+      justify-content: center;
+      gap: 26px;
+      flex-wrap: wrap;
+      font-size: 13px;
+      margin-top: 16px
+    }
+
+    .candidate-line span {
+      min-width: 150px;
+      border-bottom: 1px solid #222;
+      padding: 0 4px 4px
+    }
+
+    .exam-info {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      border: 1px solid #333;
+      border-right: 0;
+      border-bottom: 0;
+      margin-top: 16px
+    }
+
+    .exam-info div {
+      border-right: 1px solid #333;
+      border-bottom: 1px solid #333;
+      padding: 8px 6px;
+      font-size: 12px;
+      text-align: center
+    }
+
+    .exam-notice {
+      font-size: 12px;
+      line-height: 1.75;
+      padding: 12px 0;
+      color: #333
+    }
+
+    .exam-section {
+      margin-top: 20px
+    }
+
+    .exam-section-title {
+      font-family: "SimSun", "宋体", serif;
+      font-size: 17px;
+      font-weight: 800;
+      border-bottom: 1px solid #333;
+      padding-bottom: 6px;
+      margin-bottom: 12px
+    }
+
+    .exam-question {
+      font-family: "SimSun", "宋体", serif;
+      margin: 12px 0 18px;
+      font-size: 14px;
+      line-height: 1.8
+    }
+
+    .exam-question .q-format {
+      font-family: "SimSun", "宋体", serif;
+      background: #fff;
+      border: 0;
+      padding: 0;
+      margin-top: 7px
+    }
+
+    .exam-question .option {
+      border: 0;
+      padding: 2px 0;
+      background: #fff
+    }
+
+    .exam-question .choice-mark {
+      width: 15px;
+      height: 15px;
+      flex-basis: 15px
+    }
+
+    .exam-question .case-material {
+      background: #fafafa;
+      border-left: 3px solid #777
+    }
+
+    .exam-question .task-box {
+      border-color: #777
+    }
+
+    .exam-question .task-box .task-title {
+      background: #f2f2f2
+    }
+
+    .section-score {
+      float: right;
+      font-size: 12px;
+      font-weight: 400
+    }
+
+    .paper-score-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 16px 0
+    }
+
+    .paper-score-table th,
+    .paper-score-table td {
+      border: 1px solid #333;
+      padding: 7px;
+      text-align: center;
+      font-size: 12px;
+      position: static;
+      background: #fff
+    }
+
+    .paper-actions {
+      display: flex;
+      gap: 8px;
+      justify-content: flex-end;
+      margin-bottom: 14px;
+      flex-wrap: wrap
+    }
+
+    .question-type-fields {
+      grid-column: 1/-1;
+      border: 1px solid #e6ecf5;
+      background: #f9fbfe;
+      border-radius: 12px;
+      padding: 12px
+    }
+
+    .question-type-fields h4 {
+      margin: 0 0 10px;
+      font-size: 13px
+    }
+
+    @media print {
+      body {
+        background: #fff
+      }
+
+      aside,
+      header,
+      .page-head,
+      .paper-actions,
+      .drawer-backdrop,
+      .mobile-nav {
+        display: none !important
+      }
+
+      .drawer {
+        position: static !important;
+        transform: none !important;
+        width: auto !important;
+        height: auto !important;
+        box-shadow: none !important;
+        padding: 0 !important
+      }
+
+      .drawer-head {
+        display: none !important
+      }
+
+      .exam-paper {
+        border: 0;
+        box-shadow: none;
+        padding: 0
+      }
+    }
+
+    @media(max-width:1150px) {
+      .kpis {
+        grid-template-columns: repeat(3, 1fr)
+      }
+
+      .two,
+      .three,
+      .split {
+        grid-template-columns: 1fr
+      }
+
+      .paper-grid {
+        grid-template-columns: repeat(2, 1fr)
+      }
+
+      .ai-points,
+      .scenario {
+        grid-template-columns: repeat(2, 1fr)
+      }
+    }
+
+    @media(max-width:820px) {
+      .app {
+        grid-template-columns: 1fr
+      }
+
+      aside {
+        display: none
+      }
+
+      header {
+        padding: 12px 14px;
+        height: auto;
+        min-height: 68px;
+        align-items: flex-start
+      }
+
+      .content {
+        padding: 16px 12px 90px
+      }
+
+      .kpis {
+        grid-template-columns: repeat(2, 1fr)
+      }
+
+      .paper-grid,
+      .ai-points,
+      .scenario,
+      .form-grid {
+        grid-template-columns: 1fr
+      }
+
+      .mobile-nav {
+        display: flex;
+        position: fixed;
+        left: 8px;
+        right: 8px;
+        bottom: 8px;
+        background: #fff;
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        box-shadow: 0 10px 30px rgba(20, 30, 60, .15);
+        z-index: 30;
+        padding: 5px;
+        overflow-x: auto
+      }
+
+      .mobile-nav button {
+        flex: 1;
+        min-width: 78px;
+        border: 0;
+        background: transparent;
+        padding: 9px 5px;
+        border-radius: 10px;
+        font-size: 11px;
+        color: var(--muted)
+      }
+
+      .mobile-nav button.active {
+        background: #edf3ff;
+        color: var(--primary);
+        font-weight: 700
+      }
+    }
+
+
+    button,
+    [role=button] {
+      cursor: pointer;
+    }
+
+    *,
+    :before,
+    :after {
+      box-sizing: border-box;
+      border-width: 0;
+      border-style: solid;
+      border-color: #e5e7eb;
+    }
+
+    *,
+    :before,
+    :after {
+      --tw-border-spacing-x: 0;
+      --tw-border-spacing-y: 0;
+      --tw-translate-x: 0;
+      --tw-translate-y: 0;
+      --tw-rotate: 0;
+      --tw-skew-x: 0;
+      --tw-skew-y: 0;
+      --tw-scale-x: 1;
+      --tw-scale-y: 1;
+      --tw-pan-x: ;
+      --tw-pan-y: ;
+      --tw-pinch-zoom: ;
+      --tw-scroll-snap-strictness: proximity;
+      --tw-gradient-from-position: ;
+      --tw-gradient-via-position: ;
+      --tw-gradient-to-position: ;
+      --tw-ordinal: ;
+      --tw-slashed-zero: ;
+      --tw-numeric-figure: ;
+      --tw-numeric-spacing: ;
+      --tw-numeric-fraction: ;
+      --tw-ring-inset: ;
+      --tw-ring-offset-width: 0px;
+      --tw-ring-offset-color: #fff;
+      --tw-ring-color: rgb(59 130 246 / .5);
+      --tw-ring-offset-shadow: 0 0 #0000;
+      --tw-ring-shadow: 0 0 #0000;
+      --tw-shadow: 0 0 #0000;
+      --tw-shadow-colored: 0 0 #0000;
+      --tw-blur: ;
+      --tw-brightness: ;
+      --tw-contrast: ;
+      --tw-grayscale: ;
+      --tw-hue-rotate: ;
+      --tw-invert: ;
+      --tw-saturate: ;
+      --tw-sepia: ;
+      --tw-drop-shadow: ;
+      --tw-backdrop-blur: ;
+      --tw-backdrop-brightness: ;
+      --tw-backdrop-contrast: ;
+      --tw-backdrop-grayscale: ;
+      --tw-backdrop-hue-rotate: ;
+      --tw-backdrop-invert: ;
+      --tw-backdrop-opacity: ;
+      --tw-backdrop-saturate: ;
+      --tw-backdrop-sepia: ;
+      --tw-contain-size: ;
+      --tw-contain-layout: ;
+      --tw-contain-paint: ;
+    }
+
+    .w-5 {
+      width: 1.25rem;
+    }
+
+    .h-5 {
+      height: 1.25rem;
+    }
+
+    .transition-all {
+      transition-property: all;
+      transition-timing-function: cubic-bezier(.4, 0, .2, 1);
+      transition-duration: .15s;
+    }
+
+    .shadow-md {
+      --tw-shadow: 0 4px 6px -1px rgb(0 0 0 / .1), 0 2px 4px -2px rgb(0 0 0 / .1);
+      --tw-shadow-colored: 0 4px 6px -1px var(--tw-shadow-color), 0 2px 4px -2px var(--tw-shadow-color);
+      box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
+    }
+
+    .text-white {
+      --tw-text-opacity: 1;
+      color: rgb(255 255 255 / var(--tw-text-opacity, 1));
+    }
+
+    .py-3 {
+      padding-top: .75rem;
+      padding-bottom: .75rem;
+    }
+
+    .px-6 {
+      padding-left: 1.5rem;
+      padding-right: 1.5rem;
+    }
+
+    .to-cyan-500 {
+      --tw-gradient-to: #06b6d4 var(--tw-gradient-to-position);
+    }
+
+    .from-blue-600 {
+      --tw-gradient-from: #2563eb var(--tw-gradient-from-position);
+      --tw-gradient-to: #06b6d4 var(--tw-gradient-to-position);
+      --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to);
+    }
+
+    .bg-gradient-to-r {
+      background-image: linear-gradient(to right, var(--tw-gradient-stops));
+    }
+
+    .rounded-xl {
+      border-radius: .75rem;
+    }
+
+    .justify-center {
+      justify-content: center;
+    }
+
+    .items-center {
+      align-items: center;
+    }
+
+    .w-full {
+      width: 100%;
+    }
+
+    .flex {
+      display: flex;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="app">
+    <aside>
+      <div class="brand">
+        <!-- <div class="logo">W</div> -->
+        <img style="width:32px;" src='https://static.szaccord.org.cn/logo.png' alt="Logo"
+          className="w-10 h-10 rounded-lg object-cover" />
+        <div><b>教学质量监控与评价</b><small>Quality Intelligence</small></div>
+      </div>
+
+      <div class="menu-title">质量监控</div>
+      <button class="nav-btn active" data-view="dashboard"><span class="ico">◈</span>质量驾驶舱</button>
+      <button class="nav-btn" data-view="teachers"><span class="ico">◎</span>教师评价</button>
+      <button class="nav-btn" data-view="indicators"><span class="ico">◇</span>评价指标体系</button>
+
+      <div class="menu-title">测评管理</div>
+      <button class="nav-btn" data-view="questions"><span class="ico">▣</span>测评题库管理</button>
+      <button class="nav-btn" data-view="papers"><span class="ico">▤</span>测评试卷管理</button>
+      <button class="nav-btn" data-view="scores"><span class="ico">▥</span>测评成绩管理</button>
+
+      <div class="menu-title">智能分析</div>
+      <button class="nav-btn" data-view="analytics"><span class="ico">⌁</span>群体绩效分析</button>
+      <button class="nav-btn" data-view="alerts"><span class="ico">⚑</span>预警与改进闭环</button>
+    </aside>
+
+    <main>
+      <header>
+        <div class="header-title" style="min-height:1px"></div>
+        <div class="header-right">
+          <span id="clockText1"></span><button style="width:68px;" onclick="(function(){window.location.href='/'})()"
+            class="w-full px-6 py-3 rounded-xl transition-all bg-gradient-to-r from-blue-600 to-cyan-500 hover:from-blue-600 hover:to-cyan-500 text-white flex items-center justify-center space-x-2 shadow-md hover:shadow-lg"><svg
+              class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6">
+              </path>
+            </svg></button>
+
+        </div>
+      </header>
+
+      <div class="content">
+        <!-- Dashboard -->
+        <section class="view active" id="dashboard">
+          <div class="page-head">
+            <div>
+              <h2>教学质量监控驾驶舱</h2>
+              <p>覆盖“评价—诊断—赋能—追踪”全过程，结合课堂行为、学生成长、同行教研与教师发展数据形成闭环。</p>
+            </div>
+          </div>
+
+          <div class="grid kpis">
+            <div class="card kpi" onclick="navTo('teachers')">
+              <div class="kpi-label"><span>教师综合质量指数</span><span class="status" id="kpiTeacherStatus">—</span></div>
+              <div class="kpi-value" id="kpiTeacherQuality">—</div>
+              <div class="sub" id="kpiTeacherSub">—</div>
+            </div>
+            <div class="card kpi">
+              <div class="kpi-label"><span>学习成效评价均值</span><span class="status" id="kpiOutcomeStatus">—</span></div>
+              <div class="kpi-value" id="kpiOutcomeAvg">—</div>
+              <div class="sub" id="kpiOutcomeSub">—</div>
+            </div>
+            <div class="card kpi">
+              <div class="kpi-label"><span>学生评价覆盖率</span><span class="status" id="kpiStudentStatus">—</span></div>
+              <div class="kpi-value" id="kpiStudentCoverage">—</div>
+              <div class="sub" id="kpiStudentSub">—</div>
+            </div>
+            <div class="card kpi">
+              <div class="kpi-label"><span>能力测评通过率</span><span class="status" id="kpiPassStatus">—</span></div>
+              <div class="kpi-value" id="kpiPassRate">—</div>
+              <div class="sub" id="kpiPassSub">—</div>
+            </div>
+            <div class="card kpi" onclick="navTo('alerts')">
+              <div class="kpi-label"><span>闭环改进完成率</span><span class="status" id="kpiCloseStatus">—</span></div>
+              <div class="kpi-value" id="kpiCloseRate">—</div>
+              <div class="sub" id="kpiCloseSub">—</div>
+            </div>
+          </div>
+
+          <div class="grid two">
+            <div class="card">
+              <div class="card-head">
+                <div>
+                  <h3>教学质量趋势</h3><small>综合指数 / 课堂互动 / 学习成效</small>
+                </div>
+                <div class="legend"><span>综合指数</span><span>学习成效</span><span>课堂互动</span></div>
+              </div>
+              <div class="card-body">
+                <div class="chart-wrap"><canvas id="trendChart"></canvas></div>
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="card-head">
+                <div>
+                  <h3>本周重点预警</h3><small>依据规则引擎 + 多源数据诊断</small>
+                </div><button class="btn sm" onclick="navTo('alerts')">查看全部</button>
+              </div>
+              <div class="card-body" id="weeklyAlerts"></div>
+            </div>
+          </div>
+
+          <div class="grid three" style="margin-top:16px">
+            <div class="card">
+              <div class="card-head">
+                <div>
+                  <h3>多元主体评价结构</h3><small>学生 / 同行 / 自评 / 学习成效</small>
+                </div>
+              </div>
+              <div class="card-body">
+                <div class="chart-wrap" style="height:230px"><canvas id="radarChart"></canvas></div>
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="card-head">
+                <div>
+                  <h3>质量分布</h3><small id="qualityDistributionTotal">—</small>
+                </div>
+              </div>
+              <div class="card-body" id="qualityDistribution"></div>
+            </div>
+
+            <div class="card">
+              <div class="card-head">
+                <div>
+                  <h3>数据采集状态</h3><small>最近更新 <span id="dataUpdateTime"></span></small>
+                </div>
+              </div>
+              <div class="card-body" id="dataCollectionStatus"></div>
+            </div>
+          </div>
+
+          <div class="ai-box" style="margin-top:16px" id="aiBox">
+            <h3>教学质量诊断摘要</h3>
+            <p id="aiText">本周全校教学质量总体稳定。主要风险集中在“能力达成率与课程评价结构不一致”“课堂互动下降”“部分实训课程题库覆盖不足”三个方面。建议优先处理 8 门高风险课程，并对 12
+              名教师启动定向改进任务。</p>
+            <div class="ai-points" id="diagnosticFacts"></div>
+          </div>
+        </section>
+
+        <!-- Teachers -->
+        <section class="view" id="teachers">
+          <div class="page-head">
+            <div>
+              <h2>教师评价</h2>
+              <p>学员反馈、同行评价、教师自评与教学效果评价一体化，支持教学准备—教学过程—教学效果多维指标。</p>
+            </div>
+            <div class="inline-actions"><button class="btn" onclick="openModal('weightModal')">权重配置</button><button
+                class="btn primary" onclick="openModal('teacherTaskModal')">发起评价</button></div>
+          </div>
+
+          <div class="grid kpis">
+            <div class="card kpi">
+              <div class="kpi-label">参评教师</div>
+              <div class="kpi-value" id="teacherCountKpi">—</div>
+              <div class="sub" id="teacherCountSub">—</div>
+            </div>
+            <div class="card kpi">
+              <div class="kpi-label">学生评价覆盖率</div>
+              <div class="kpi-value" id="teacherStudentCoverage">—</div>
+              <div class="sub" id="teacherStudentSub">—</div>
+            </div>
+            <div class="card kpi">
+              <div class="kpi-label">同行评价覆盖率</div>
+              <div class="kpi-value" id="teacherPeerCoverage">—</div>
+              <div class="sub" id="teacherPeerSub">—</div>
+            </div>
+            <div class="card kpi">
+              <div class="kpi-label">平均综合分</div>
+              <div class="kpi-value" id="teacherAvgScore">—</div>
+              <div class="sub" id="teacherAvgSub">—</div>
+            </div>
+            <div class="card kpi">
+              <div class="kpi-label">需关注教师</div>
+              <div class="kpi-value" id="teacherWarnCount">—</div>
+              <div class="sub" id="teacherWarnSub">—</div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-body">
+              <div class="toolbar">
+                <input class="grow" id="teacherSearch" placeholder="搜索教师、课程、专业..." oninput="filterTeachers()">
+                <select id="teacherDept" onchange="filterTeachers()">
+                  <option value="all">全部学院</option>
+                  <option>汽车工程学院</option>
+                  <option>信息工程学院</option>
+                  <option>智能制造学院</option>
+                  <option>财经商贸学院</option>
+                </select>
+                <select id="teacherRisk" onchange="filterTeachers()">
+                  <option value="all">全部状态</option>
+                  <option value="good">优秀/良好</option>
+                  <option value="warn">需关注</option>
+                </select>
+                <button class="btn" onclick="exportTeachersCSV()">导出</button>
+              </div>
+              <div style="overflow:auto;max-height:560px">
+                <table id="teacherTable">
+                  <thead>
+                    <tr>
+                      <th>教师</th>
+                      <th>学院 / 主讲课程</th>
+                      <th>学生评价</th>
+                      <th>同行评价</th>
+                      <th>自评</th>
+                      <th>学习成效</th>
+                      <th>综合分</th>
+                      <th>状态</th>
+                      <th>操作</th>
+                    </tr>
+                  </thead>
+                  <tbody id="teacherTbody"></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <div class="card" style="margin-top:16px">
+            <div class="card-head">
+              <div>
+                <h3>评价任务</h3><small>发起后的评价任务持续保存在系统中</small>
+              </div>
+            </div>
+            <div class="card-body" style="overflow:auto">
+              <table>
+                <thead>
+                  <tr>
+                    <th>任务名称</th>
+                    <th>参评范围</th>
+                    <th>开始日期</th>
+                    <th>结束日期</th>
+                    <th>状态</th>
+                    <th>说明</th>
+                  </tr>
+                </thead>
+                <tbody id="teacherTaskTbody"></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- Indicators -->
+        <section class="view" id="indicators">
+          <div class="page-head">
+            <div>
+              <h2>评价指标体系</h2>
+              <p>支持自定义评价维度、指标权重、阈值与数据来源，形成“知识传递效能—思维培养深度—情感价值引导”三维模型。</p>
+            </div>
+            <button class="btn primary" onclick="saveWeights()">保存指标方案</button>
+          </div>
+          <div class="grid two">
+            <div class="card">
+              <div class="card-head">
+                <div>
+                  <h3>教师综合评价权重</h3><small>拖动滑块实时重算教师综合分</small>
+                </div>
+              </div>
+              <div class="card-body" id="weightsPanel">
+                <div class="metric-row"><label>学生评价</label><input class="wslider" data-key="student" type="range"
+                    min="0" max="100" value="30"><b class="wval">30%</b></div>
+                <div class="metric-row"><label>同行评价</label><input class="wslider" data-key="peer" type="range" min="0"
+                    max="100" value="20"><b class="wval">20%</b></div>
+                <div class="metric-row"><label>教师自评</label><input class="wslider" data-key="self" type="range" min="0"
+                    max="100" value="10"><b class="wval">10%</b></div>
+                <div class="metric-row"><label>课堂行为</label><input class="wslider" data-key="classroom" type="range"
+                    min="0" max="100" value="15"><b class="wval">15%</b></div>
+                <div class="metric-row"><label>学习成效</label><input class="wslider" data-key="outcome" type="range"
+                    min="0" max="100" value="25"><b class="wval">25%</b></div>
+                <div class="notice" id="weightNotice">权重合计 100%，配置有效。教师“王宁”当前综合分：82.6。</div>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-head">
+                <div>
+                  <h3>三维评价模型</h3><small>核心维度与建议指标</small>
+                </div>
+              </div>
+              <div class="card-body">
+                <div class="feed">
+                  <div class="dot"></div>
+                  <div><b>知识传递效能</b>
+                    <p>课程目标达成率、知识点掌握率、讲授清晰度、测评一致性、重难点突破效果。</p>
+                  </div>
+                </div>
+                <div class="feed">
+                  <div class="dot" style="background:#7b61ff"></div>
+                  <div><b>思维培养深度</b>
+                    <p>高阶问题占比、项目任务复杂度、学生探究行为、迁移应用能力、课堂深度互动。</p>
+                  </div>
+                </div>
+                <div class="feed">
+                  <div class="dot" style="background:#14a36d"></div>
+                  <div><b>情感价值引导</b>
+                    <p>职业素养、规范意识、协作意识、课程思政融入、学习投入与课堂获得感。</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card" style="margin-top:16px">
+            <div class="card-head">
+              <div>
+                <h3>指标目录与数据源</h3><small>可用于校级、院级、专业、课程、教师五级评价</small>
+              </div><button class="btn sm" onclick="openMetricCreate()">+ 新增指标</button>
+            </div>
+            <div class="card-body matrix">
+              <table>
+                <thead>
+                  <tr>
+                    <th>一级维度</th>
+                    <th>二级指标</th>
+                    <th>数据源</th>
+                    <th class="center">权重</th>
+                    <th class="center">阈值</th>
+                    <th>刷新频率</th>
+                    <th>状态</th>
+                  </tr>
+                </thead>
+                <tbody id="metricTableBody"></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- Questions -->
+        <section class="view" id="questions">
+          <div class="page-head">
+            <div>
+              <h2>测评题库管理</h2>
+              <p>题目与职业教育能力分类的三级维度、课程、技能、难度和认知层级精确关联；单选、多选、填空、案例分析、实操题均按对应题型规范展示，支持全生命周期管理与智能组卷。</p>
+            </div>
+            <div class="inline-actions"><span class="basket">组卷篮：<b id="basketCount">0</b></span><button class="btn"
+                onclick="backupQuestionBank()">备份题库</button><button class="btn"
+                onclick="batchImportQuestions()">批量导入</button><button class="btn primary"
+                onclick="openQuestionCreate()">+ 新建题目</button></div>
+          </div>
+
+          <div class="grid kpis">
+            <div class="card kpi">
+              <div class="kpi-label">题库总量</div>
+              <div class="kpi-value" id="questionTotalKpi">—</div>
+              <div class="sub" id="questionTotalSub">—</div>
+            </div>
+            <div class="card kpi">
+              <div class="kpi-label">已关联三级能力点</div>
+              <div class="kpi-value" id="questionDimKpi">—</div>
+              <div class="sub" id="questionDimSub">—</div>
+            </div>
+            <div class="card kpi">
+              <div class="kpi-label">案例 / 实操题占比</div>
+              <div class="kpi-value" id="questionAppliedRate">—</div>
+              <div class="sub" id="questionAppliedSub">—</div>
+            </div>
+            <div class="card kpi">
+              <div class="kpi-label">质量审校通过率</div>
+              <div class="kpi-value" id="questionQualityRate">—</div>
+              <div class="sub" id="questionQualitySub">—</div>
+            </div>
+            <div class="card kpi">
+              <div class="kpi-label">题型覆盖</div>
+              <div class="kpi-value" id="questionTypeCoverage">—</div>
+              <div class="sub" id="questionTypeSub">—</div>
+            </div>
+          </div>
+
+          <div class="split">
+            <div class="card">
+              <div class="card-body">
+                <div class="toolbar">
+                  <input id="qSearch" class="grow" placeholder="搜索题干、标签、技能..." oninput="renderQuestions()">
+                  <select id="qCourse" onchange="renderQuestions()">
+                    <option value="all">全部课程</option>
+                    <option>ROS机器人操作系统基础</option>
+                    <option>Python程序设计</option>
+                    <option>新能源汽车电控技术</option>
+                    <option>PLC控制技术</option>
+                  </select>
+                  <select id="qType" onchange="renderQuestions()">
+                    <option value="all">全部题型</option>
+                    <option>单选题</option>
+                    <option>多选题</option>
+                    <option>填空题</option>
+                    <option>案例分析</option>
+                    <option>实操题</option>
+                  </select>
+                  <button class="btn" onclick="openBasketDrawer()">查看组卷篮</button>
+                </div>
+                <div id="questionList"></div>
+              </div>
+            </div>
+            <div class="right-panel">
+              <div class="card">
+                <div class="card-head">
+                  <h3>分类与关联</h3>
+                </div>
+                <div class="card-body">
+                  <div class="timeline">
+                    <div class="tl"><b>一级：专业能力</b>
+                      <p>面向专业核心任务与典型工作过程。</p>
+                    </div>
+                    <div class="tl"><b>二级：智能驾驶系统集成</b>
+                      <p>覆盖感知、定位、决策、控制与系统调试。</p>
+                    </div>
+                    <div class="tl"><b>三级：传感器数据融合与调试</b>
+                      <p id="focusDimStats">—</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="card">
+                <div class="card-head">
+                  <h3>题库健康度</h3>
+                </div>
+                <div class="card-body">
+                  <div class="statlist">
+                    <div class="statbox"><b id="questionAvgDiff">—</b><small>平均难度</small></div>
+                    <div class="statbox"><b id="questionAvgQuality">—</b><small>平均质量分</small></div>
+                    <div class="statbox"><b id="questionDuplicateCount">—</b><small>重复题数</small></div>
+                    <div class="statbox"><b id="questionHealthTypes">—</b><small>题型覆盖</small></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Papers -->
+        <section class="view" id="papers">
+          <div class="page-head">
+            <div>
+              <h2>测评试卷管理</h2>
+              <p>依据学生申请的能力维度、先决课程、难度和题目分布自动生成个性化试卷，并可与课程完成条件、学分互认规则关联。</p>
+            </div>
+            <div class="inline-actions"><button class="btn" onclick="openModal('templateModal')">试卷模板</button><button
+                class="btn primary" onclick="openPaperCreate()">智能组卷</button></div>
+          </div>
+
+          <div class="grid kpis">
+            <div class="card kpi">
+              <div class="kpi-label">测评活动</div>
+              <div class="kpi-value" id="paperCountKpi">—</div>
+              <div class="sub" id="paperCountSub">—</div>
+            </div>
+            <div class="card kpi">
+              <div class="kpi-label">智能组卷占比</div>
+              <div class="kpi-value" id="paperAutoRate">—</div>
+              <div class="sub" id="paperAutoSub">—</div>
+            </div>
+            <div class="card kpi">
+              <div class="kpi-label">课程关联率</div>
+              <div class="kpi-value" id="paperCourseRate">—</div>
+              <div class="sub" id="paperCourseSub">—</div>
+            </div>
+            <div class="card kpi">
+              <div class="kpi-label">平均能力覆盖</div>
+              <div class="kpi-value" id="paperCoverageAvg">—</div>
+              <div class="sub" id="paperCoverageSub">—</div>
+            </div>
+            <div class="card kpi">
+              <div class="kpi-label">平均质量指数</div>
+              <div class="kpi-value" id="paperQualityAvg">—</div>
+              <div class="sub" id="paperQualitySub">—</div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-body">
+              <div class="toolbar">
+                <button class="chip-btn active" onclick="paperFilter(this,'all')">全部</button>
+                <button class="chip-btn" onclick="paperFilter(this,'running')">进行中</button>
+                <button class="chip-btn" onclick="paperFilter(this,'draft')">草稿</button>
+                <button class="chip-btn" onclick="paperFilter(this,'done')">已结束</button>
+                <span style="flex:1"></span>
+                <input id="paperSearch" placeholder="搜索测评名称..." oninput="renderPapers()">
+              </div>
+              <div class="paper-grid" id="paperGrid"></div>
+            </div>
+          </div>
+
+          <div class="scenario" style="margin-top:16px">
+            <div class="card"><b>① 读取测评申请</b>
+              <p>识别能力维度、适用对象、课程先决条件、目标等级与认证要求。</p>
+            </div>
+            <div class="card"><b>② 智能筛题</b>
+              <p>按难度、题型、能力点、知识点、历史曝光率和质量参数进行约束筛选。</p>
+            </div>
+            <div class="card"><b>③ 生成试卷</b>
+              <p>自动满足分值结构、难度曲线、能力覆盖度与同源题规避规则。</p>
+            </div>
+            <div class="card"><b>④ 质量校验</b>
+              <p>检查重复、偏题、覆盖缺口、预计难度与考试时长，人工确认后发布。</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- Scores -->
+        <section class="view" id="scores">
+          <div class="page-head">
+            <div>
+              <h2>测评成绩管理</h2>
+              <p>自动记录测评成绩、建立多维索引、追踪能力成长，支持个人成果展示、群体绩效分析与学分互认。</p>
+            </div>
+            <div class="inline-actions"><button class="btn" onclick="syncCredits()">同步学分互认</button><button
+                class="btn primary" onclick="exportScoreReport()">生成成绩报告</button></div>
+          </div>
+
+          <div class="grid kpis">
+            <div class="card kpi">
+              <div class="kpi-label">成绩记录</div>
+              <div class="kpi-value" id="scoreRecordKpi">—</div>
+              <div class="sub" id="scoreRecordSub">—</div>
+            </div>
+            <div class="card kpi">
+              <div class="kpi-label">平均分</div>
+              <div class="kpi-value" id="scoreAvgKpi">—</div>
+              <div class="sub" id="scoreAvgSub">—</div>
+            </div>
+            <div class="card kpi">
+              <div class="kpi-label">通过率</div>
+              <div class="kpi-value" id="scorePassKpi">—</div>
+              <div class="sub" id="scorePassSub">—</div>
+            </div>
+            <div class="card kpi">
+              <div class="kpi-label">优秀率</div>
+              <div class="kpi-value" id="scoreExcellentKpi">—</div>
+              <div class="sub" id="scoreExcellentSub">—</div>
+            </div>
+            <div class="card kpi">
+              <div class="kpi-label">已认定学分</div>
+              <div class="kpi-value" id="creditSyncKpi">—</div>
+              <div class="sub" id="creditSyncSub">—</div>
+            </div>
+          </div>
+
+          <div class="grid two">
+            <div class="card">
+              <div class="card-head">
+                <div>
+                  <h3>学生成绩与能力成长</h3><small>点击查看个人成长轨迹</small>
+                </div>
+              </div>
+              <div class="card-body">
+                <div class="toolbar">
+                  <input id="scoreSearch" class="grow" placeholder="学号 / 姓名 / 专业..." oninput="renderScores()">
+                  <select id="scoreMajor" onchange="renderScores()">
+                    <option value="all">全部专业</option>
+                    <option>智能网联汽车技术</option>
+                    <option>软件技术</option>
+                    <option>工业机器人技术</option>
+                  </select>
+                </div>
+                <div style="overflow:auto;max-height:460px">
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>学生</th>
+                        <th>专业 / 班级</th>
+                        <th>测评</th>
+                        <th>成绩</th>
+                        <th>能力增值</th>
+                        <th>学分</th>
+                        <th>操作</th>
+                      </tr>
+                    </thead>
+                    <tbody id="scoreTbody"></tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-head">
+                <div>
+                  <h3>群体成绩分布</h3><small>当前筛选范围</small>
+                </div>
+              </div>
+              <div class="card-body">
+                <div class="chart-wrap" style="height:250px"><canvas id="scoreChart"></canvas></div>
+                <div class="notice" id="scoreDistributionNotice">—</div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Analytics -->
+        <section class="view" id="analytics">
+          <div class="page-head">
+            <div>
+              <h2>群体绩效分析</h2>
+              <p>面向学院、专业、课程、班级的质量比较与问题定位，为教学管理部门提供可追踪的决策依据。</p>
+            </div>
+            <button class="btn primary" onclick="exportAnalyticsReport()">生成分析报告</button>
+          </div>
+          <div class="grid two">
+            <div class="card">
+              <div class="card-head">
+                <div>
+                  <h3>学院质量指数</h3><small>综合教师评价、学习成效与改进闭环</small>
+                </div>
+              </div>
+              <div class="card-body">
+                <div class="chart-wrap"><canvas id="collegeChart"></canvas></div>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-head">
+                <div>
+                  <h3>关键指标对比矩阵</h3><small>颜色越深代表风险越高</small>
+                </div>
+              </div>
+              <div class="card-body matrix">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>专业</th>
+                      <th class="center">学生评价</th>
+                      <th class="center">目标达成</th>
+                      <th class="center">通过率</th>
+                      <th class="center">互动</th>
+                      <th class="center">闭环</th>
+                    </tr>
+                  </thead>
+                  <tbody id="analyticsMatrixBody"></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <div class="ai-box" style="margin-top:16px">
+            <h3>群体绩效结论</h3>
+            <p id="analyticsConclusion">—</p>
+            <div class="ai-points" id="analyticsEvidence"></div>
+          </div>
+        </section>
+
+        <!-- Alerts -->
+        <section class="view" id="alerts">
+          <div class="page-head">
+            <div>
+              <h2>预警与改进闭环</h2>
+              <p>自动识别教学质量风险，形成责任人、改进任务、证据材料、复测结果和闭环状态的全流程追踪。</p>
+            </div>
+            <button class="btn primary" onclick="openModal('alertModal')">+ 新建改进任务</button>
+          </div>
+
+          <div class="grid kpis">
+            <div class="card kpi">
+              <div class="kpi-label">当前未闭环</div>
+              <div class="kpi-value" id="alertOpenKpi">—</div>
+              <div class="sub" id="alertOpenSub">—</div>
+            </div>
+            <div class="card kpi">
+              <div class="kpi-label">本月新增</div>
+              <div class="kpi-value" id="alertMonthKpi">—</div>
+              <div class="sub" id="alertMonthSub">—</div>
+            </div>
+            <div class="card kpi">
+              <div class="kpi-label">处理中</div>
+              <div class="kpi-value" id="alertRunningKpi">—</div>
+              <div class="sub" id="alertRunningSub">—</div>
+            </div>
+            <div class="card kpi">
+              <div class="kpi-label">已完成</div>
+              <div class="kpi-value" id="alertDoneKpi">—</div>
+              <div class="sub" id="alertDoneSub">—</div>
+            </div>
+            <div class="card kpi">
+              <div class="kpi-label">平均改进进度</div>
+              <div class="kpi-value" id="alertProgressKpi">—</div>
+              <div class="sub" id="alertProgressSub">—</div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-body">
+              <div style="overflow:auto">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>风险事项</th>
+                      <th>对象</th>
+                      <th>触发规则</th>
+                      <th>负责人</th>
+                      <th>截止日期</th>
+                      <th>状态</th>
+                      <th>改进进度</th>
+                      <th>操作</th>
+                    </tr>
+                  </thead>
+                  <tbody id="alertTbody"></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </main>
+  </div>
+
+  <div class="mobile-nav">
+    <button class="active" data-view="dashboard">驾驶舱</button>
+    <button data-view="teachers">教师</button>
+    <button data-view="questions">题库</button>
+    <button data-view="papers">试卷</button>
+    <button data-view="scores">成绩</button>
+  </div>
+
+  <div class="drawer-backdrop" id="drawerBackdrop" onclick="closeDrawer()"></div>
+  <div class="drawer" id="drawer">
+    <div class="drawer-head">
+      <h3 id="drawerTitle">详情</h3><button class="x" onclick="closeDrawer()">×</button>
+    </div>
+    <div id="drawerContent"></div>
+  </div>
+
+  <div class="modal-backdrop" id="modalBackdrop" onclick="closeAllModals()"></div>
+
+  <div class="modal" id="questionModal">
+    <div class="drawer-head">
+      <h3 id="questionModalTitle">新建测评题目</h3><button class="x" onclick="closeAllModals()">×</button>
+    </div>
+    <input type="hidden" id="questionEditId">
+    <div class="form-grid">
+      <div class="field"><label>所属课程</label><select id="qmCourse">
+          <option>ROS机器人操作系统基础</option>
+          <option>Python程序设计</option>
+          <option>新能源汽车电控技术</option>
+          <option>PLC控制技术</option>
+        </select></div>
+      <div class="field"><label>题型</label><select id="qmType" onchange="renderQuestionTypeFields()">
+          <option>单选题</option>
+          <option>多选题</option>
+          <option>填空题</option>
+          <option>案例分析</option>
+          <option>实操题</option>
+        </select></div>
+      <div class="field"><label>三级能力维度</label><input id="qmDim" value="专业能力 / 智能驾驶系统集成 / 传感器数据融合与调试"></div>
+      <div class="field"><label>难度</label><select id="qmDiff">
+          <option value="1">较易</option>
+          <option value="2">中等偏易</option>
+          <option value="3" selected>中等</option>
+          <option value="4">较难</option>
+          <option value="5">困难</option>
+        </select></div>
+      <div class="field"><label>建议分值</label><input id="qmScore" type="number" value="4" min="1" max="50"></div>
+      <div class="field"><label>标签</label><input id="qmTags" placeholder="ROS, TF, 传感器融合"></div>
+      <div class="field" style="grid-column:1/-1"><label id="qmTitleLabel">题干</label><textarea id="qmTitle"
+          placeholder="输入题干..."></textarea></div>
+      <div id="questionTypeFields" class="question-type-fields"></div>
+    </div>
+    <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:16px"><button class="btn"
+        onclick="closeAllModals()">取消</button><button class="btn primary" onclick="saveQuestion()">保存</button></div>
+  </div>
+
+  <div class="modal" id="paperModal">
+    <div class="drawer-head">
+      <h3 id="paperModalTitle">智能组卷</h3><button class="x" onclick="closeAllModals()">×</button>
+    </div>
+    <input type="hidden" id="paperEditIndex">
+    <div class="form-grid">
+      <div class="field"><label>测评名称</label><input id="pmName" value="2026级智能网联汽车技术 · L3阶段测评"></div>
+      <div class="field"><label>适用对象</label><input id="pmObj" value="2026级智能网联汽车技术1班 · 42人"></div>
+      <div class="field"><label>目标能力等级</label><select id="pmLevel">
+          <option>L2</option>
+          <option selected>L3</option>
+          <option>L4</option>
+        </select></div>
+      <div class="field"><label>先决课程</label><input id="pmPre" value="Python程序设计、汽车传感器技术"></div>
+      <div class="field"><label>试卷总分</label><input id="pmScore" value="100"></div>
+      <div class="field"><label>考试时长</label><input id="pmDuration" value="90"></div>
+      <div class="field"><label>难度结构</label><select id="pmStructure">
+          <option>易 30% / 中 50% / 难 20%</option>
+          <option>易 20% / 中 60% / 难 20%</option>
+        </select></div>
+      <div class="field"><label>通过标准</label><input id="pmPass" value="60"></div>
+    </div>
+    <div class="notice" style="margin-top:14px">系统将自动检查三级能力点覆盖率、题目曝光率、历史答题质量、预计难度、题型结构与考试时长。</div>
+    <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:16px"><button class="btn"
+        onclick="closeAllModals()">取消</button><button class="btn primary" id="paperModalSubmit"
+        onclick="generatePaper()">生成试卷</button></div>
+  </div>
+
+  <div class="modal" id="templateModal">
+    <div class="drawer-head">
+      <h3>试卷模板</h3><button class="x" onclick="closeAllModals()">×</button>
+    </div>
+    <div class="paper-grid">
+      <div class="paper">
+        <h4>L3 职业能力认证模板</h4>
+        <p>单选 20分 · 多选 15分 · 填空 15分 · 案例 30分 · 实操 20分</p><button class="btn sm"
+          onclick="applyTemplate('L3 职业能力认证模板')">应用模板</button>
+      </div>
+      <div class="paper">
+        <h4>课程结课测评模板</h4>
+        <p>单选/多选/填空 · 案例分析 · 实操任务，按课程目标配置分值</p><button class="btn sm" onclick="applyTemplate('课程结课测评模板')">应用模板</button>
+      </div>
+      <div class="paper">
+        <h4>补考 / 复测模板</h4>
+        <p>规避原题 · 同难度 · 能力点一致</p><button class="btn sm" onclick="applyTemplate('补考 / 复测模板')">应用模板</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal" id="weightModal">
+    <div class="drawer-head">
+      <h3>教师评价权重快速配置</h3><button class="x" onclick="closeAllModals()">×</button>
+    </div>
+    <p style="color:var(--muted);font-size:13px">当前默认：学生 30%、同行 20%、自评 10%、课堂行为 15%、学习成效 25%。可直接转到“评价指标体系”页面进行精细化维护。</p>
+    <div style="display:flex;gap:8px"><button class="btn" onclick="closeAllModals()">关闭</button><button
+        class="btn primary" onclick="closeAllModals();navTo('indicators')">进入指标体系</button></div>
+  </div>
+
+  <div class="modal" id="metricModal">
+    <div class="drawer-head">
+      <h3 id="metricModalTitle">新增评价指标</h3><button class="x" onclick="closeAllModals()">×</button>
+    </div>
+    <input type="hidden" id="metricEditIndex">
+    <div class="form-grid">
+      <div class="field"><label>一级维度</label><input id="mmLevel1" value="教学过程"></div>
+      <div class="field"><label>二级指标</label><input id="mmName" value="实训反馈及时率"></div>
+      <div class="field"><label>数据源</label><input id="mmSource" value="课堂行为分析、学生反馈"></div>
+      <div class="field"><label>权重</label><input id="mmWeight" value="8%"></div>
+      <div class="field"><label>阈值</label><input id="mmThreshold" value="≥85"></div>
+      <div class="field"><label>刷新频率</label><input id="mmFreq" value="每周"></div>
+    </div>
+    <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:16px"><button class="btn"
+        onclick="closeAllModals()">取消</button><button class="btn primary" onclick="saveMetric()">保存</button></div>
+  </div>
+
+  <div class="modal" id="teacherTaskModal">
+    <div class="drawer-head">
+      <h3>发起教师评价任务</h3><button class="x" onclick="closeAllModals()">×</button>
+    </div>
+    <div class="form-grid">
+      <div class="field"><label>任务名称</label><input id="ttName" value="第6教学周教师评价"></div>
+      <div class="field"><label>参评范围</label><select id="ttDept">
+          <option>全校</option>
+          <option>汽车工程学院</option>
+          <option>信息工程学院</option>
+        </select></div>
+      <div class="field"><label>开始日期</label><input id="ttStart" type="date"></div>
+      <div class="field"><label>结束日期</label><input id="ttEnd" type="date"></div>
+      <div class="field" style="grid-column:1/-1"><label>评价说明</label><textarea
+          id="ttDesc">覆盖学生评价、同行互评、教师自评和教学效果评价。</textarea></div>
+    </div>
+    <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:16px"><button class="btn"
+        onclick="closeAllModals()">取消</button><button class="btn primary" onclick="createTeacherTask()">创建任务</button>
+    </div>
+  </div>
+
+  <div class="modal" id="alertModal">
+    <div class="drawer-head">
+      <h3>新建改进任务</h3><button class="x" onclick="closeAllModals()">×</button>
+    </div>
+    <div class="form-grid">
+      <div class="field"><label>风险事项</label><input id="amTitle" value="课堂互动指数下降"></div>
+      <div class="field"><label>对象</label><input id="amTarget" value="信息工程学院 / Python程序设计"></div>
+      <div class="field"><label>触发规则</label><input id="amRule" value="连续2周下降且幅度＞5%"></div>
+      <div class="field"><label>负责人</label><input id="amOwner" value="张晨"></div>
+      <div class="field"><label>截止日期</label><input id="amDate" type="date"></div>
+      <div class="field"><label>状态</label><select id="amStatus">
+          <option value="high">高风险</option>
+          <option value="running" selected>处理中</option>
+          <option value="pending">待确认</option>
+          <option value="done">已完成</option>
+        </select></div>
+    </div>
+    <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:16px"><button class="btn"
+        onclick="closeAllModals()">取消</button><button class="btn primary" onclick="saveAlert()">保存</button></div>
+  </div>
+
+
+  <div class="modal" id="scoreModal">
+    <div class="drawer-head">
+      <h3 id="scoreModalTitle">编辑成绩记录</h3><button class="x" onclick="closeAllModals()">×</button>
+    </div>
+    <input type="hidden" id="scoreEditId">
+    <div class="form-grid">
+      <div class="field"><label>学号</label><input id="smId" disabled></div>
+      <div class="field"><label>姓名</label><input id="smName" disabled></div>
+      <div class="field"><label>专业</label><input id="smMajor" disabled></div>
+      <div class="field"><label>班级</label><input id="smClass" disabled></div>
+      <div class="field"><label>测评名称</label><input id="smExam" disabled></div>
+      <div class="field"><label>成绩</label><input id="smScore" type="number" min="0" max="100"></div>
+      <div class="field"><label>能力增值</label><input id="smGrowth"></div>
+      <div class="field"><label>学分认定</label><input id="smCredit"></div>
+    </div>
+    <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:16px"><button class="btn"
+        onclick="closeAllModals()">取消</button><button class="btn primary" onclick="saveScore()">保存</button></div>
+  </div>
+
+  <div class="toast" id="toast">操作成功</div>
+
+
+  <script>
+    const state = {
+      questionBasket: [],
+      paperStatus: 'all',
+      teacherWeights: { student: 30, peer: 20, self: 10, classroom: 15, outcome: 25 }
+    };
+
+    const teacherData = [
+      { name: '李雅', dept: '汽车工程学院', course: '新能源汽车电控技术', student: 94.2, peer: 92.6, self: 91.0, classroom: 92.4, outcome: 94.1, total: 93.1, risk: 'good' },
+      { name: '张晨', dept: '信息工程学院', course: 'Python程序设计', student: 90.8, peer: 88.6, self: 92.0, classroom: 87.1, outcome: 85.7, total: 88.7, risk: 'good' },
+      { name: '赵明', dept: '智能制造学院', course: 'PLC控制技术', student: 87.4, peer: 89.1, self: 90.0, classroom: 85.2, outcome: 83.2, total: 86.8, risk: 'good' },
+      { name: '王宁', dept: '汽车工程学院', course: 'ROS机器人操作系统基础', student: 80.4, peer: 86.2, self: 88.0, classroom: 78.5, outcome: 76.8, total: 82.6, risk: 'warn' },
+      { name: '周雪', dept: '财经商贸学院', course: '财务数据分析', student: 95.1, peer: 93.7, self: 94.0, classroom: 92.7, outcome: 92.8, total: 94.1, risk: 'good' },
+      { name: '刘坤', dept: '信息工程学院', course: '数据库应用技术', student: 84.6, peer: 85.9, self: 89.0, classroom: 82.8, outcome: 81.1, total: 84.2, risk: 'good' },
+      { name: '孙博', dept: '智能制造学院', course: '工业机器人离线编程', student: 78.5, peer: 82.3, self: 87.0, classroom: 76.2, outcome: 72.6, total: 79.4, risk: 'warn' },
+      { name: '陈卓', dept: '汽车工程学院', course: '汽车传感器技术', student: 89.9, peer: 91.3, self: 90.0, classroom: 89.5, outcome: 88.6, total: 89.9, risk: 'good' }
+    ];
+
+    const metrics = [
+      { level1: '教学准备', name: '课程标准与教案一致性', source: '课程标准、教案文档', weight: '8%', threshold: '≥90', freq: '每学期', status: '启用' },
+      { level1: '教学过程', name: '课堂有效互动指数', source: '课堂行为分析、学生反馈', weight: '12%', threshold: '≥80', freq: '每周', status: '启用' },
+      { level1: '教学过程', name: '高阶问题占比', source: '课堂语义分析、作业题目', weight: '10%', threshold: '≥30%', freq: '每周', status: '启用' },
+      { level1: '教学效果', name: '课程目标达成率', source: '测评、作业、实训成绩', weight: '20%', threshold: '≥75%', freq: '每月', status: '启用' },
+      { level1: '教学效果', name: '能力增值度', source: '前测/后测、能力图谱', weight: '15%', threshold: '≥12%', freq: '每学期', status: '试运行' },
+      { level1: '发展改进', name: '改进任务闭环率', source: '教师发展档案、整改任务', weight: '10%', threshold: '≥85%', freq: '每月', status: '启用' }
+    ];
+
+    const questionData = [
+      { id: 'Q2026-10477', type: '单选题', course: 'Python程序设计', title: '在 Python 中，以下哪种数据结构最适合存储“技能名称—熟练度”键值对？', dim: '数字化能力 / 程序设计 / 数据结构应用', tags: ['Python', '字典'], diff: 1, quality: 96, score: 4, options: ['列表 list', '元组 tuple', '字典 dict', '集合 set'], answer: 'C', analysis: '字典以 key-value 形式保存数据，适合表示“技能名称—熟练度”的映射关系。' },
+      { id: 'Q2026-10476', type: '单选题', course: 'ROS机器人操作系统基础', title: '在 ROS2 中，用于发布和订阅消息的数据通信机制是下列哪一项？', dim: '专业能力 / 智能驾驶系统集成 / ROS节点开发', tags: ['ROS2', 'Topic'], diff: 1, quality: 94, score: 4, options: ['Topic', 'Action Server', 'Parameter', 'Launch'], answer: 'A', analysis: 'Topic 是 ROS2 中典型的发布/订阅异步通信机制。' },
+      { id: 'Q2026-10475', type: '单选题', course: '新能源汽车电控技术', title: '检修新能源汽车高压系统前，首先应执行的安全操作是？', dim: '专业能力 / 新能源汽车检修 / 高压安全作业', tags: ['高压安全', '检修'], diff: 1, quality: 97, score: 4, options: ['直接拆卸动力电池连接器', '断开低压蓄电池后立即作业', '按规定执行高压下电并确认无电', '使用万用表测量整车电流'], answer: 'C', analysis: '必须执行规范的高压下电、等待放电并验电确认。' },
+      { id: 'Q2026-10474', type: '单选题', course: 'PLC控制技术', title: 'S7-1200 PLC 中，常开触点在输入信号为 1 时，其逻辑状态为？', dim: '专业能力 / 自动化控制 / PLC基本逻辑', tags: ['PLC', '梯形图'], diff: 1, quality: 95, score: 4, options: ['断开', '导通', '保持上一状态', '随机变化'], answer: 'B', analysis: '常开触点对应变量为 TRUE 时逻辑导通。' },
+      { id: 'Q2026-10473', type: '单选题', course: 'ROS机器人操作系统基础', title: '移动机器人进行坐标变换时，最适合查看完整 TF 坐标树关系的工具是？', dim: '专业能力 / 智能驾驶系统集成 / 坐标变换', tags: ['ROS', 'TF'], diff: 2, quality: 93, score: 4, options: ['rqt_graph', 'view_frames', 'ros2 bag', 'rviz2 map'], answer: 'B', analysis: 'view_frames 可生成 TF 坐标树关系图。' },
+
+      { id: 'Q2026-10396', type: '多选题', course: '新能源汽车电控技术', title: '高压互锁故障诊断时，以下哪些数据可作为优先判定依据？', dim: '专业能力 / 新能源汽车检修 / 高压系统故障诊断', tags: ['高压互锁', '故障诊断'], diff: 2, quality: 88, score: 5, options: ['高压互锁回路电压', 'VCU/BMS 故障码', '连接器锁止状态', '车机导航地图版本', '维修开关状态'], answer: ['A', 'B', 'C', 'E'], analysis: '高压互锁诊断应结合电气量、控制器故障码、连接器和维修开关状态综合判断。' },
+      { id: 'Q2026-10395', type: '多选题', course: 'Python程序设计', title: '以下哪些做法有助于提高数据处理程序的可维护性？', dim: '数字化能力 / 程序设计 / 工程规范', tags: ['Python', '代码质量'], diff: 2, quality: 91, score: 5, options: ['将重复逻辑封装为函数', '使用有意义的变量名', '所有代码写在一个超长函数中', '为关键模块编写测试', '记录必要的异常日志'], answer: ['A', 'B', 'D', 'E'], analysis: '模块化、命名规范、测试与日志均有利于维护；超长函数会降低可维护性。' },
+      { id: 'Q2026-10394', type: '多选题', course: 'ROS机器人操作系统基础', title: '机器人定位出现明显跳变时，应优先检查哪些因素？', dim: '专业能力 / 智能驾驶系统集成 / 定位故障诊断', tags: ['定位', 'TF', '时间同步'], diff: 3, quality: 92, score: 5, options: ['传感器时间戳', 'TF 外参', '里程计数据连续性', '显示器分辨率', '定位滤波参数'], answer: ['A', 'B', 'C', 'E'], analysis: '定位跳变通常与时间同步、坐标外参、里程计连续性和滤波参数相关。' },
+
+      { id: 'Q2026-10355', type: '填空题', course: 'ROS机器人操作系统基础', title: 'ROS2 中负责节点发现与底层通信的中间件规范简称为 ______。', dim: '专业能力 / 智能驾驶系统集成 / ROS节点开发', tags: ['ROS2', 'DDS'], diff: 1, quality: 95, score: 5, blanks: 1, answer: ['DDS'], analysis: 'ROS2 默认基于 DDS 规范实现底层发现与通信。' },
+      { id: 'Q2026-10354', type: '填空题', course: 'Python程序设计', title: 'Python 中定义函数使用的关键字是 ______，异常捕获常用的关键字组合是 ______ / except。', dim: '数字化能力 / 程序设计 / Python基础', tags: ['Python', '函数', '异常'], diff: 1, quality: 96, score: 5, blanks: 2, answer: ['def', 'try'], analysis: '函数使用 def 定义；异常处理使用 try / except。' },
+      { id: 'Q2026-10353', type: '填空题', course: 'PLC控制技术', title: 'PLC 一个典型扫描周期通常包括输入采样、程序执行和 ______ 三个主要阶段。', dim: '专业能力 / 自动化控制 / PLC工作原理', tags: ['PLC', '扫描周期'], diff: 2, quality: 94, score: 5, blanks: 1, answer: ['输出刷新'], analysis: 'PLC 循环扫描的典型三个阶段为输入采样、程序执行、输出刷新。' },
+
+      { id: 'Q2026-10482', type: '案例分析', course: 'ROS机器人操作系统基础', title: '移动机器人定位漂移诊断与改进', material: '某智能配送机器人在室内测试时，激光雷达与轮速计融合后的定位结果出现持续漂移，转弯后误差显著放大。日志显示部分传感器时间戳存在 80~150ms 偏差，TF 树中 base_link 到 lidar_link 的静态外参由人工测量录入。', dim: '专业能力 / 智能驾驶系统集成 / 传感器数据融合与调试', tags: ['ROS', 'TF', '传感器融合'], diff: 3, quality: 92, score: 15, subQuestions: ['指出本案例至少 3 个可能导致定位漂移的原因。（5分）', '给出从数据、TF、时间同步到融合参数的排查顺序。（5分）', '提出一套可验证改进效果的测试方案。（5分）'], answer: ['检查时间戳同步、TF 外参、轮速计累计误差、滤波参数与传感器异常。', '按“原始数据→时间同步→TF→单传感器质量→融合参数”逐层排查。', '固定路线多次测试，对比轨迹误差、重定位次数和漂移量。'], rubric: [['原因识别', '5', '至少识别3项关键原因'], ['排查路径', '5', '顺序合理且可执行'], ['验证方案', '5', '指标明确、具有复现性']] },
+      { id: 'Q2026-10291', type: '案例分析', course: 'Python程序设计', title: '设备传感器日志异常检测方案设计', material: '某实训产线连续采集 30 天温度、振动、电流和转速数据。现场反馈部分时段存在传感器跳变，但不同变量分布特征差异较大，且生产负载在白班、夜班之间存在明显变化。', dim: '数字化能力 / 数据处理 / 数据质量分析', tags: ['Python', '数据清洗', '异常检测'], diff: 3, quality: 91, score: 15, subQuestions: ['设计异常值识别的完整数据处理流程。（6分）', '说明 IQR、Z-score 与基于业务阈值方法的适用条件。（5分）', '说明如何验证清洗结果没有误删真实故障数据。（4分）'], answer: ['数据检查→缺失处理→分组描述统计→异常检测→业务复核→结果验证。', '近似正态可用Z-score；偏态或含极端值可用IQR；明确设备边界时优先业务阈值。', '与故障工单、报警记录交叉验证并保留原始数据审计链。'], rubric: [['流程完整性', '6', '步骤完整、顺序合理'], ['方法选择', '5', '能依据数据分布与业务条件选型'], ['验证机制', '4', '具备交叉验证与可追溯性']] },
+
+      { id: 'Q2026-10433', type: '实操题', course: 'PLC控制技术', title: '传送带顺序控制与故障联锁调试', background: '某自动化生产线包含三段传送带 M1、M2、M3，需要按工艺顺序启动，并满足急停、过载和故障复位要求。使用 S7-1200 PLC 完成程序开发与现场调试。', dim: '专业能力 / 自动化控制 / PLC编程与调试', tags: ['PLC', 'S7-1200', '实操'], diff: 3, quality: 90, score: 20, requirements: ['完成 I/O 点表并进行地址分配。', '编写三段传送带顺序启动、逆序停止程序。', '加入急停、过载联锁和故障保持/复位逻辑。', '下载程序并完成至少 3 组测试工况验证。'], deliverables: ['I/O 点表', '梯形图程序', '调试记录表', '故障测试结果'], answer: '按实操评分量表评分', rubric: [['I/O 规划', '4', '地址正确、命名规范'], ['控制逻辑', '7', '顺控、联锁、复位逻辑完整'], ['调试验证', '5', '测试工况完整、结果正确'], ['规范与安全', '4', '操作规范、记录完整']] }
+    ];
+
+    const papers = [
+      { name: '智能网联汽车技术 L3 阶段测评', obj: '2026级1班 · 42人', questions: 14, duration: 90, pass: 60, coverage: 96, status: 'running', level: 'L3', structure: '易 30% / 中 50% / 难 20%', quality: 88.9, autoGenerated: true, course: 'ROS机器人操作系统基础' },
+      { name: 'Python程序设计项目化结课测评', obj: '软件技术1-2班 · 86人', questions: 14, duration: 80, pass: 60, coverage: 93, status: 'draft', level: 'L2', structure: '易 20% / 中 60% / 难 20%', quality: 86.7, autoGenerated: true, course: 'Python程序设计' },
+      { name: '新能源汽车高压系统诊断专项测评', obj: '2025级3班 · 39人', questions: 14, duration: 60, pass: 70, coverage: 100, status: 'done', level: 'L3', structure: '易 30% / 中 50% / 难 20%', quality: 91.2, autoGenerated: false, course: '新能源汽车电控技术' },
+      { name: 'PLC控制技术阶段测评（二）', obj: '工业机器人技术1班 · 45人', questions: 14, duration: 90, pass: 60, coverage: 88, status: 'running', level: 'L2', structure: '易 30% / 中 50% / 难 20%', quality: 84.3, autoGenerated: true, course: 'PLC控制技术' },
+      { name: '财务数据分析能力测评', obj: '大数据与会计2班 · 48人', questions: 14, duration: 75, pass: 60, coverage: 97, status: 'done', level: 'L2', structure: '易 20% / 中 60% / 难 20%', quality: 90.4, autoGenerated: false, course: '财务数据分析' },
+      { name: '数据库应用技术复测', obj: '软件技术3班 · 43人', questions: 14, duration: 60, pass: 60, coverage: 91, status: 'draft', level: 'L2', structure: '易 30% / 中 50% / 难 20%', quality: 85.1, autoGenerated: true, course: '数据库应用技术' }
+    ];
+
+    const students = [
+      { id: '26050118', name: '林浩', major: '智能网联汽车技术', cls: '2026级1班', exam: 'L3阶段测评', score: 92, growth: '+18.2%', credit: '2.0' },
+      { id: '26050107', name: '赵晨曦', major: '智能网联汽车技术', cls: '2026级1班', exam: 'L3阶段测评', score: 86, growth: '+13.4%', credit: '2.0' },
+      { id: '26050131', name: '周子涵', major: '智能网联汽车技术', cls: '2026级1班', exam: 'L3阶段测评', score: 74, growth: '+9.1%', credit: '2.0' },
+      { id: '26050126', name: '陈宇航', major: '智能网联汽车技术', cls: '2026级1班', exam: 'L3阶段测评', score: 58, growth: '+4.8%', credit: '待认定' },
+      { id: '26030105', name: '许嘉', major: '软件技术', cls: '2026级2班', exam: 'Python项目结课', score: 95, growth: '+20.1%', credit: '2.5' },
+      { id: '26030217', name: '王可', major: '软件技术', cls: '2026级3班', exam: '数据库应用', score: 83, growth: '+11.6%', credit: '2.0' },
+      { id: '26060122', name: '郭林', major: '工业机器人技术', cls: '2026级1班', exam: 'PLC阶段测评', score: 79, growth: '+10.5%', credit: '2.0' }
+    ];
+
+    const alerts = [
+      { id: 'a1', createdDate: '2026-09-18', title: '系统集成与调试能力达成率偏低', target: '智能网联汽车技术', rule: '能力点连续 2 次 ＜75%', owner: '陈卓 / 王宁', date: '2026-10-18', status: 'high', progress: 42, events: ['9/18 触发预警：达成率 69.8%', '9/20 教研室确认问题：实操任务覆盖不足', '9/24 计划补充 2 个系统联调项目', '10/10 组织专项复测', '10/18 验证目标：达成率 ≥80%'] },
+      { id: 'a2', createdDate: '2026-09-15', title: '课堂互动指数连续下降', target: '王宁 / ROS基础', rule: '连续 2 周下降且幅度＞5%', owner: '教研室主任', date: '2026-10-08', status: 'running', progress: 68, events: ['9/15 互动指数 81.4', '9/22 互动指数 76.5', '已安排同课异构听评课', '建议增加“操作—提问—反馈”循环', '两周后复核互动指数'] },
+      { id: 'a3', createdDate: '2026-09-20', title: '过程性评价权重不足', target: 'Python程序设计', rule: '项目课程过程权重＜40%', owner: '张晨', date: '2026-09-30', status: 'pending', progress: 24, events: ['课程方案检测：过程性成绩 20%', '校级建议：项目课程 40%-60%', '教师已提交调整方案', '待专业负责人审核', '下个教学单元开始执行'] },
+      { id: 'a4', createdDate: '2026-09-12', title: '题库能力点覆盖不足', target: 'PLC控制技术', rule: '三级能力点覆盖＜85%', owner: '赵明', date: '2026-10-12', status: 'running', progress: 55, events: ['当前三级能力点覆盖 82%', '缺口集中在故障诊断类实操题', '计划新增 25 道题', '其中案例题 10 道、实操题 8 道', '10/12 完成审校'] }
+    ];
+
+    const evaluationTasks = [
+      { id: 'et1', name: '第6教学周教师评价', scope: '全校', start: '2026-09-21', end: '2026-09-27', status: '进行中', desc: '学生评价、同行互评、教师自评和教学效果评价。' }
+    ];
+
+    const pageNames = {
+      dashboard: '质量驾驶舱', teachers: '教师评价', indicators: '评价指标体系',
+      questions: '测评题库管理', papers: '测评试卷管理', scores: '测评成绩管理',
+      analytics: '群体绩效分析', alerts: '预警与改进闭环'
+    };
+
+
+    function saveLocalState() {
+      const data = {
+        teacherData, metrics, questionData, papers, students, alerts, evaluationTasks,
+        teacherWeights: state.teacherWeights
+      };
+      localStorage.setItem('wbzy_quality_system_data_v4', JSON.stringify(data));
+    }
+    function loadLocalState() {
+      const raw = localStorage.getItem('wbzy_quality_system_data_v4');
+      if (!raw) return;
+      try {
+        const data = JSON.parse(raw);
+        if (Array.isArray(data.teacherData)) { teacherData.splice(0, teacherData.length, ...data.teacherData); }
+        if (Array.isArray(data.metrics)) { metrics.splice(0, metrics.length, ...data.metrics); }
+        if (Array.isArray(data.questionData)) { questionData.splice(0, questionData.length, ...data.questionData); }
+        if (Array.isArray(data.papers)) { papers.splice(0, papers.length, ...data.papers); }
+        if (Array.isArray(data.students)) { students.splice(0, students.length, ...data.students); }
+        if (Array.isArray(data.alerts)) {
+          alerts.splice(0, alerts.length, ...data.alerts.map((a, i) => ({ ...a, createdDate: a.createdDate || '2026-09-01' })));
+        }
+        if (Array.isArray(data.evaluationTasks)) { evaluationTasks.splice(0, evaluationTasks.length, ...data.evaluationTasks); }
+        if (data.teacherWeights) { state.teacherWeights = data.teacherWeights; }
+      } catch (e) { }
+    }
+
+
+    const courseMajorMap = {
+      'ROS机器人操作系统基础': '智能网联汽车技术',
+      '汽车传感器技术': '智能网联汽车技术',
+      '新能源汽车电控技术': '新能源汽车技术',
+      'Python程序设计': '软件技术',
+      '数据库应用技术': '软件技术',
+      'PLC控制技术': '工业机器人技术',
+      '工业机器人离线编程': '工业机器人技术',
+      '财务数据分析': '大数据与会计'
+    };
+
+    function avg(arr) {
+      const nums = arr.filter(v => Number.isFinite(+v)).map(Number);
+      return nums.length ? nums.reduce((a, b) => a + b, 0) / nums.length : null;
+    }
+    function pct(n, d) {
+      return d ? n / d * 100 : 0;
+    }
+    function fmt1(v) {
+      return Number.isFinite(v) ? v.toFixed(1) : '—';
+    }
+    function setStatus(el, value, good = 90, warn = 80) {
+      if (!el) return;
+      el.className = 'status ' + (value >= good ? 's-good' : value >= warn ? 's-info' : 's-warn');
+      el.textContent = value >= good ? '良好' : value >= warn ? '正常' : '关注';
+    }
+    function teacherMajor(t) {
+      return courseMajorMap[t.course] || '其他';
+    }
+    function alertMatchesMajor(a, major, teachers) {
+      if ((a.target || '').includes(major)) return true;
+      return teachers.some(t => (a.target || '').includes(t.name) || (a.target || '').includes(t.course.replace('机器人操作系统', '')));
+    }
+
+    function navTo(view) {
+      document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+      document.getElementById(view).classList.add('active');
+      document.querySelectorAll('[data-view]').forEach(b => b.classList.toggle('active', b.dataset.view === view));
+      document.getElementById('headerName').textContent = pageNames[view];
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      setTimeout(drawAll, 60);
+    }
+    document.querySelectorAll('[data-view]').forEach(btn => btn.addEventListener('click', () => navTo(btn.dataset.view)));
+
+    function showToast(msg) {
+      const t = document.getElementById('toast'); t.textContent = msg; t.classList.add('show');
+      clearTimeout(window._toastTimer);
+      window._toastTimer = setTimeout(() => t.classList.remove('show'), 2200);
+    }
+
+    function openDrawer(title, html) {
+      document.getElementById('drawerTitle').textContent = title;
+      document.getElementById('drawerContent').innerHTML = html;
+      document.getElementById('drawer').classList.add('show');
+      document.getElementById('drawerBackdrop').classList.add('show');
+    }
+    function closeDrawer() { document.getElementById('drawer').classList.remove('show'); document.getElementById('drawerBackdrop').classList.remove('show') }
+
+    function openModal(id) {
+      document.getElementById('modalBackdrop').classList.add('show');
+      document.getElementById(id).classList.add('show');
+    }
+    function closeAllModals() {
+      document.getElementById('modalBackdrop').classList.remove('show');
+      document.querySelectorAll('.modal').forEach(m => m.classList.remove('show'));
+    }
+
+    function downloadFile(name, content, type = 'text/plain;charset=utf-8') {
+      const blob = new Blob([content], { type });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url; a.download = name; a.click();
+      setTimeout(() => URL.revokeObjectURL(url), 500);
+    }
+
+    function setNowFields() {
+      const now = new Date();
+      const plus7 = new Date(now.getTime() + 7 * 24 * 3600 * 1000);
+      const fmt = d => d.toISOString().slice(0, 10);
+      // const clock = () => document.getElementById('clockText').textContent = now.toLocaleDateString('zh-CN', { year: 'numeric', month: '2-digit', day: '2-digit' }) + ' · 数据中心';
+      // clock();
+      document.getElementById('dataUpdateTime').textContent = new Date().toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit' });
+      document.getElementById('ttStart').value = fmt(now);
+      document.getElementById('ttEnd').value = fmt(plus7);
+      document.getElementById('amDate').value = fmt(plus7);
+    }
+
+    function renderWeeklyAlerts() {
+      const top = alerts.filter(a => a.status !== 'done').slice(0, 3);
+      document.getElementById('weeklyAlerts').innerHTML = top.map(a => `
+    <div class="feed"><div class="dot" style="background:${a.status === 'high' ? '#e34d59' : a.status === 'running' ? '#f59e0b' : '#2f6df6'}"></div>
+      <div><b>${a.title}</b><p>${a.target} · ${a.rule}</p><span class="status ${statusClass(a.status)}">${statusText(a.status)}</span></div>
+    </div>`).join('');
+    }
+
+    function filterTeachers() {
+      recalculateTeacherTotals();
+      const q = (document.getElementById('teacherSearch')?.value || '').toLowerCase();
+      const dept = document.getElementById('teacherDept')?.value || 'all';
+      const risk = document.getElementById('teacherRisk')?.value || 'all';
+      const list = teacherData.filter(x => {
+        const hit = (x.name + x.dept + x.course).toLowerCase().includes(q);
+        const dep = dept === 'all' || x.dept === dept;
+        const r = risk === 'all' || (risk === 'warn' ? x.risk === 'warn' : x.risk === 'good');
+        return hit && dep && r;
+      });
+      document.getElementById('teacherTbody').innerHTML = list.map(t => `
+    <tr>
+      <td><div class="person"><div class="avatar">${t.name.slice(-1)}</div><div><b>${t.name}</b><div class="sub">专任教师</div></div></div></td>
+      <td>${t.dept}<div class="sub">${t.course}</div></td>
+      <td>${t.student.toFixed(1)}</td><td>${t.peer.toFixed(1)}</td><td>${t.self.toFixed(1)}</td><td>${t.outcome.toFixed(1)}</td>
+      <td class="score">${t.total.toFixed(1)}</td>
+      <td><span class="status ${t.risk === 'warn' ? 's-warn' : 's-good'}">${t.risk === 'warn' ? '需关注' : '正常'}</span></td>
+      <td><button class="btn sm" onclick="teacherDetail('${t.name}')">详情</button></td>
+    </tr>`).join('');
+      updateTeacherKpis(list);
+    }
+
+    function recalculateTeacherTotals() {
+      const w = state.teacherWeights;
+      const totalW = Object.values(w).reduce((a, b) => a + (+b || 0), 0) || 100;
+      teacherData.forEach(t => {
+        t.total = (
+          t.student * w.student +
+          t.peer * w.peer +
+          t.self * w.self +
+          t.classroom * w.classroom +
+          t.outcome * w.outcome
+        ) / totalW;
+        t.risk = (t.total < 80 || t.outcome < 80 || t.classroom < 80) ? 'warn' : 'good';
+      });
+    }
+    function updateTeacherKpis(list = teacherData) {
+      const count = list.length;
+      const studentCovered = list.filter(t => Number.isFinite(+t.student)).length;
+      const peerCovered = list.filter(t => Number.isFinite(+t.peer)).length;
+      const avgScore = avg(list.map(t => t.total));
+      const warn = list.filter(t => t.risk === 'warn').length;
+
+      document.getElementById('teacherCountKpi').textContent = count;
+      document.getElementById('teacherCountSub').textContent = `当前列表 ${count} 名教师`;
+      document.getElementById('teacherStudentCoverage').textContent = count ? pct(studentCovered, count).toFixed(1) + '%' : '—';
+      document.getElementById('teacherStudentSub').textContent = `${studentCovered}/${count} 名教师已有学生评价`;
+      document.getElementById('teacherPeerCoverage').textContent = count ? pct(peerCovered, count).toFixed(1) + '%' : '—';
+      document.getElementById('teacherPeerSub').textContent = `${peerCovered}/${count} 名教师已有同行评价`;
+      document.getElementById('teacherAvgScore').textContent = avgScore === null ? '—' : avgScore.toFixed(1);
+      document.getElementById('teacherAvgSub').textContent = `按当前评价权重计算`;
+      document.getElementById('teacherWarnCount').textContent = warn;
+      document.getElementById('teacherWarnSub').textContent = `占当前列表 ${count ? pct(warn, count).toFixed(1) : '0.0'}%`;
+    }
+    function renderTeacherTasks() {
+      const body = document.getElementById('teacherTaskTbody');
+      if (!body) return;
+      body.innerHTML = evaluationTasks.length ? evaluationTasks.map(t => `
+    <tr><td><b>${t.name}</b></td><td>${t.scope}</td><td>${t.start}</td><td>${t.end}</td><td><span class="status ${t.status === '已结束' ? 's-good' : 's-info'}">${t.status}</span></td><td>${t.desc}</td></tr>
+  `).join('') : '<tr><td colspan="6" class="empty">暂无评价任务</td></tr>';
+    }
+
+    function teacherDetail(name) {
+      const t = teacherData.find(x => x.name === name);
+      openDrawer(`${t.name} · 教师质量画像`, `
+    <div class="grid two">
+      <div class="card" style="box-shadow:none"><div class="card-body">
+        <div style="position:relative"><div class="score-ring"><span>${t.total.toFixed(1)}<small>综合分</small></span></div></div>
+        <p style="text-align:center;color:var(--muted);font-size:12px">${t.dept} · ${t.course}</p>
+      </div></div>
+      <div class="card" style="box-shadow:none"><div class="card-body">
+        <div class="statlist">
+          <div class="statbox"><b>${t.student.toFixed(1)}</b><small>学生评价</small></div>
+          <div class="statbox"><b>${t.peer.toFixed(1)}</b><small>同行评价</small></div>
+          <div class="statbox"><b>${t.self.toFixed(1)}</b><small>教师自评</small></div>
+          <div class="statbox"><b>${t.outcome.toFixed(1)}</b><small>学习成效</small></div>
+        </div>
+      </div></div>
+    </div>
+    <div class="card" style="box-shadow:none;margin-top:14px"><div class="card-head"><h3>最近发展区诊断</h3></div><div class="card-body">
+      <div class="feed"><div class="dot"></div><div><b>课堂互动</b><p>${name === '王宁' ? '互动行为指数连续两周下降，建议增加“学生上机操作—即时反馈—二次讲解”闭环。' : '课堂互动稳定，建议继续提升高阶问题比例。'}</p></div></div>
+      <div class="feed"><div class="dot" style="background:#14a36d"></div><div><b>学习成效</b><p>${t.outcome < 80 ? '课程目标4“系统集成与调试”达成率为 69.8%，建议重构实训任务并进行专项复测。' : '核心课程目标达成率处于良好区间。'}</p></div></div>
+      <div class="feed"><div class="dot" style="background:#7b61ff"></div><div><b>成长建议</b><p>推荐参加“项目化教学设计”教研活动，并选取 1 门课程开展同课异构与课堂观察。</p></div></div>
+    </div></div>
+    <div style="display:flex;gap:8px;margin-top:14px"><button class="btn primary" onclick="createImproveTaskForTeacher('${t.name}','${t.course}')">创建改进任务</button><button class="btn" onclick="exportTeacherReport('${t.name}')">导出发展报告</button></div>
+  `);
+    }
+
+    function createImproveTaskForTeacher(name, course) {
+      alerts.unshift({
+        id: 'a' + Date.now(), createdDate: new Date().toISOString().slice(0, 10), title: '教师发展改进任务', target: `${name} / ${course}`, rule: '教师画像诊断触发', owner: name, date: new Date(Date.now() + 14 * 24 * 3600 * 1000).toISOString().slice(0, 10), status: 'running', progress: 10, events: ['已根据教师质量画像自动创建改进任务', '待教师确认改进行动', '待教研室跟踪落实']
+      });
+      renderAlerts(); renderWeeklyAlerts(); updateAlertKpis(); saveLocalState(); updateDashboardKpis(); updateAnalytics(); updateDiagnosticSummary(); closeDrawer(); navTo('alerts');
+      showToast('已创建教师改进任务');
+    }
+
+    function exportTeacherReport(name) {
+      const t = teacherData.find(x => x.name === name);
+      const lines = [
+        `教师发展报告`,
+        `姓名：${t.name}`,
+        `学院：${t.dept}`,
+        `课程：${t.course}`,
+        `学生评价：${t.student}`,
+        `同行评价：${t.peer}`,
+        `教师自评：${t.self}`,
+        `课堂行为：${t.classroom}`,
+        `学习成效：${t.outcome}`,
+        `综合分：${t.total}`,
+        `建议：加强项目化教学设计与课堂互动闭环。`
+      ].join('\n');
+      downloadFile(`${name}_教师发展报告.txt`, lines);
+    }
+
+    function exportTeachersCSV() {
+      const csv = [['教师', '学院', '课程', '学生评价', '同行评价', '自评', '课堂行为', '学习成效', '综合分', '状态']]
+        .concat(teacherData.map(t => [t.name, t.dept, t.course, t.student, t.peer, t.self, t.classroom, t.outcome, t.total, t.risk === 'warn' ? '需关注' : '正常']))
+        .map(r => r.join(',')).join('\n');
+      downloadFile('教师评价明细.csv', '\ufeff' + csv, 'text/csv;charset=utf-8');
+    }
+
+    function defaultScoreByType(type) {
+      return { '单选题': 4, '多选题': 5, '填空题': 5, '案例分析': 15, '实操题': 20 }[type] || 5;
+    }
+    function escapeHtml(s) {
+      return String(s ?? '').replace(/[&<>"']/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[m]));
+    }
+    function renderQuestionTypeFields(data = {}) {
+      const type = document.getElementById('qmType').value;
+      document.getElementById('qmScore').value = data.score || defaultScoreByType(type);
+      const box = document.getElementById('questionTypeFields');
+      if (type === '单选题' || type === '多选题') {
+        const opts = data.options || ['', '', '', ''];
+        box.innerHTML = `
+      <h4>${type}设置</h4>
+      <div class="form-grid">
+        <div class="field" style="grid-column:1/-1"><label>选项（每行一个，系统自动标注 A/B/C/D…）</label><textarea id="qmOptions" style="min-height:110px">${escapeHtml(opts.join('\n'))}</textarea></div>
+        <div class="field"><label>${type === '单选题' ? '正确答案（如 C）' : '正确答案（如 A,B,D）'}</label><input id="qmAnswer" value="${escapeHtml(Array.isArray(data.answer) ? data.answer.join(',') : data.answer || '')}"></div>
+        <div class="field"><label>答案解析</label><input id="qmAnalysis" value="${escapeHtml(data.analysis || '')}"></div>
+      </div>`;
+      } else if (type === '填空题') {
+        box.innerHTML = `
+      <h4>填空题设置</h4>
+      <div class="form-grid">
+        <div class="field"><label>空格数量</label><input id="qmBlanks" type="number" min="1" max="10" value="${data.blanks || 1}"></div>
+        <div class="field"><label>标准答案（多空用 | 分隔）</label><input id="qmAnswer" value="${escapeHtml(Array.isArray(data.answer) ? data.answer.join(' | ') : data.answer || '')}"></div>
+        <div class="field" style="grid-column:1/-1"><label>答案解析</label><input id="qmAnalysis" value="${escapeHtml(data.analysis || '')}"></div>
+      </div>`;
+      } else if (type === '案例分析') {
+        box.innerHTML = `
+      <h4>案例分析题设置</h4>
+      <div class="form-grid">
+        <div class="field" style="grid-column:1/-1"><label>案例材料</label><textarea id="qmMaterial">${escapeHtml(data.material || '')}</textarea></div>
+        <div class="field" style="grid-column:1/-1"><label>设问（每行一道）</label><textarea id="qmSubQuestions">${escapeHtml((data.subQuestions || []).join('\n'))}</textarea></div>
+        <div class="field" style="grid-column:1/-1"><label>参考答案（每行对应一道设问）</label><textarea id="qmAnswer">${escapeHtml((Array.isArray(data.answer) ? data.answer : [data.answer || '']).join('\n'))}</textarea></div>
+        <div class="field" style="grid-column:1/-1"><label>评分量表（格式：评分项|分值|评分标准；每行一项）</label><textarea id="qmRubric">${escapeHtml((data.rubric || []).map(r => r.join('|')).join('\n'))}</textarea></div>
+      </div>`;
+      } else {
+        box.innerHTML = `
+      <h4>实操题设置</h4>
+      <div class="form-grid">
+        <div class="field" style="grid-column:1/-1"><label>任务背景 / 工位情境</label><textarea id="qmBackground">${escapeHtml(data.background || '')}</textarea></div>
+        <div class="field" style="grid-column:1/-1"><label>操作要求（每行一项）</label><textarea id="qmRequirements">${escapeHtml((data.requirements || []).join('\n'))}</textarea></div>
+        <div class="field" style="grid-column:1/-1"><label>提交成果（每行一项）</label><textarea id="qmDeliverables">${escapeHtml((data.deliverables || []).join('\n'))}</textarea></div>
+        <div class="field" style="grid-column:1/-1"><label>评分量表（格式：评分项|分值|评分标准；每行一项）</label><textarea id="qmRubric">${escapeHtml((data.rubric || []).map(r => r.join('|')).join('\n'))}</textarea></div>
+      </div>`;
+      }
+    }
+    function openQuestionCreate() {
+      document.getElementById('questionModalTitle').textContent = '新建测评题目';
+      document.getElementById('questionEditId').value = '';
+      document.getElementById('qmCourse').value = 'ROS机器人操作系统基础';
+      document.getElementById('qmType').value = '单选题';
+      document.getElementById('qmDim').value = '专业能力 / 智能驾驶系统集成 / 传感器数据融合与调试';
+      document.getElementById('qmDiff').value = '2';
+      document.getElementById('qmTags').value = '';
+      document.getElementById('qmTitle').value = '';
+      renderQuestionTypeFields();
+      openModal('questionModal');
+    }
+    function editQuestion(id) {
+      const q = questionData.find(x => x.id === id);
+      document.getElementById('questionModalTitle').textContent = '编辑测评题目';
+      document.getElementById('questionEditId').value = q.id;
+      document.getElementById('qmCourse').value = q.course;
+      document.getElementById('qmType').value = q.type;
+      document.getElementById('qmDim').value = q.dim;
+      document.getElementById('qmDiff').value = q.diff;
+      document.getElementById('qmTags').value = q.tags.join(', ');
+      document.getElementById('qmTitle').value = q.title;
+      renderQuestionTypeFields(q);
+      openModal('questionModal');
+    }
+    function parseRubric(v) {
+      return String(v || '').split('\n').map(s => s.trim()).filter(Boolean).map(line => {
+        const p = line.split('|').map(x => x.trim());
+        return [p[0] || '评分项', p[1] || '0', p[2] || '按要求评分'];
+      });
+    }
+    function saveQuestion() {
+      const editId = document.getElementById('questionEditId').value.trim();
+      const type = document.getElementById('qmType').value;
+      const obj = {
+        id: editId || 'Q' + new Date().getFullYear() + '-' + Math.floor(10000 + Math.random() * 89999),
+        course: document.getElementById('qmCourse').value,
+        type,
+        dim: document.getElementById('qmDim').value,
+        diff: +document.getElementById('qmDiff').value,
+        score: +document.getElementById('qmScore').value || defaultScoreByType(type),
+        title: document.getElementById('qmTitle').value.trim(),
+        tags: document.getElementById('qmTags').value.split(',').map(s => s.trim()).filter(Boolean),
+        quality: 89
+      };
+      if (!obj.title) { showToast('请填写题干或任务名称'); return; }
+      if (type === '单选题' || type === '多选题') {
+        obj.options = document.getElementById('qmOptions').value.split('\n').map(x => x.trim()).filter(Boolean);
+        const ans = document.getElementById('qmAnswer').value.toUpperCase().replace(/\s/g, '').split(',').filter(Boolean);
+        obj.answer = type === '单选题' ? (ans[0] || 'A') : ans;
+        obj.analysis = document.getElementById('qmAnalysis').value.trim();
+      } else if (type === '填空题') {
+        obj.blanks = +document.getElementById('qmBlanks').value || 1;
+        obj.answer = document.getElementById('qmAnswer').value.split('|').map(x => x.trim()).filter(Boolean);
+        obj.analysis = document.getElementById('qmAnalysis').value.trim();
+      } else if (type === '案例分析') {
+        obj.material = document.getElementById('qmMaterial').value.trim();
+        obj.subQuestions = document.getElementById('qmSubQuestions').value.split('\n').map(x => x.trim()).filter(Boolean);
+        obj.answer = document.getElementById('qmAnswer').value.split('\n').map(x => x.trim()).filter(Boolean);
+        obj.rubric = parseRubric(document.getElementById('qmRubric').value);
+      } else {
+        obj.background = document.getElementById('qmBackground').value.trim();
+        obj.requirements = document.getElementById('qmRequirements').value.split('\n').map(x => x.trim()).filter(Boolean);
+        obj.deliverables = document.getElementById('qmDeliverables').value.split('\n').map(x => x.trim()).filter(Boolean);
+        obj.rubric = parseRubric(document.getElementById('qmRubric').value);
+        obj.answer = '按实操评分量表评分';
+      }
+      const idx = questionData.findIndex(x => x.id === obj.id);
+      if (idx >= 0) questionData[idx] = obj; else questionData.unshift(obj);
+      renderQuestions(); saveLocalState(); updateDashboardKpis(); updateAnalytics(); closeAllModals();
+      showToast(idx >= 0 ? '题目已更新' : '题目已创建');
+    }
+    function batchImportQuestions() {
+      const samples = [
+        { id: 'Q2026-' + Math.floor(10000 + Math.random() * 89999), type: '单选题', course: 'Python程序设计', title: 'Pandas 中读取 CSV 文件最常用的方法是？', dim: '数字化能力 / 数据处理 / 工具应用', tags: ['Python', 'Pandas'], diff: 1, quality: 92, score: 4, options: ['pd.open_csv()', 'pd.read_csv()', 'pd.load_csv()', 'pd.csv()'], answer: 'B', analysis: 'Pandas 使用 read_csv 读取 CSV。' },
+        { id: 'Q2026-' + Math.floor(10000 + Math.random() * 89999), type: '多选题', course: 'ROS机器人操作系统基础', title: '机器人定位调试时，以下哪些数据应纳入问题复现记录？', dim: '专业能力 / 智能驾驶系统集成 / 定位调试', tags: ['定位', '调试'], diff: 2, quality: 91, score: 5, options: ['rosbag 数据', 'TF 树', '软件版本', '传感器标定参数', '办公电脑壁纸'], answer: ['A', 'B', 'C', 'D'], analysis: '可复现所需的数据、配置和版本均应留存。' },
+        { id: 'Q2026-' + Math.floor(10000 + Math.random() * 89999), type: '实操题', course: 'PLC控制技术', title: '三段输送线故障诊断与恢复', background: '设备运行中 M2 过载停机，需定位原因并恢复生产。', dim: '专业能力 / 自动化控制 / PLC故障诊断', tags: ['PLC', '故障诊断'], diff: 4, quality: 88, score: 20, requirements: ['读取报警与输入状态', '判断故障原因', '完成安全复位', '验证恢复运行'], deliverables: ['故障记录', '处理步骤', '验证结果'], answer: '按实操评分量表评分', rubric: [['故障定位', '8', '定位准确'], ['操作规范', '6', '安全规范'], ['恢复验证', '6', '验证完整']] }
+      ];
+      questionData.unshift(...samples);
+      renderQuestions(); saveLocalState(); updateDashboardKpis(); updateAnalytics();
+      showToast('已导入 3 道题目');
+    }
+    function backupQuestionBank() {
+      downloadFile('题库备份.json', JSON.stringify(questionData, null, 2), 'application/json;charset=utf-8');
+    }
+    function addToBasket(id) {
+      if (!state.questionBasket.includes(id)) state.questionBasket.push(id);
+      updateBasket(); renderQuestions();
+    }
+    function removeFromBasket(id) {
+      state.questionBasket = state.questionBasket.filter(x => x !== id);
+      updateBasket(); renderQuestions(); openBasketDrawer();
+    }
+    function updateBasket() {
+      document.getElementById('basketCount').textContent = state.questionBasket.length;
+    }
+    function renderRubric(rubric) {
+      if (!rubric || !rubric.length) return '';
+      return `<table class="rubric-table"><thead><tr><th>评分项</th><th style="width:60px">分值</th><th>评分标准</th></tr></thead><tbody>${rubric.map(r => `<tr><td>${escapeHtml(r[0])}</td><td>${escapeHtml(r[1])}</td><td>${escapeHtml(r[2])}</td></tr>`).join('')}</tbody></table>`;
+    }
+    function renderQuestionFormat(q, { showAnswer = false, paper = false, number = null } = {}) {
+      const prefix = number !== null ? `<b>${number}．</b>` : '';
+      const score = q.score ? `（${q.score}分）` : '';
+      if (q.type === '单选题' || q.type === '多选题') {
+        const markClass = q.type === '单选题' ? 'radio' : 'check';
+        const opts = (q.options || []).map((o, i) => `<div class="option"><span class="choice-mark ${markClass}"></span><span><b>${String.fromCharCode(65 + i)}.</b> ${escapeHtml(o)}</span></div>`).join('');
+        const answer = Array.isArray(q.answer) ? q.answer.join('、') : q.answer;
+        return `<div class="q-format"><div class="q-stem">${prefix}${escapeHtml(q.title)} ${score}</div><div class="option-list">${opts}</div>${showAnswer ? `<div class="answer-key"><b>参考答案：</b>${escapeHtml(answer)}${q.analysis ? `<br><b>解析：</b>${escapeHtml(q.analysis)}` : ''}</div>` : ''}</div>`;
+      }
+      if (q.type === '填空题') {
+        const answer = Array.isArray(q.answer) ? q.answer.join('；') : q.answer;
+        return `<div class="q-format"><div class="q-stem">${prefix}${escapeHtml(q.title)} ${score}</div>${paper ? `<div class="fill-answer-row"><span>答：</span><span class="blank-line"></span></div>` : ''}${showAnswer ? `<div class="answer-key"><b>参考答案：</b>${escapeHtml(answer)}${q.analysis ? `<br><b>解析：</b>${escapeHtml(q.analysis)}` : ''}</div>` : ''}</div>`;
+      }
+      if (q.type === '案例分析') {
+        const subs = (q.subQuestions || []).map((s, i) => `<div class="subquestion">${i + 1}. ${escapeHtml(s)}</div>${paper ? '<div class="answer-box"></div>' : ''}`).join('');
+        return `<div class="q-format"><div class="q-stem">${prefix}${escapeHtml(q.title)} ${score}</div><div class="case-material"><b>【案例材料】</b><br>${escapeHtml(q.material || '')}</div><div style="margin-top:10px"><b style="font-size:13px">【问题】</b>${subs}</div>${showAnswer ? `<div class="answer-key"><b>参考答案：</b><ol style="margin:6px 0 0 18px">${(q.answer || []).map(a => `<li>${escapeHtml(a)}</li>`).join('')}</ol>${renderRubric(q.rubric)}</div>` : ''}</div>`;
+      }
+      const req = (q.requirements || []).map(x => `<li>${escapeHtml(x)}</li>`).join('');
+      const del = (q.deliverables || []).map(x => `<li>${escapeHtml(x)}</li>`).join('');
+      return `<div class="q-format"><div class="q-stem">${prefix}${escapeHtml(q.title)} ${score}</div><div class="case-material"><b>【任务背景】</b><br>${escapeHtml(q.background || '')}</div><div class="task-box"><div class="task-title">操作要求</div><ul>${req}</ul></div><div class="task-box"><div class="task-title">提交成果</div><ul>${del}</ul></div>${paper ? '<div class="answer-box large"></div>' : ''}${showAnswer ? `<div class="answer-key"><b>评分方式：</b>${escapeHtml(q.answer || '按评分量表评分')}${renderRubric(q.rubric)}</div>` : ''}</div>`;
+    }
+    function openBasketDrawer() {
+      const list = questionData.filter(q => state.questionBasket.includes(q.id));
+      openDrawer(`组卷篮（${list.length}）`, list.length ? `
+    <div>${list.map(q => `
+      <div class="question">
+        ${renderQuestionFormat(q, { showAnswer: false })}
+        <div style="display:flex;justify-content:flex-end;margin-top:8px"><button class="btn sm" onclick="removeFromBasket('${q.id}')">移除</button></div>
+      </div>`).join('')}
+      <div style="display:flex;gap:8px;margin-top:12px">
+        <button class="btn" onclick="closeDrawer();openPaperCreate()">基于组卷篮生成试卷</button>
+        <button class="btn primary" onclick="exportBasket()">导出组卷清单</button>
+      </div>
+    </div>
+  `: '<div class="empty">组卷篮为空</div>');
+    }
+    function exportBasket() {
+      const list = questionData.filter(q => state.questionBasket.includes(q.id));
+      const csv = [['题号', '课程', '题型', '分值', '题干']].concat(list.map(q => [q.id, q.course, q.type, q.score || '', q.title])).map(r => r.join(',')).join('\n');
+      downloadFile('组卷篮清单.csv', '\ufeff' + csv, 'text/csv;charset=utf-8');
+    }
+    function renderQuestions() {
+      const q = (document.getElementById('qSearch')?.value || '').toLowerCase();
+      const course = document.getElementById('qCourse')?.value || 'all';
+      const type = document.getElementById('qType')?.value || 'all';
+      const list = questionData.filter(x => (x.title + x.tags.join('') + x.dim).toLowerCase().includes(q) && (course === 'all' || x.course === course) && (type === 'all' || x.type === type));
+      updateQuestionKpis(list);
+      document.getElementById('questionList').innerHTML = list.length ? list.map(x => `
+    <div class="question">
+      <div class="qtop">
+        <div><div class="sub">${x.id} · ${x.course}</div></div>
+        <div style="text-align:right"><span class="status s-info">${x.type}</span><div class="sub">质量 ${x.quality} · ${x.score || defaultScoreByType(x.type)}分</div></div>
+      </div>
+      ${renderQuestionFormat(x, { showAnswer: false })}
+      <div class="qmeta"><span class="pill">${x.dim}</span>${x.tags.map(t => `<span class="pill">${t}</span>`).join('')}</div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-top:10px">
+        <div class="difficulty">${[1, 2, 3, 4, 5].map(i => `<i class="${i <= x.diff ? 'on' : ''}"></i>`).join('')} <span class="sub" style="margin-left:6px">难度</span></div>
+        <div>
+          <button class="btn sm" onclick="addToBasket('${x.id}')">${state.questionBasket.includes(x.id) ? '已加入' : '加入组卷'}</button>
+          <button class="btn sm" onclick="editQuestion('${x.id}')">编辑</button>
+          <button class="btn sm" onclick="previewQuestion('${x.id}')">完整预览</button>
+          <button class="btn sm" onclick="deleteQuestion('${x.id}')">删除</button>
+        </div>
+      </div>
+    </div>`).join('') : '<div class="empty">未找到符合条件的题目</div>';
+    }
+    function previewQuestion(id) {
+      const q = questionData.find(x => x.id === id);
+      openDrawer(`${q.type} · ${q.id}`, `
+    <div class="qmeta" style="margin-bottom:10px"><span class="pill">${q.course}</span><span class="pill">${q.dim}</span><span class="pill">${q.score || defaultScoreByType(q.type)}分</span></div>
+    ${renderQuestionFormat(q, { showAnswer: true })}
+  `);
+    }
+    function deleteQuestion(id) {
+      if (!confirm('确认删除该题目吗？')) return;
+      const idx = questionData.findIndex(x => x.id === id);
+      if (idx < 0) return;
+      questionData.splice(idx, 1);
+      state.questionBasket = state.questionBasket.filter(x => x !== id);
+      updateBasket();
+      renderQuestions(); saveLocalState(); updateDashboardKpis(); updateAnalytics();
+      showToast('题目已删除');
+    }
+    function updateQuestionKpis(list = questionData) {
+      const total = list.length;
+      const dims = new Set(list.map(q => q.dim).filter(Boolean));
+      const applied = list.filter(q => q.type === '案例分析' || q.type === '实操题').length;
+      const approved = list.filter(q => (+q.quality || 0) >= 90).length;
+      const types = new Set(list.map(q => q.type));
+      const expectedTypes = ['单选题', '多选题', '填空题', '案例分析', '实操题'];
+
+      document.getElementById('questionTotalKpi').textContent = total;
+      document.getElementById('questionTotalSub').textContent = `当前列表 ${total} 道题`;
+      document.getElementById('questionDimKpi').textContent = dims.size;
+      document.getElementById('questionDimSub').textContent = `按三级能力维度去重`;
+      document.getElementById('questionAppliedRate').textContent = total ? pct(applied, total).toFixed(1) + '%' : '—';
+      document.getElementById('questionAppliedSub').textContent = `案例/实操 ${applied}/${total}`;
+      document.getElementById('questionQualityRate').textContent = total ? pct(approved, total).toFixed(1) + '%' : '—';
+      document.getElementById('questionQualitySub').textContent = `质量分≥90：${approved}/${total}`;
+      document.getElementById('questionTypeCoverage').textContent = `${types.size}/${expectedTypes.length}`;
+      document.getElementById('questionTypeSub').textContent = `当前包含 ${[...types].join('、') || '无'}`;
+
+      const avgDiff = avg(list.map(q => q.diff));
+      const avgQuality = avg(list.map(q => q.quality));
+      const titleCounts = {};
+      list.forEach(q => titleCounts[q.title] = (titleCounts[q.title] || 0) + 1);
+      const duplicateCount = Object.values(titleCounts).reduce((s, n) => s + (n > 1 ? n - 1 : 0), 0);
+      document.getElementById('questionAvgDiff').textContent = avgDiff === null ? '—' : avgDiff.toFixed(1) + '/5';
+      document.getElementById('questionAvgQuality').textContent = avgQuality === null ? '—' : avgQuality.toFixed(1);
+      document.getElementById('questionDuplicateCount').textContent = duplicateCount;
+      document.getElementById('questionHealthTypes').textContent = `${types.size}/${expectedTypes.length}`;
+
+      const focus = '传感器数据融合与调试';
+      const focusList = questionData.filter(q => (q.dim || '').includes(focus));
+      const caseCount = focusList.filter(q => q.type === '案例分析').length;
+      document.getElementById('focusDimStats').textContent =
+        `当前题库关联 ${focusList.length} 道题，其中案例分析 ${caseCount} 道，平均质量分 ${focusList.length ? avg(focusList.map(q => q.quality)).toFixed(1) : '—'}。`;
+    }
+
+    function openPaperCreate() {
+      document.getElementById('paperModalTitle').textContent = '智能组卷';
+      document.getElementById('paperModalSubmit').textContent = '生成试卷';
+      document.getElementById('paperEditIndex').value = '';
+      document.getElementById('pmName').value = '2026级智能网联汽车技术 · L3阶段测评';
+      document.getElementById('pmObj').value = '2026级智能网联汽车技术1班 · 42人';
+      document.getElementById('pmLevel').value = 'L3';
+      document.getElementById('pmPre').value = 'Python程序设计、汽车传感器技术';
+      document.getElementById('pmScore').value = state.questionBasket.length
+        ? questionData.filter(q => state.questionBasket.includes(q.id)).reduce((s, q) => s + (q.score || defaultScoreByType(q.type)), 0)
+        : '100';
+      document.getElementById('pmDuration').value = '90';
+      document.getElementById('pmStructure').selectedIndex = 0;
+      document.getElementById('pmPass').value = '60';
+      openModal('paperModal');
+    }
+    function openPaperEdit(idx) {
+      const p = papers[idx];
+      document.getElementById('paperModalTitle').textContent = '编辑试卷';
+      document.getElementById('paperModalSubmit').textContent = '保存';
+      document.getElementById('paperEditIndex').value = idx;
+      document.getElementById('pmName').value = p.name;
+      document.getElementById('pmObj').value = p.obj;
+      document.getElementById('pmLevel').value = p.level || 'L3';
+      document.getElementById('pmPre').value = (p.pre || '');
+      document.getElementById('pmScore').value = paperTotalScore(p);
+      document.getElementById('pmDuration').value = p.duration;
+      document.getElementById('pmStructure').value = p.structure || '易 30% / 中 50% / 难 20%';
+      document.getElementById('pmPass').value = p.pass;
+      openModal('paperModal');
+    }
+    function applyTemplate(name) {
+      closeAllModals();
+      openPaperCreate();
+      if (name.includes('课程结课')) document.getElementById('pmStructure').selectedIndex = 1;
+      if (name.includes('补考')) document.getElementById('pmPass').value = '60';
+    }
+    function defaultPaperQuestions() {
+      return questionData.slice(0, 14).map(q => q.id);
+    }
+    function generatePaper() {
+      const editIdx = document.getElementById('paperEditIndex').value;
+      let selected = [];
+      if (editIdx !== '' && papers[editIdx] && !state.questionBasket.length) {
+        selected = getPaperQuestions(papers[editIdx]);
+      } else {
+        selected = state.questionBasket.length ? questionData.filter(q => state.questionBasket.includes(q.id)) : questionData.slice(0, 14);
+      }
+      if (selected.length < 5) {
+        const ids = new Set(selected.map(q => q.id));
+        questionData.forEach(q => { if (selected.length < 14 && !ids.has(q.id)) { selected.push(q); ids.add(q.id); } });
+      }
+      const coverage = Math.min(100, 86 + Math.round(selected.length * .7));
+      const totalScore = selected.reduce((s, q) => s + (q.score || defaultScoreByType(q.type)), 0);
+      const item = {
+        name: document.getElementById('pmName').value.trim(),
+        obj: document.getElementById('pmObj').value.trim(),
+        questions: selected.length,
+        duration: +document.getElementById('pmDuration').value || 90,
+        pass: +document.getElementById('pmPass').value || 60,
+        coverage,
+        status: editIdx !== '' && papers[editIdx] ? papers[editIdx].status : 'draft',
+        level: document.getElementById('pmLevel').value,
+        pre: document.getElementById('pmPre').value.trim(),
+        structure: document.getElementById('pmStructure').value,
+        quality: editIdx !== '' && papers[editIdx] ? papers[editIdx].quality : +(85 + Math.random() * 8).toFixed(1),
+        autoGenerated: true,
+        course: selected[0]?.course || '',
+        questionIds: selected.map(q => q.id),
+        totalScore: +document.getElementById('pmScore').value || totalScore
+      };
+      if (editIdx !== '' && papers[editIdx]) {
+        papers[editIdx] = item;
+      } else {
+        papers.unshift(item);
+      }
+      state.questionBasket = [];
+      updateBasket();
+      renderPapers(); saveLocalState(); updateDashboardKpis(); updateAnalytics(); closeAllModals();
+      navTo('papers');
+      showToast(editIdx !== '' ? '试卷已更新' : '试卷已按题型结构生成');
+    }
+    function paperFilter(el, status) {
+      state.paperStatus = status;
+      document.querySelectorAll('#papers .chip-btn').forEach(b => b.classList.remove('active')); el.classList.add('active');
+      renderPapers();
+    }
+    function statusLabel(status) { return status === 'running' ? '进行中' : status === 'draft' ? '草稿' : '已结束'; }
+    function getPaperQuestions(p) {
+      const ids = p.questionIds && p.questionIds.length ? p.questionIds : defaultPaperQuestions();
+      return ids.map(id => questionData.find(q => q.id === id)).filter(Boolean);
+    }
+    function paperTotalScore(p) {
+      return p.totalScore || getPaperQuestions(p).reduce((s, q) => s + (q.score || defaultScoreByType(q.type)), 0);
+    }
+    function renderPapers() {
+      const q = (document.getElementById('paperSearch')?.value || '').toLowerCase();
+      const list = papers.filter(x => (state.paperStatus === 'all' || x.status === state.paperStatus) && x.name.toLowerCase().includes(q));
+      updatePaperKpis(list);
+      document.getElementById('paperGrid').innerHTML = list.map((x) => {
+        const idx = papers.indexOf(x);
+        return `
+    <div class="paper">
+      <div style="display:flex;justify-content:space-between;gap:8px"><h4>${x.name}</h4><span class="status ${x.status === 'running' ? 's-good' : x.status === 'draft' ? 's-draft' : 's-warn'}">${statusLabel(x.status)}</span></div>
+      <p>${x.obj}</p>
+      <div class="statlist">
+        <div class="statbox"><b>${getPaperQuestions(x).length}</b><small>题目</small></div>
+        <div class="statbox"><b>${x.duration}</b><small>分钟</small></div>
+        <div class="statbox"><b>${paperTotalScore(x)}</b><small>试卷总分</small></div>
+        <div class="statbox"><b>${x.coverage}%</b><small>能力覆盖</small></div>
+      </div>
+      <div style="display:flex;gap:7px;margin-top:11px;flex-wrap:wrap">
+        <button class="btn sm" onclick="previewPaper(${idx})">整卷预览</button>
+        <button class="btn sm" onclick="openPaperEdit(${idx})">编辑</button>
+        <button class="btn sm" onclick="duplicatePaper(${idx})">复制</button>
+        <button class="btn sm" onclick="checkPaperQuality(${idx})">校验</button>
+        <button class="btn sm" onclick="managePaperStatus(${idx})">状态管理</button>
+        <button class="btn sm" onclick="deletePaper(${idx})">删除</button>
+        <button class="btn sm" onclick="publishPaper(${idx})">${x.status === 'draft' ? '发布' : '导出'}</button>
+      </div>
+    </div>`}).join('');
+    }
+    function buildPaperHTML(p, withActions = true) {
+      const qs = getPaperQuestions(p);
+      const order = ['单选题', '多选题', '填空题', '案例分析', '实操题'];
+      const titleMap = {
+        '单选题': '一、单项选择题',
+        '多选题': '二、多项选择题',
+        '填空题': '三、填空题',
+        '案例分析': '四、案例分析题',
+        '实操题': '五、实操任务题'
+      };
+      let globalNo = 1;
+      const sections = order.map(type => {
+        const arr = qs.filter(q => q.type === type);
+        if (!arr.length) return '';
+        const subtotal = arr.reduce((s, q) => s + (q.score || defaultScoreByType(type)), 0);
+        const eachText = arr.every(q => (q.score || 0) === (arr[0].score || 0)) ? `，每题${arr[0].score || defaultScoreByType(type)}分` : '';
+        const body = arr.map(q => `<div class="exam-question">${renderQuestionFormat(q, { showAnswer: false, paper: true, number: globalNo++ })}</div>`).join('');
+        return `<section class="exam-section"><div class="exam-section-title">${titleMap[type]}（共${arr.length}题${eachText}，共${subtotal}分）<span class="section-score">得分：______</span></div>${body}</section>`;
+      }).join('');
+      const total = paperTotalScore(p);
+      const actions = withActions ? `<div class="paper-actions"><button class="btn" onclick="printPaperByName('${encodeURIComponent(p.name)}')">打印试卷</button><button class="btn" onclick="exportPaperByName('${encodeURIComponent(p.name)}')">导出试卷HTML</button><button class="btn primary" onclick="showAnswerSheetByName('${encodeURIComponent(p.name)}')">查看参考答案与评分标准</button></div>` : '';
+      return `${actions}<article class="exam-paper">
+    <div class="exam-header">
+      <h2>${escapeHtml(p.name)}</h2>
+      <div class="exam-sub">2026—2027 学年第一学期 · ${escapeHtml(p.level || 'L3')} 能力测评</div>
+      <div class="candidate-line"><span>姓名：</span><span>学号：</span><span>班级：</span></div>
+      <div class="exam-info">
+        <div>考试时间：${p.duration} 分钟</div><div>试卷满分：${total} 分</div><div>通过标准：${p.pass} 分</div><div>考试方式：理论 + 实操</div>
+      </div>
+    </div>
+    <table class="paper-score-table"><tr><th>题型</th>${order.map(t => `<th>${t}</th>`).join('')}<th>总分</th></tr>
+    <tr><td>分值</td>${order.map(t => `<td>${qs.filter(q => q.type === t).reduce((s, q) => s + (q.score || defaultScoreByType(t)), 0)}</td>`).join('')}<td>${total}</td></tr>
+    <tr><td>得分</td>${order.map(() => '<td></td>').join('')}<td></td></tr></table>
+    <div class="exam-notice"><b>考试说明：</b>1. 单项选择题每题只有一个正确答案；2. 多项选择题少选、多选、错选均按课程测评规则计分；3. 案例分析题应结合材料作答并写明分析依据；4. 实操题须按安全规范完成操作并提交规定成果；5. 请在规定时间内完成全部题目。</div>
+    ${sections}
+  </article>`;
+    }
+    function previewPaper(idx) {
+      const p = papers[idx];
+      openDrawer(`试卷预览 · ${p.name}`, buildPaperHTML(p, true));
+    }
+    function duplicatePaper(idx) {
+      const p = { ...papers[idx], name: papers[idx].name + '（复制）', status: 'draft' };
+      if (p.questionIds) p.questionIds = [...p.questionIds];
+      papers.unshift(p); renderPapers(); saveLocalState(); updateDashboardKpis(); updateAnalytics();
+      showToast('试卷已复制');
+    }
+    function checkPaperQuality(idx) {
+      const p = papers[idx];
+      const qs = getPaperQuestions(p);
+      const typeCount = new Set(qs.map(q => q.type)).size;
+      const typeScore = Math.min(100, 70 + typeCount * 6);
+      openDrawer(`质量校验 · ${p.name}`, `
+    <div class="metric-row"><label>能力覆盖度</label><div class="progress"><i style="width:${p.coverage}%"></i></div><b>${p.coverage}%</b></div>
+    <div class="metric-row"><label>题型结构完整度</label><div class="progress"><i style="width:${typeScore}%"></i></div><b>${typeScore}</b></div>
+    <div class="metric-row"><label>难度匹配</label><div class="progress"><i style="width:88%"></i></div><b>88</b></div>
+    <div class="metric-row"><label>题目质量均值</label><div class="progress"><i style="width:${Math.round(qs.reduce((s, q) => s + q.quality, 0) / Math.max(1, qs.length))}%"></i></div><b>${Math.round(qs.reduce((s, q) => s + q.quality, 0) / Math.max(1, qs.length))}</b></div>
+    <div class="notice" style="margin-top:14px">整卷已按“卷头信息—题型分区—题号—分值—答题区域—评分标准”结构校验。总分 ${paperTotalScore(p)} 分，题型 ${typeCount} 类。</div>
+  `);
+    }
+    function managePaperStatus(idx) {
+      const p = papers[idx];
+      const next = p.status === 'draft' ? 'running' : p.status === 'running' ? 'done' : 'draft';
+      p.status = next;
+      renderPapers(); saveLocalState(); updateDashboardKpis(); updateAnalytics();
+      showToast('试卷状态已更新为' + statusLabel(next));
+    }
+    function deletePaper(idx) {
+      if (!confirm('确认删除该试卷吗？')) return;
+      papers.splice(idx, 1);
+      renderPapers(); saveLocalState(); updateDashboardKpis(); updateAnalytics();
+      showToast('试卷已删除');
+    }
+    function publishPaper(idx) {
+      const p = papers[idx];
+      if (p.status === 'draft') {
+        p.status = 'running';
+        renderPapers(); saveLocalState(); updateDashboardKpis(); updateAnalytics();
+        showToast('试卷已发布');
+      } else {
+        exportPaper(idx);
+      }
+    }
+    function paperByEncodedName(enc) {
+      const name = decodeURIComponent(enc);
+      return papers.find(p => p.name === name);
+    }
+    function exportPaperByName(enc) {
+      const p = paperByEncodedName(enc); if (!p) return;
+      downloadFile(`${p.name}.html`, `<!DOCTYPE html><html><head><meta charset="UTF-8"><title>${escapeHtml(p.name)}</title><style>${document.querySelector('style').innerHTML}</style></head><body>${buildPaperHTML(p, false)}</body></html>`, 'text/html;charset=utf-8');
+    }
+    function printPaperByName(enc) {
+      const p = paperByEncodedName(enc); if (!p) return;
+      const w = window.open('', '_blank');
+      w.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>${escapeHtml(p.name)}</title><style>${document.querySelector('style').innerHTML} body{background:#fff;padding:20px}.exam-paper{max-width:900px;margin:auto}</style></head><body>${buildPaperHTML(p, false)}<script>window.onload=()=>setTimeout(()=>window.print(),200)<\/script></body></html>`);
+      w.document.close();
+    }
+    function showAnswerSheetByName(enc) {
+      const p = paperByEncodedName(enc); if (!p) return;
+      const qs = getPaperQuestions(p);
+      const grouped = ['单选题', '多选题', '填空题', '案例分析', '实操题'].map(type => {
+        const arr = qs.filter(q => q.type === type); if (!arr.length) return '';
+        return `<div class="exam-section"><div class="exam-section-title">${type}参考答案与评分标准</div>${arr.map((q, i) => `<div class="question">${renderQuestionFormat(q, { showAnswer: true })}</div>`).join('')}</div>`;
+      }).join('');
+      openDrawer(`参考答案 · ${p.name}`, grouped);
+    }
+    function exportPaper(idx) {
+      const p = papers[idx];
+      exportPaperByName(encodeURIComponent(p.name));
+    }
+    function updatePaperKpis(list = papers) {
+      const total = list.length;
+      const running = list.filter(p => p.status === 'running').length;
+      const auto = list.filter(p => p.autoGenerated === true).length;
+      const linked = list.filter(p => !!p.course).length;
+      const coverage = avg(list.map(p => p.coverage));
+      const quality = avg(list.map(p => +p.quality));
+
+      document.getElementById('paperCountKpi').textContent = total;
+      document.getElementById('paperCountSub').textContent = `进行中 ${running} · 草稿 ${list.filter(p => p.status === 'draft').length} · 已结束 ${list.filter(p => p.status === 'done').length}`;
+      document.getElementById('paperAutoRate').textContent = total ? pct(auto, total).toFixed(1) + '%' : '—';
+      document.getElementById('paperAutoSub').textContent = `智能组卷 ${auto}/${total}`;
+      document.getElementById('paperCourseRate').textContent = total ? pct(linked, total).toFixed(1) + '%' : '—';
+      document.getElementById('paperCourseSub').textContent = `已关联课程 ${linked}/${total}`;
+      document.getElementById('paperCoverageAvg').textContent = coverage === null ? '—' : coverage.toFixed(1) + '%';
+      document.getElementById('paperCoverageSub').textContent = `按当前列表试卷计算`;
+      document.getElementById('paperQualityAvg').textContent = quality === null ? '—' : quality.toFixed(1);
+      document.getElementById('paperQualitySub').textContent = `按当前列表试卷计算`;
+    }
+
+    function getFilteredStudents() {
+      const q = (document.getElementById('scoreSearch')?.value || '').toLowerCase();
+      const major = document.getElementById('scoreMajor')?.value || 'all';
+      return students.filter(s => (s.id + s.name + s.major + s.cls).toLowerCase().includes(q) && (major === 'all' || s.major === major));
+    }
+    function renderScores() {
+      const list = getFilteredStudents();
+      updateScoreKpis(list);
+      document.getElementById('scoreTbody').innerHTML = list.map(s => `
+    <tr><td><b>${s.name}</b><div class="sub">${s.id}</div></td><td>${s.major}<div class="sub">${s.cls}</div></td><td>${s.exam}</td><td class="score">${s.score}</td><td class="up">${s.growth}</td><td>${s.credit}</td><td><button class="btn sm" onclick="studentDetail('${s.id}')">成长轨迹</button><button class="btn sm" onclick="editScore('${s.id}')">编辑</button><button class="btn sm" onclick="deleteScore('${s.id}')">删除</button></td></tr>
+  `).join('');
+    }
+    function studentDetail(id) {
+      const s = students.find(x => x.id === id);
+      openDrawer(`${s.name} · 能力成长报告`, `
+    <div class="card" style="box-shadow:none"><div class="card-body">
+      <div class="person"><div class="avatar">${s.name.slice(-1)}</div><div><b>${s.name}</b><div class="sub">${s.id} · ${s.major} · ${s.cls}</div></div></div>
+      <div class="statlist" style="margin-top:14px">
+        <div class="statbox"><b>${s.score}</b><small>本次成绩</small></div>
+        <div class="statbox"><b style="color:#14a36d">${s.growth}</b><small>能力增值</small></div>
+        <div class="statbox"><b>${s.credit}</b><small>学分认定</small></div>
+        <div class="statbox"><b>${s.score >= 60 ? 'L3' : 'L2'}</b><small>当前能力级别</small></div>
+      </div>
+    </div></div>
+    <div class="card" style="box-shadow:none;margin-top:14px"><div class="card-head"><h3>能力维度</h3></div><div class="card-body">
+      <div class="metric-row"><label>ROS 节点开发</label><div class="progress"><i style="width:${Math.min(98, s.score + 4)}%"></i></div><b>${Math.min(98, s.score + 4)}</b></div>
+      <div class="metric-row"><label>传感器数据处理</label><div class="progress"><i style="width:${Math.max(55, s.score - 3)}%"></i></div><b>${Math.max(55, s.score - 3)}</b></div>
+      <div class="metric-row"><label>系统集成与调试</label><div class="progress"><i style="width:${Math.max(48, s.score - 12)}%"></i></div><b>${Math.max(48, s.score - 12)}</b></div>
+      <div class="metric-row"><label>故障分析</label><div class="progress"><i style="width:${Math.max(52, s.score - 7)}%"></i></div><b>${Math.max(52, s.score - 7)}</b></div>
+    </div></div>
+    <div class="notice" style="margin-top:14px">个性化建议：优先补强“系统集成与调试”能力点，建议完成 2 个实训任务后参加专项复测。</div>
+  `);
+    }
+    function editScore(id) {
+      const s = students.find(x => x.id === id);
+      document.getElementById('scoreEditId').value = s.id;
+      document.getElementById('smId').value = s.id;
+      document.getElementById('smName').value = s.name;
+      document.getElementById('smMajor').value = s.major;
+      document.getElementById('smClass').value = s.cls;
+      document.getElementById('smExam').value = s.exam;
+      document.getElementById('smScore').value = s.score;
+      document.getElementById('smGrowth').value = s.growth;
+      document.getElementById('smCredit').value = s.credit;
+      openModal('scoreModal');
+    }
+    function saveScore() {
+      const id = document.getElementById('scoreEditId').value;
+      const s = students.find(x => x.id === id);
+      if (!s) return;
+      s.score = +document.getElementById('smScore').value || 0;
+      s.growth = document.getElementById('smGrowth').value.trim();
+      s.credit = document.getElementById('smCredit').value.trim();
+      renderScores(); saveLocalState(); updateDashboardKpis(); updateAnalytics(); updateDiagnosticSummary(); closeAllModals();
+      showToast('成绩记录已更新');
+    }
+    function deleteScore(id) {
+      if (!confirm('确认删除该成绩记录吗？')) return;
+      const idx = students.findIndex(x => x.id === id);
+      if (idx < 0) return;
+      students.splice(idx, 1);
+      renderScores(); saveLocalState(); updateDashboardKpis(); updateAnalytics(); updateDiagnosticSummary();
+      showToast('成绩记录已删除');
+    }
+    function syncCredits() {
+      let changed = 0;
+      students.forEach(s => {
+        if (s.credit === '待认定' && s.score >= 60) { s.credit = '2.0'; changed++; }
+      });
+      renderScores(); saveLocalState(); updateDashboardKpis(); updateAnalytics(); updateDiagnosticSummary();
+      showToast(`已完成学分同步，新增认定 ${changed} 条`);
+    }
+    function exportScoreReport() {
+      const csv = [['学号', '姓名', '专业', '班级', '测评', '成绩', '能力增值', '学分']]
+        .concat(students.map(s => [s.id, s.name, s.major, s.cls, s.exam, s.score, s.growth, s.credit]))
+        .map(r => r.join(',')).join('\n');
+      downloadFile('测评成绩报告.csv', '\ufeff' + csv, 'text/csv;charset=utf-8');
+    }
+    function updateScoreKpis(list = students) {
+      const total = list.length;
+      const average = avg(list.map(s => s.score));
+      const passed = list.filter(s => s.score >= 60).length;
+      const excellent = list.filter(s => s.score >= 90).length;
+      const credited = list.filter(s => s.credit !== '待认定' && s.credit !== '' && s.credit != null).length;
+      const eligible = list.filter(s => s.score >= 60).length;
+
+      document.getElementById('scoreRecordKpi').textContent = total;
+      document.getElementById('scoreRecordSub').textContent = `当前列表 ${total} 条`;
+      document.getElementById('scoreAvgKpi').textContent = average === null ? '—' : average.toFixed(1);
+      document.getElementById('scoreAvgSub').textContent = `按当前列表成绩计算`;
+      document.getElementById('scorePassKpi').textContent = total ? pct(passed, total).toFixed(1) + '%' : '—';
+      document.getElementById('scorePassSub').textContent = `通过 ${passed}/${total}`;
+      document.getElementById('scoreExcellentKpi').textContent = total ? pct(excellent, total).toFixed(1) + '%' : '—';
+      document.getElementById('scoreExcellentSub').textContent = `≥90 分：${excellent}/${total}`;
+      document.getElementById('creditSyncKpi').textContent = credited;
+      document.getElementById('creditSyncSub').textContent = `可认定对象 ${eligible} 人`;
+
+      drawHistogram('scoreChart', list);
+      const notice = document.getElementById('scoreDistributionNotice');
+      if (notice) {
+        if (!total) notice.textContent = '当前筛选条件下没有成绩记录。';
+        else {
+          const low = list.filter(s => s.score < 60);
+          const majors = [...new Set(list.map(s => s.major))];
+          notice.textContent = `当前列表共 ${total} 条成绩，平均分 ${average.toFixed(1)}，通过 ${passed} 人，未通过 ${low.length} 人；涉及 ${majors.join('、')}。`;
+        }
+      }
+    }
+
+    function openMetricCreate() {
+      document.getElementById('metricModalTitle').textContent = '新增评价指标';
+      document.getElementById('metricEditIndex').value = '';
+      document.getElementById('mmLevel1').value = '教学过程';
+      document.getElementById('mmName').value = '实训反馈及时率';
+      document.getElementById('mmSource').value = '课堂行为分析、学生反馈';
+      document.getElementById('mmWeight').value = '8%';
+      document.getElementById('mmThreshold').value = '≥85';
+      document.getElementById('mmFreq').value = '每周';
+      openModal('metricModal');
+    }
+    function editMetric(idx) {
+      const m = metrics[idx];
+      document.getElementById('metricModalTitle').textContent = '编辑评价指标';
+      document.getElementById('metricEditIndex').value = idx;
+      document.getElementById('mmLevel1').value = m.level1;
+      document.getElementById('mmName').value = m.name;
+      document.getElementById('mmSource').value = m.source;
+      document.getElementById('mmWeight').value = m.weight;
+      document.getElementById('mmThreshold').value = m.threshold;
+      document.getElementById('mmFreq').value = m.freq;
+      openModal('metricModal');
+    }
+    function toggleMetricStatus(idx) {
+      metrics[idx].status = metrics[idx].status === '启用' ? '停用' : '启用';
+      renderMetrics(); saveLocalState(); showToast('指标状态已更新');
+    }
+    function deleteMetric(idx) {
+      if (!confirm('确认删除该评价指标吗？')) return;
+      metrics.splice(idx, 1);
+      renderMetrics(); saveLocalState(); showToast('指标已删除');
+    }
+    function renderMetrics() {
+      document.getElementById('metricTableBody').innerHTML = metrics.map((m, idx) => `
+    <tr>
+      <td>${m.level1}</td>
+      <td>${m.name}</td>
+      <td>${m.source}</td>
+      <td class="center">${m.weight}</td>
+      <td class="center">${m.threshold}</td>
+      <td>${m.freq}</td>
+      <td><span class="status ${m.status === '启用' ? 's-good' : 's-info'}">${m.status}</span></td>
+      <td>
+        <button class="btn sm" onclick="editMetric(${idx})">编辑</button>
+        <button class="btn sm" onclick="toggleMetricStatus(${idx})">${m.status === '启用' ? '停用' : '启用'}</button>
+        <button class="btn sm" onclick="deleteMetric(${idx})">删除</button>
+      </td>
+    </tr>
+  `).join('');
+    }
+    function saveMetric() {
+      const m = {
+        level1: document.getElementById('mmLevel1').value.trim(),
+        name: document.getElementById('mmName').value.trim(),
+        source: document.getElementById('mmSource').value.trim(),
+        weight: document.getElementById('mmWeight').value.trim(),
+        threshold: document.getElementById('mmThreshold').value.trim(),
+        freq: document.getElementById('mmFreq').value.trim(),
+        status: '启用'
+      };
+      const editIdx = document.getElementById('metricEditIndex').value;
+      if (editIdx !== '' && metrics[editIdx]) {
+        m.status = metrics[editIdx].status;
+        metrics[editIdx] = m;
+        renderMetrics(); saveLocalState(); closeAllModals(); showToast('指标已更新');
+      } else {
+        metrics.unshift(m);
+        renderMetrics(); saveLocalState(); closeAllModals(); showToast('指标已新增');
+      }
+    }
+    function setupWeights() {
+      const saved = localStorage.getItem('wbzy_teacher_weights');
+      if (saved) {
+        state.teacherWeights = JSON.parse(saved);
+        const sliders = [...document.querySelectorAll('.wslider')];
+        sliders.forEach(sl => sl.value = state.teacherWeights[sl.dataset.key]);
+      }
+      const sliders = [...document.querySelectorAll('.wslider')];
+      sliders.forEach(sl => sl.addEventListener('input', () => {
+        sliders.forEach((s, i) => document.querySelectorAll('.wval')[i].textContent = s.value + '%');
+        updateWeightPreview();
+      }));
+      sliders.forEach((s, i) => document.querySelectorAll('.wval')[i].textContent = s.value + '%');
+      updateWeightPreview();
+    }
+    function updateWeightPreview() {
+      const sliders = [...document.querySelectorAll('.wslider')];
+      const vals = sliders.map(s => +s.value), total = vals.reduce((a, b) => a + b, 0);
+      sliders.forEach(s => state.teacherWeights[s.dataset.key] = +s.value);
+      const t = teacherData.find(x => x.name === '王宁');
+      const score = (
+        t.student * state.teacherWeights.student +
+        t.peer * state.teacherWeights.peer +
+        t.self * state.teacherWeights.self +
+        t.classroom * state.teacherWeights.classroom +
+        t.outcome * state.teacherWeights.outcome
+      ) / (total || 1);
+      const n = document.getElementById('weightNotice');
+      n.textContent = `权重合计 ${total}%，${total === 100 ? '配置有效' : '需调整为 100%'}。教师“王宁”重算综合分：${score.toFixed(1)}。`;
+      n.style.borderLeftColor = total === 100 ? '#14a36d' : '#e34d59';
+    }
+    function saveWeights() {
+      const total = Object.values(state.teacherWeights).reduce((a, b) => a + (+b || 0), 0);
+      if (total !== 100) { showToast('评价权重合计需为 100%'); return; }
+      recalculateTeacherTotals();
+      localStorage.setItem('wbzy_teacher_weights', JSON.stringify(state.teacherWeights));
+      saveLocalState();
+      filterTeachers();
+      updateDashboardKpis();
+      updateAnalytics();
+      drawAll();
+      showToast('指标方案已保存');
+    }
+
+    function createTeacherTask() {
+      const name = document.getElementById('ttName').value.trim();
+      const scope = document.getElementById('ttDept').value;
+      const start = document.getElementById('ttStart').value;
+      const end = document.getElementById('ttEnd').value;
+      const desc = document.getElementById('ttDesc').value.trim();
+      if (!name || !start || !end) { showToast('请完整填写任务名称和日期'); return; }
+      evaluationTasks.unshift({ id: 'et' + Date.now(), name, scope, start, end, status: '进行中', desc });
+      saveLocalState();
+      renderTeacherTasks();
+      closeAllModals();
+      showToast('评价任务已创建');
+    }
+
+    function statusText(status) {
+      return status === 'high' ? '高风险' : status === 'running' ? '处理中' : status === 'pending' ? '待确认' : '已完成';
+    }
+    function statusClass(status) {
+      return status === 'high' ? 's-bad' : status === 'running' ? 's-warn' : status === 'pending' ? 's-info' : 's-good';
+    }
+    function renderAlerts() {
+      document.getElementById('alertTbody').innerHTML = alerts.map(a => `
+    <tr>
+      <td>${a.title}</td><td>${a.target}</td><td>${a.rule}</td><td>${a.owner}</td><td>${a.date}</td>
+      <td><span class="status ${statusClass(a.status)}">${statusText(a.status)}</span></td>
+      <td><div class="progress mini-progress"><i style="width:${a.progress}%"></i></div></td>
+      <td><button class="btn sm" onclick="openAlert('${a.id}')">查看闭环</button><button class="btn sm" onclick="deleteAlert('${a.id}')">删除</button></td>
+    </tr>`).join('');
+    }
+    function openAlert(id) {
+      const a = alerts.find(x => x.id === id);
+      openDrawer(a.title, `
+    <div class="timeline">${a.events.map((x, i) => `<div class="tl"><b>${x}</b><p>${i === a.events.length - 1 ? '完成后可进行复测验证。' : '系统已记录证据与责任人。'}</p></div>`).join('')}</div>
+    <div class="card" style="box-shadow:none;margin-top:14px"><div class="card-head"><h3>更新闭环</h3></div><div class="card-body">
+      <div class="form-grid">
+        <div class="field"><label>状态</label><select id="alertEditStatus">
+          <option value="high" ${a.status === 'high' ? 'selected' : ''}>高风险</option>
+          <option value="running" ${a.status === 'running' ? 'selected' : ''}>处理中</option>
+          <option value="pending" ${a.status === 'pending' ? 'selected' : ''}>待确认</option>
+          <option value="done" ${a.status === 'done' ? 'selected' : ''}>已完成</option>
+        </select></div>
+        <div class="field"><label>进度</label><input id="alertEditProgress" type="number" min="0" max="100" value="${a.progress}"></div>
+        <div class="field" style="grid-column:1/-1"><label>新增记录</label><textarea id="alertEditEvent">已完成本轮改进记录。</textarea></div>
+      </div>
+      <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:12px"><button class="btn" onclick="deleteAlert('${a.id}')">删除</button><button class="btn primary" onclick="updateAlert('${a.id}')">保存更新</button></div>
+    </div></div>
+  `);
+    }
+    function updateAlert(id) {
+      const a = alerts.find(x => x.id === id);
+      a.status = document.getElementById('alertEditStatus').value;
+      a.progress = Math.max(0, Math.min(100, +document.getElementById('alertEditProgress').value || 0));
+      const ev = document.getElementById('alertEditEvent').value.trim();
+      if (ev) a.events.push(ev);
+      if (a.status === 'done') a.progress = 100;
+      renderAlerts(); updateAlertKpis(); renderWeeklyAlerts(); saveLocalState(); updateDashboardKpis(); updateAnalytics(); updateDiagnosticSummary(); closeDrawer();
+      showToast('闭环进度已更新');
+    }
+    function deleteAlert(id) {
+      if (!confirm('确认删除该改进任务吗？')) return;
+      const idx = alerts.findIndex(x => x.id === id);
+      if (idx < 0) return;
+      alerts.splice(idx, 1);
+      renderAlerts(); updateAlertKpis(); renderWeeklyAlerts(); saveLocalState(); updateDashboardKpis(); updateAnalytics(); updateDiagnosticSummary(); closeDrawer();
+      showToast('改进任务已删除');
+    }
+    function saveAlert() {
+      alerts.unshift({
+        id: 'a' + Date.now(),
+        createdDate: new Date().toISOString().slice(0, 10),
+        title: document.getElementById('amTitle').value.trim(),
+        target: document.getElementById('amTarget').value.trim(),
+        rule: document.getElementById('amRule').value.trim(),
+        owner: document.getElementById('amOwner').value.trim(),
+        date: document.getElementById('amDate').value,
+        status: document.getElementById('amStatus').value,
+        progress: document.getElementById('amStatus').value === 'done' ? 100 : 18,
+        events: ['已新建改进任务', '待补充实施证据']
+      });
+      renderAlerts(); updateAlertKpis(); renderWeeklyAlerts(); saveLocalState(); updateDashboardKpis(); updateAnalytics(); updateDiagnosticSummary(); closeAllModals();
+      showToast('改进任务已创建');
+    }
+    function updateAlertKpis() {
+      const open = alerts.filter(a => a.status !== 'done');
+      const high = open.filter(a => a.status === 'high').length;
+      const running = alerts.filter(a => a.status === 'running').length;
+      const done = alerts.filter(a => a.status === 'done').length;
+      const now = new Date();
+      const month = alerts.filter(a => {
+        const d = new Date(a.createdDate || '');
+        return !Number.isNaN(d.getTime()) && d.getFullYear() === now.getFullYear() && d.getMonth() === now.getMonth();
+      }).length;
+      const progress = avg(alerts.map(a => a.progress));
+
+      document.getElementById('alertOpenKpi').textContent = open.length;
+      document.getElementById('alertOpenSub').textContent = `高风险 ${high} · 待确认 ${open.filter(a => a.status === 'pending').length}`;
+      document.getElementById('alertMonthKpi').textContent = month;
+      document.getElementById('alertMonthSub').textContent = `按创建日期统计`;
+      document.getElementById('alertRunningKpi').textContent = running;
+      document.getElementById('alertRunningSub').textContent = `当前状态为“处理中”`;
+      document.getElementById('alertDoneKpi').textContent = done;
+      document.getElementById('alertDoneSub').textContent = `总任务 ${alerts.length}`;
+      document.getElementById('alertProgressKpi').textContent = progress === null ? '—' : progress.toFixed(1) + '%';
+      document.getElementById('alertProgressSub').textContent = `按全部改进任务计算`;
+    }
+
+
+    function updateDashboardKpis() {
+      recalculateTeacherTotals();
+      const teacherAvg = avg(teacherData.map(t => t.total)) ?? 0;
+      const outcomeAvg = avg(teacherData.map(t => t.outcome)) ?? 0;
+      const studentCovered = teacherData.filter(t => Number.isFinite(+t.student)).length;
+      const studentCoverage = pct(studentCovered, teacherData.length);
+      const passed = students.filter(s => s.score >= 60).length;
+      const passRate = pct(passed, students.length);
+      const done = alerts.filter(a => a.status === 'done').length;
+      const closeRate = pct(done, alerts.length);
+
+      document.getElementById('kpiTeacherQuality').textContent = teacherAvg.toFixed(1);
+      document.getElementById('kpiTeacherSub').textContent = `来自 ${teacherData.length} 名教师评价记录`;
+      setStatus(document.getElementById('kpiTeacherStatus'), teacherAvg, 90, 80);
+
+      document.getElementById('kpiOutcomeAvg').textContent = outcomeAvg.toFixed(1);
+      document.getElementById('kpiOutcomeSub').textContent = `来自 ${teacherData.length} 名教师学习成效评价`;
+      setStatus(document.getElementById('kpiOutcomeStatus'), outcomeAvg, 90, 80);
+
+      document.getElementById('kpiStudentCoverage').textContent = studentCoverage.toFixed(1) + '%';
+      document.getElementById('kpiStudentSub').textContent = `已评价 ${studentCovered}/${teacherData.length} 名教师`;
+      setStatus(document.getElementById('kpiStudentStatus'), studentCoverage, 95, 85);
+
+      document.getElementById('kpiPassRate').textContent = students.length ? passRate.toFixed(1) + '%' : '—';
+      document.getElementById('kpiPassSub').textContent = `通过 ${passed}/${students.length} 条成绩记录`;
+      setStatus(document.getElementById('kpiPassStatus'), passRate, 85, 75);
+
+      document.getElementById('kpiCloseRate').textContent = alerts.length ? closeRate.toFixed(1) + '%' : '—';
+      document.getElementById('kpiCloseSub').textContent = `已完成 ${done}/${alerts.length} 项改进任务`;
+      setStatus(document.getElementById('kpiCloseStatus'), closeRate, 85, 60);
+
+      renderQualityDistribution();
+      renderDataCollectionStatus();
+    }
+    function renderQualityDistribution() {
+      const groups = [
+        ['A 优秀（≥90）', teacherData.filter(t => t.total >= 90).length],
+        ['B 良好（80-89）', teacherData.filter(t => t.total >= 80 && t.total < 90).length],
+        ['C 合格（70-79）', teacherData.filter(t => t.total >= 70 && t.total < 80).length],
+        ['D 关注（＜70）', teacherData.filter(t => t.total < 70).length]
+      ];
+      const total = teacherData.length || 1;
+      document.getElementById('qualityDistributionTotal').textContent = `${teacherData.length} 名教师`;
+      document.getElementById('qualityDistribution').innerHTML = groups.map(([label, count]) => `
+    <div class="metric-row"><label>${label}</label><div class="progress"><i style="width:${pct(count, total).toFixed(1)}%"></i></div><b>${count}</b></div>
+  `).join('');
+    }
+    function renderDataCollectionStatus() {
+      const studentCovered = teacherData.filter(t => Number.isFinite(+t.student)).length;
+      const peerCovered = teacherData.filter(t => Number.isFinite(+t.peer)).length;
+      document.getElementById('dataCollectionStatus').innerHTML = `
+    <div class="feed"><div class="dot"></div><div><b>教师评价记录</b><p>${teacherData.length} 名教师 · 学生评价覆盖 ${studentCovered}/${teacherData.length}</p></div></div>
+    <div class="feed"><div class="dot" style="background:#14a36d"></div><div><b>题库数据</b><p>${questionData.length} 道题 · ${new Set(questionData.map(q => q.type)).size} 类题型</p></div></div>
+    <div class="feed"><div class="dot" style="background:#7b61ff"></div><div><b>试卷数据</b><p>${papers.length} 份试卷 · 进行中 ${papers.filter(p => p.status === 'running').length} 份</p></div></div>
+    <div class="feed"><div class="dot" style="background:#f59e0b"></div><div><b>测评成绩</b><p>${students.length} 条成绩记录 · 通过 ${students.filter(s => s.score >= 60).length} 条</p></div></div>
+  `;
+    }
+    function buildMajorAnalytics() {
+      const majors = [...new Set([...teacherData.map(teacherMajor), ...students.map(s => s.major)].filter(m => m && m !== '其他'))];
+      return majors.map(major => {
+        const ts = teacherData.filter(t => teacherMajor(t) === major);
+        const ss = students.filter(s => s.major === major);
+        const related = alerts.filter(a => alertMatchesMajor(a, major, ts));
+        const studentEval = avg(ts.map(t => t.student));
+        const outcome = avg(ts.map(t => t.outcome));
+        const interaction = avg(ts.map(t => t.classroom));
+        const pass = ss.length ? pct(ss.filter(s => s.score >= 60).length, ss.length) : null;
+        const close = related.length ? pct(related.filter(a => a.status === 'done').length, related.length) : null;
+        const core = [studentEval, outcome, interaction, pass].filter(v => v !== null);
+        return { major, studentEval, outcome, pass, interaction, close, teacherCount: ts.length, studentCount: ss.length, alertCount: related.length, coreIndex: avg(core) };
+      });
+    }
+    function heatClass(v) {
+      if (v === null || !Number.isFinite(v)) return '';
+      return v >= 90 ? 'h1' : v >= 80 ? 'h2' : v >= 70 ? 'h3' : 'h4';
+    }
+    function heatCell(v) {
+      return `<div class="heat ${heatClass(v)}">${v === null ? '—' : v.toFixed(1)}</div>`;
+    }
+    function updateAnalytics() {
+      const data = buildMajorAnalytics();
+      const body = document.getElementById('analyticsMatrixBody');
+      if (body) {
+        body.innerHTML = data.map(r => `<tr><td>${r.major}</td><td>${heatCell(r.studentEval)}</td><td>${heatCell(r.outcome)}</td><td>${heatCell(r.pass)}</td><td>${heatCell(r.interaction)}</td><td>${heatCell(r.close)}</td></tr>`).join('');
+      }
+      const valid = data.filter(r => r.coreIndex !== null).sort((a, b) => a.coreIndex - b.coreIndex);
+      const target = valid[0];
+      const conclusion = document.getElementById('analyticsConclusion');
+      const evidence = document.getElementById('analyticsEvidence');
+      if (target && conclusion && evidence) {
+        conclusion.textContent = `当前专业对比中，${target.major}的核心质量指标均值为 ${target.coreIndex.toFixed(1)}。该结论由教师评价、学习成效、课堂互动和当前成绩记录共同计算；涉及 ${target.teacherCount} 名教师、${target.studentCount} 条学生成绩和 ${target.alertCount} 项相关改进任务。`;
+        evidence.innerHTML = `
+      <div class="ai-point"><b>学生评价</b><br>${target.studentEval === null ? '无数据' : target.studentEval.toFixed(1) + ' 分'}</div>
+      <div class="ai-point"><b>学习成效 / 课堂互动</b><br>${target.outcome === null ? '—' : target.outcome.toFixed(1)} / ${target.interaction === null ? '—' : target.interaction.toFixed(1)}</div>
+      <div class="ai-point"><b>测评通过 / 闭环完成</b><br>${target.pass === null ? '无成绩' : target.pass.toFixed(1) + '%'} / ${target.close === null ? '无相关任务' : target.close.toFixed(1) + '%'}</div>
+    `;
+      }
+    }
+
+    function exportAnalyticsReport() {
+      const data = buildMajorAnalytics().sort((a, b) => (a.coreIndex ?? 999) - (b.coreIndex ?? 999));
+      const lines = ['群体绩效分析报告', ''];
+      data.forEach(r => {
+        lines.push(`${r.major}：核心质量指标 ${r.coreIndex === null ? '无数据' : r.coreIndex.toFixed(1)}；学生评价 ${r.studentEval === null ? '—' : r.studentEval.toFixed(1)}；学习成效 ${r.outcome === null ? '—' : r.outcome.toFixed(1)}；通过率 ${r.pass === null ? '—' : r.pass.toFixed(1) + '%'}；课堂互动 ${r.interaction === null ? '—' : r.interaction.toFixed(1)}；闭环完成 ${r.close === null ? '—' : r.close.toFixed(1) + '%'}`);
+      });
+      downloadFile('群体绩效分析报告.txt', lines.join('\n'));
+    }
+
+
+    function updateDiagnosticSummary() {
+      const openAlerts = alerts.filter(a => a.status !== 'done');
+      const high = openAlerts.filter(a => a.status === 'high').length;
+      const running = openAlerts.filter(a => a.status === 'running').length;
+      const warnTeachers = teacherData.filter(t => t.risk === 'warn').length;
+      const avgTeacher = avg(teacherData.map(t => t.total)) || 0;
+      const passRate = students.length ? pct(students.filter(s => s.score >= 60).length, students.length) : 0;
+      const mainRisk = openAlerts[0];
+
+      const txt = document.getElementById('aiText');
+      if (txt) {
+        const riskText = mainRisk ? `当前优先事项为“${mainRisk.title}”，对象：${mainRisk.target}，改进进度 ${mainRisk.progress}%。` : '当前没有未闭环质量事项。';
+        txt.textContent = `教师综合评价均值 ${avgTeacher.toFixed(1)}，当前成绩记录通过率 ${passRate.toFixed(1)}%。系统跟踪 ${openAlerts.length} 项未闭环事项，其中高风险 ${high} 项、处理中 ${running} 项；${warnTeachers} 名教师处于关注状态。${riskText}`;
+      }
+      const facts = document.getElementById('diagnosticFacts');
+      if (facts) {
+        facts.innerHTML = `
+      <div class="ai-point"><b>数据范围</b><br>教师 ${teacherData.length} 名 · 题目 ${questionData.length} 道 · 试卷 ${papers.length} 份 · 成绩 ${students.length} 条</div>
+      <div class="ai-point"><b>当前质量事项</b><br>未闭环 ${openAlerts.length} 项 · 高风险 ${high} 项 · 需关注教师 ${warnTeachers} 名</div>
+      <div class="ai-point"><b>改进任务</b><br>总计 ${alerts.length} 项 · 已完成 ${alerts.filter(a => a.status === 'done').length} 项 · 平均进度 ${(avg(alerts.map(a => a.progress)) || 0).toFixed(1)}%</div>
+    `;
+      }
+    }
+
+    function drawLineChart(canvasId, series, labels) {
+      const c = document.getElementById(canvasId); if (!c) return;
+      const dpr = window.devicePixelRatio || 1, rect = c.getBoundingClientRect();
+      if (rect.width === 0 || rect.height === 0) return;
+      c.width = rect.width * dpr; c.height = rect.height * dpr;
+      const ctx = c.getContext('2d'); ctx.scale(dpr, dpr);
+      const w = rect.width, h = rect.height, p = { l: 36, r: 16, t: 16, b: 28 };
+      ctx.clearRect(0, 0, w, h); ctx.font = '11px sans-serif'; ctx.fillStyle = '#7b879b'; ctx.strokeStyle = '#e8edf5'; ctx.lineWidth = 1;
+      [60, 70, 80, 90, 100].forEach(v => { const y = p.t + (100 - v) / (40) * (h - p.t - p.b); ctx.beginPath(); ctx.moveTo(p.l, y); ctx.lineTo(w - p.r, y); ctx.stroke(); ctx.fillText(v, 5, y + 4) });
+      labels.forEach((lab, i) => { const x = p.l + i * (w - p.l - p.r) / (labels.length - 1); ctx.fillText(lab, x - 10, h - 8) });
+      const colors = ['#2f6df6', '#14a36d', '#f59e0b'];
+      series.forEach((arr, si) => {
+        ctx.strokeStyle = colors[si]; ctx.lineWidth = 2.2; ctx.beginPath();
+        arr.forEach((v, i) => { const x = p.l + i * (w - p.l - p.r) / (arr.length - 1); const y = p.t + (100 - v) / 40 * (h - p.t - p.b); i ? ctx.lineTo(x, y) : ctx.moveTo(x, y) });
+        ctx.stroke();
+        arr.forEach((v, i) => { const x = p.l + i * (w - p.l - p.r) / (arr.length - 1); const y = p.t + (100 - v) / 40 * (h - p.t - p.b); ctx.fillStyle = colors[si]; ctx.beginPath(); ctx.arc(x, y, 3, 0, Math.PI * 2); ctx.fill() });
+      });
+    }
+    function drawBarChart(canvasId, values, labels) {
+      const c = document.getElementById(canvasId); if (!c) return;
+      const dpr = window.devicePixelRatio || 1, rect = c.getBoundingClientRect(); if (rect.width === 0 || rect.height === 0) return;
+      c.width = rect.width * dpr; c.height = rect.height * dpr;
+      const ctx = c.getContext('2d'); ctx.scale(dpr, dpr); const w = rect.width, h = rect.height, p = 30;
+      ctx.clearRect(0, 0, w, h); ctx.font = '11px sans-serif';
+      const max = Math.max(...values) * 1.12, bw = (w - p * 2) / values.length * .55, gap = (w - p * 2) / values.length;
+      values.forEach((v, i) => { const bh = (h - 55) * v / max; const x = p + i * gap + gap * .2, y = h - 28 - bh; ctx.fillStyle = i === 0 ? '#2f6df6' : '#89aafa'; ctx.fillRect(x, y, bw, bh); ctx.fillStyle = '#536078'; ctx.fillText(v, x + 4, y - 7); ctx.fillStyle = '#7b879b'; ctx.fillText(labels[i], x - 3, h - 10) });
+    }
+    function drawHistogram(canvasId, list = students) {
+      const bins = [
+        list.filter(s => s.score < 60).length,
+        list.filter(s => s.score >= 60 && s.score < 70).length,
+        list.filter(s => s.score >= 70 && s.score < 80).length,
+        list.filter(s => s.score >= 80 && s.score < 90).length,
+        list.filter(s => s.score >= 90 && s.score < 95).length,
+        list.filter(s => s.score >= 95).length
+      ];
+      drawBarChart(canvasId, bins, ['<60', '60-69', '70-79', '80-89', '90-94', '95+']);
+    }
+    function drawRadar(canvasId) {
+      const c = document.getElementById(canvasId); if (!c) return;
+      const dpr = window.devicePixelRatio || 1, rect = c.getBoundingClientRect(); if (rect.width === 0 || rect.height === 0) return;
+      c.width = rect.width * dpr; c.height = rect.height * dpr;
+      const ctx = c.getContext('2d'); ctx.scale(dpr, dpr); const w = rect.width, h = rect.height, cx = w / 2, cy = h / 2 + 2, R = Math.min(w, h) * .34;
+      const labels = ['学生评价', '同行评价', '教师自评', '课堂行为', '学习成效'];
+      const vals = [
+        avg(teacherData.map(t => t.student)) || 0,
+        avg(teacherData.map(t => t.peer)) || 0,
+        avg(teacherData.map(t => t.self)) || 0,
+        avg(teacherData.map(t => t.classroom)) || 0,
+        avg(teacherData.map(t => t.outcome)) || 0
+      ];
+      ctx.font = '11px sans-serif'; ctx.strokeStyle = '#dfe6f0'; ctx.fillStyle = '#6a778c';
+      for (let level = 1; level <= 4; level++) { ctx.beginPath(); labels.forEach((_, i) => { const a = -Math.PI / 2 + i * 2 * Math.PI / 5, r = R * level / 4, x = cx + Math.cos(a) * r, y = cy + Math.sin(a) * r; i ? ctx.lineTo(x, y) : ctx.moveTo(x, y) }); ctx.closePath(); ctx.stroke() }
+      labels.forEach((lab, i) => { const a = -Math.PI / 2 + i * 2 * Math.PI / 5, x = cx + Math.cos(a) * (R + 18), y = cy + Math.sin(a) * (R + 18); ctx.fillText(lab, x - 26, y + 4) });
+      ctx.beginPath(); vals.forEach((v, i) => { const a = -Math.PI / 2 + i * 2 * Math.PI / 5, r = R * v / 100, x = cx + Math.cos(a) * r, y = cy + Math.sin(a) * r; i ? ctx.lineTo(x, y) : ctx.moveTo(x, y) }); ctx.closePath(); ctx.fillStyle = 'rgba(47,109,246,.18)'; ctx.fill(); ctx.strokeStyle = '#2f6df6'; ctx.lineWidth = 2; ctx.stroke();
+    }
+    function drawAll() {
+      const currentTeacher = avg(teacherData.map(t => t.total)) || 0;
+      const currentOutcome = avg(teacherData.map(t => t.outcome)) || 0;
+      const currentClassroom = avg(teacherData.map(t => t.classroom)) || 0;
+      drawLineChart('trendChart',
+        [[84.0, 84.7, 85.1, 85.9, 86.4, currentTeacher],
+        [81.8, 82.6, 83.0, 83.5, 84.0, currentOutcome],
+        [82.1, 83.0, 83.8, 84.4, 85.0, currentClassroom]],
+        ['W1', 'W2', 'W3', 'W4', 'W5', 'W6']);
+      drawRadar('radarChart');
+      drawHistogram('scoreChart', getFilteredStudents());
+      const deptMap = {};
+      teacherData.forEach(t => { (deptMap[t.dept] ??= []).push(t.total) });
+      const labels = Object.keys(deptMap).map(x => x.replace('学院', '').replace('工程', ''));
+      const values = Object.values(deptMap).map(v => +(avg(v) || 0).toFixed(1));
+      drawBarChart('collegeChart', values, labels);
+    }
+
+    function renderAll() {
+      recalculateTeacherTotals();
+      renderWeeklyAlerts();
+      filterTeachers();
+      renderTeacherTasks();
+      renderMetrics();
+      renderQuestions();
+      renderPapers();
+      renderScores();
+      renderAlerts();
+      updateAlertKpis();
+      updateBasket();
+      updateDashboardKpis();
+      updateAnalytics();
+      updateDiagnosticSummary();
+    }
+
+    window.addEventListener('resize', () => setTimeout(drawAll, 120));
+
+    setNowFields();
+    loadLocalState();
+    renderQuestionTypeFields();
+    setupWeights();
+    renderAll();
+    setTimeout(drawAll, 80);
+  </script>
+</body>
+
+</html>

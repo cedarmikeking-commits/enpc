@@ -1,0 +1,39 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* 垂直文字样式 */
+.writing-mode-vertical {
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+}
+
+
+
+/* 自定义颜色变量 */
+
+:root {
+  --color-primary: #3b82f6;
+  /* 蓝色 */
+  --color-secondary: #10B981;
+  /* 绿色 */
+  --color-accent: #F59E0B;
+  /* 橙色 */
+  --color-background: #F3F4F6;
+  /* 浅灰色 */
+  --color-text: #111827;
+  /* 深灰色 */
+}
+
+.gradient-menu .ant-menu-item-selected {
+  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%) !important;
+  color: white;
+}
+
+.gradient .ant-menu-item-selected:hover {}
+
+.logout-btn {
+  .ant-btn-icon {
+    margin-top: 3px;
+  }
+}

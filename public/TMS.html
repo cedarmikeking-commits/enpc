@@ -1,0 +1,2435 @@
+<!DOCTYPE html>
+
+<html lang="zh-CN">
+
+<head>
+  <meta charset="utf-8" />
+  <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+  <title>培训与活动管理系统</title>
+  <style>
+    :root {
+      --bg: #f4f7fb;
+      --card: #ffffff;
+      --line: #e6ebf2;
+      --text: #172033;
+      --muted: #667085;
+      --primary: #2563eb;
+      --primary-2: #3b82f6;
+      --green: #16a34a;
+      --orange: #f59e0b;
+      --red: #ef4444;
+      --purple: #7c3aed;
+      --nav: #0f172a;
+      --nav2: #111c33;
+      --shadow: 0 12px 28px rgba(15, 23, 42, .08);
+      --radius: 16px;
+    }
+
+    * {
+      box-sizing: border-box
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: "Microsoft YaHei", "PingFang SC", system-ui, -apple-system, sans-serif;
+      font-size: 14px
+    }
+
+    button,
+    input,
+    select,
+    textarea {
+      font: inherit
+    }
+
+    button {
+      cursor: pointer
+    }
+
+    .app {
+      display: grid;
+      grid-template-columns: 246px 1fr;
+      min-height: 100vh
+    }
+
+    .sidebar {
+      background: linear-gradient(180deg, var(--nav), var(--nav2));
+      color: #fff;
+      padding: 18px 14px;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow: auto
+    }
+
+    .brand {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      padding: 4px 8px 18px
+    }
+
+    .logo {
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, #60a5fa, #2563eb);
+      display: grid;
+      place-items: center;
+      font-weight: 800;
+      box-shadow: 0 12px 20px rgba(37, 99, 235, .3)
+    }
+
+    .brand h1 {
+      margin: 0;
+      font-size: 15px
+    }
+
+    .brand p {
+      margin: 3px 0 0;
+      font-size: 11px;
+      color: #a7b7d6
+    }
+
+    .nav-title {
+      font-size: 11px;
+      color: #7083a3;
+      padding: 12px 12px 6px;
+      letter-spacing: .08em
+    }
+
+    .nav-item {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      color: #cdd7e6;
+      padding: 11px 12px;
+      border-radius: 12px;
+      margin: 4px 0;
+      transition: .2s
+    }
+
+    .nav-item:hover,
+    .nav-item.active {
+      background: rgba(59, 130, 246, .16);
+      color: #fff
+    }
+
+    .nav-item.active {
+      box-shadow: inset 3px 0 0 #60a5fa
+    }
+
+    .nav-item .ico {
+      width: 24px;
+      height: 24px;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, .08);
+      display: grid;
+      place-items: center;
+      font-size: 13px
+    }
+
+    .main {
+      min-width: 0
+    }
+
+    .topbar {
+      height: 68px;
+      background: rgba(255, 255, 255, .94);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 22px;
+      position: sticky;
+      top: 0;
+      z-index: 20
+    }
+
+    .crumb strong {
+      font-size: 17px
+    }
+
+    .crumb span {
+      color: #98a2b3
+    }
+
+    .top-actions {
+      display: flex;
+      gap: 10px;
+      align-items: center
+    }
+
+    .avatar {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      background: #dbeafe;
+      color: #1d4ed8;
+      font-weight: 700
+    }
+
+    .iconbtn {
+      border: 1px solid var(--line);
+      background: #fff;
+      border-radius: 9px;
+      padding: 7px 10px;
+      color: #475467
+    }
+
+    .content {
+      padding: 22px;
+      max-width: 1600px;
+      margin: auto
+    }
+
+    .hero {
+      background: linear-gradient(120deg, #0f3d91, #2563eb 58%, #5b8ff9);
+      color: #fff;
+      border-radius: 20px;
+      padding: 22px 24px;
+      box-shadow: var(--shadow);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
+      overflow: hidden;
+      position: relative
+    }
+
+    .hero:after {
+      content: "";
+      position: absolute;
+      right: -80px;
+      top: -90px;
+      width: 260px;
+      height: 260px;
+      border: 44px solid rgba(255, 255, 255, .07);
+      border-radius: 50%
+    }
+
+    .hero h2 {
+      font-size: 24px;
+      margin: 0 0 6px
+    }
+
+    .hero p {
+      margin: 0;
+      color: #dbeafe
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 10px;
+      z-index: 1
+    }
+
+    .btn {
+      border: 1px solid transparent;
+      padding: 9px 14px;
+      border-radius: 10px;
+      font-weight: 600;
+      transition: .2s
+    }
+
+    .btn:hover {
+      transform: translateY(-1px)
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: #fff
+    }
+
+    .btn-light {
+      background: #fff;
+      color: #1d4ed8
+    }
+
+    .btn-ghost {
+      background: #fff;
+      border-color: var(--line);
+      color: #344054
+    }
+
+    .btn-danger {
+      background: #fff5f5;
+      border-color: #fecaca;
+      color: #dc2626
+    }
+
+    .section {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      margin-top: 16px
+    }
+
+    .section-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 18px;
+      border-bottom: 1px solid var(--line);
+      gap: 10px;
+      flex-wrap: wrap
+    }
+
+    .section-head h3 {
+      margin: 0;
+      font-size: 16px
+    }
+
+    .sub {
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 4px
+    }
+
+    .section-body {
+      padding: 18px
+    }
+
+    .module {
+      display: none
+    }
+
+    .module.active {
+      display: block
+    }
+
+    .grid-kpi {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 14px;
+      margin: 18px 0
+    }
+
+    .kpi {
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 16px
+    }
+
+    .kpi .label {
+      font-size: 12px;
+      color: var(--muted)
+    }
+
+    .kpi .value {
+      font-size: 26px;
+      font-weight: 800;
+      margin: 7px 0 4px
+    }
+
+    .trend {
+      font-size: 12px
+    }
+
+    .up {
+      color: var(--green)
+    }
+
+    .down {
+      color: var(--red)
+    }
+
+    .cards2 {
+      display: grid;
+      grid-template-columns: 1.15fr .85fr;
+      gap: 16px
+    }
+
+    .cards3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px
+    }
+
+    .cards4 {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px
+    }
+
+    .mini-card {
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 14px;
+      background: #fff
+    }
+
+    .mini-title {
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 8px
+    }
+
+    .mini-value {
+      font-size: 22px;
+      font-weight: 800
+    }
+
+    .filters {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      flex-wrap: wrap
+    }
+
+    .filters input,
+    .filters select {
+      border: 1px solid var(--line);
+      background: #fff;
+      border-radius: 9px;
+      padding: 8px 10px;
+      outline: none
+    }
+
+    .tabs {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap
+    }
+
+    .tab {
+      padding: 8px 12px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: #fff;
+      color: #475467
+    }
+
+    .tab.active {
+      background: #eff6ff;
+      color: #1d4ed8;
+      border-color: #bfdbfe;
+      font-weight: 700
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse
+    }
+
+    th {
+      font-size: 12px;
+      color: #667085;
+      background: #f8fafc;
+      text-align: left;
+      padding: 11px 10px;
+      border-bottom: 1px solid var(--line)
+    }
+
+    td {
+      padding: 12px 10px;
+      border-bottom: 1px solid #edf0f4;
+      vertical-align: middle
+    }
+
+    tr:hover td {
+      background: #fbfdff
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 4px 8px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 600
+    }
+
+    .dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: currentColor
+    }
+
+    .b-blue {
+      background: #eff6ff;
+      color: #2563eb
+    }
+
+    .b-green {
+      background: #ecfdf3;
+      color: #15803d
+    }
+
+    .b-orange {
+      background: #fff7ed;
+      color: #c2410c
+    }
+
+    .b-gray {
+      background: #f2f4f7;
+      color: #475467
+    }
+
+    .b-red {
+      background: #fef2f2;
+      color: #dc2626
+    }
+
+    .b-purple {
+      background: #f5f3ff;
+      color: #6d28d9
+    }
+
+    .metric-inline {
+      display: flex;
+      gap: 9px;
+      align-items: center
+    }
+
+    .progress {
+      height: 8px;
+      background: #edf2f7;
+      border-radius: 99px;
+      overflow: hidden
+    }
+
+    .progress>span {
+      display: block;
+      height: 100%;
+      background: linear-gradient(90deg, #60a5fa, #2563eb);
+      border-radius: 99px
+    }
+
+    .chart {
+      height: 240px;
+      background: linear-gradient(180deg, #fff, #fbfdff);
+      border: 1px solid #eef2f6;
+      border-radius: 12px;
+      padding: 14px
+    }
+
+    .chart svg {
+      width: 100%;
+      height: 100%
+    }
+
+    .legend {
+      display: flex;
+      gap: 14px;
+      align-items: center;
+      font-size: 12px;
+      color: #667085
+    }
+
+    .legend i {
+      display: inline-block;
+      width: 9px;
+      height: 9px;
+      border-radius: 3px;
+      margin-right: 5px
+    }
+
+    .activity-list {
+      display: grid;
+      gap: 12px
+    }
+
+    .activity {
+      display: grid;
+      grid-template-columns: 72px 1fr auto;
+      gap: 14px;
+      align-items: center;
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: 13px
+    }
+
+    .datebox {
+      background: #eff6ff;
+      color: #1d4ed8;
+      border-radius: 10px;
+      padding: 8px;
+      text-align: center
+    }
+
+    .datebox b {
+      display: block;
+      font-size: 18px
+    }
+
+    .activity h4 {
+      margin: 0 0 5px;
+      font-size: 14px
+    }
+
+    .activity p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 12px
+    }
+
+    .avatar-stack {
+      display: flex
+    }
+
+    .avatar-stack span {
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      background: #e0e7ff;
+      border: 2px solid #fff;
+      margin-left: -7px;
+      display: grid;
+      place-items: center;
+      font-size: 10px
+    }
+
+    .avatar-stack span:first-child {
+      margin-left: 0
+    }
+
+    .timeline {
+      display: flex;
+      gap: 0;
+      margin-top: 8px
+    }
+
+    .stage {
+      flex: 1;
+      position: relative;
+      text-align: center;
+      padding-top: 34px
+    }
+
+    .stage:before {
+      content: "";
+      position: absolute;
+      top: 15px;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: #e5e7eb
+    }
+
+    .stage:first-child:before {
+      left: 50%
+    }
+
+    .stage:last-child:before {
+      right: 50%
+    }
+
+    .stage .node {
+      position: absolute;
+      top: 7px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: #cbd5e1;
+      border: 4px solid #fff;
+      box-shadow: 0 0 0 1px #cbd5e1
+    }
+
+    .stage.done:before,
+    .stage.current:before {
+      background: #60a5fa
+    }
+
+    .stage.done .node {
+      background: #2563eb;
+      box-shadow: 0 0 0 1px #2563eb
+    }
+
+    .stage.current .node {
+      background: #f59e0b;
+      box-shadow: 0 0 0 1px #f59e0b
+    }
+
+    .stage .name {
+      font-size: 12px;
+      font-weight: 700
+    }
+
+    .stage .date {
+      font-size: 11px;
+      color: #98a2b3;
+      margin-top: 4px
+    }
+
+    .needs-card {
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 15px
+    }
+
+    .needs-card .top {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px
+    }
+
+    .needs-card h4 {
+      margin: 0 0 5px
+    }
+
+    .needs-card p {
+      font-size: 12px;
+      color: var(--muted);
+      margin: 4px 0
+    }
+
+    .tags {
+      display: flex;
+      gap: 7px;
+      flex-wrap: wrap;
+      margin: 10px 0
+    }
+
+    .tag {
+      font-size: 11px;
+      padding: 4px 7px;
+      border-radius: 7px;
+      background: #f2f4f7;
+      color: #475467
+    }
+
+    .split-stat {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin-top: 12px
+    }
+
+    .split-stat div {
+      background: #f8fafc;
+      border-radius: 9px;
+      padding: 8px;
+      text-align: center
+    }
+
+    .split-stat b {
+      display: block;
+      font-size: 16px
+    }
+
+    .split-stat span {
+      font-size: 11px;
+      color: #667085
+    }
+
+    .ring {
+      --p: 75;
+      width: 118px;
+      height: 118px;
+      border-radius: 50%;
+      background: conic-gradient(#2563eb calc(var(--p)*1%), #e8edf5 0);
+      display: grid;
+      place-items: center;
+      margin: auto
+    }
+
+    .ring:after {
+      content: attr(data-label);
+      width: 86px;
+      height: 86px;
+      background: #fff;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      font-weight: 800;
+      font-size: 19px;
+      color: #1e3a8a
+    }
+
+    .barrow {
+      display: grid;
+      grid-template-columns: 120px 1fr 48px;
+      align-items: center;
+      gap: 10px;
+      margin: 10px 0;
+      font-size: 12px
+    }
+
+    .bar {
+      height: 9px;
+      border-radius: 10px;
+      background: #edf2f7;
+      overflow: hidden
+    }
+
+    .bar span {
+      display: block;
+      height: 100%;
+      border-radius: 10px;
+      background: linear-gradient(90deg, #93c5fd, #2563eb)
+    }
+
+    .feedback {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 10px;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--line)
+    }
+
+    .stars {
+      color: #f59e0b;
+      letter-spacing: 1px
+    }
+
+    .drawer,
+    .modal-mask,
+    .confirm-mask {
+      position: fixed;
+      inset: 0;
+      z-index: 50;
+      display: none
+    }
+
+    .drawer.open,
+    .modal-mask.open,
+    .confirm-mask.open {
+      display: block
+    }
+
+    .drawer:before,
+    .modal-mask:before,
+    .confirm-mask:before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: rgba(15, 23, 42, .38)
+    }
+
+    .drawer-panel {
+      position: absolute;
+      right: 0;
+      top: 0;
+      bottom: 0;
+      width: min(720px, 96vw);
+      background: #fff;
+      box-shadow: -20px 0 50px rgba(15, 23, 42, .2);
+      overflow: auto;
+      animation: slide .22s ease
+    }
+
+    @keyframes slide {
+      from {
+        transform: translateX(40px);
+        opacity: .6
+      }
+
+      to {
+        transform: none;
+        opacity: 1
+      }
+    }
+
+    .panel-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 18px 20px;
+      border-bottom: 1px solid var(--line);
+      position: sticky;
+      top: 0;
+      background: #fff;
+      z-index: 2
+    }
+
+    .panel-head h3 {
+      margin: 0
+    }
+
+    .close {
+      width: 32px;
+      height: 32px;
+      border-radius: 9px;
+      border: 1px solid var(--line);
+      background: #fff
+    }
+
+    .panel-body {
+      padding: 20px
+    }
+
+    .panel-foot {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      padding-top: 18px;
+      flex-wrap: wrap
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 6px
+    }
+
+    .field.full {
+      grid-column: 1/-1
+    }
+
+    .field label {
+      font-size: 12px;
+      color: #475467;
+      font-weight: 600
+    }
+
+    .field input,
+    .field select,
+    .field textarea {
+      border: 1px solid #d9dee7;
+      border-radius: 9px;
+      padding: 10px 11px;
+      outline: none;
+      background: #fff
+    }
+
+    .field textarea {
+      min-height: 84px;
+      resize: vertical
+    }
+
+    .field input:focus,
+    .field select:focus,
+    .field textarea:focus {
+      border-color: #93c5fd;
+      box-shadow: 0 0 0 3px #dbeafe
+    }
+
+    .checkrow {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap
+    }
+
+    .checkrow label {
+      font-size: 13px;
+      color: #475467
+    }
+
+    .hint {
+      font-size: 12px;
+      color: #667085;
+      background: #f8fafc;
+      border: 1px dashed #d0d5dd;
+      border-radius: 10px;
+      padding: 10px 12px
+    }
+
+    .empty {
+      padding: 40px;
+      text-align: center;
+      color: #98a2b3
+    }
+
+    .score {
+      font-size: 24px;
+      font-weight: 800;
+      color: #1d4ed8
+    }
+
+    .action-cell {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      white-space: nowrap;
+      flex-wrap: wrap
+    }
+
+    .toast {
+      position: fixed;
+      right: 24px;
+      bottom: 24px;
+      background: #111827;
+      color: #fff;
+      padding: 12px 16px;
+      border-radius: 10px;
+      box-shadow: var(--shadow);
+      opacity: 0;
+      transform: translateY(10px);
+      pointer-events: none;
+      transition: .25s;
+      z-index: 100
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: none
+    }
+
+    .confirm-card,
+    .modal-card {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      width: min(820px, 94vw);
+      max-height: 86vh;
+      overflow: auto;
+      background: #fff;
+      border-radius: 18px;
+      box-shadow: 0 24px 70px rgba(15, 23, 42, .28)
+    }
+
+    .confirm-card {
+      width: min(460px, 92vw)
+    }
+
+    .text-right {
+      text-align: right
+    }
+
+    .link {
+      color: #2563eb;
+      font-weight: 600;
+      cursor: pointer
+    }
+
+    .helper {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap
+    }
+
+    .footer-note {
+      font-size: 12px;
+      color: #98a2b3;
+      margin-top: 10px
+    }
+
+    @media(max-width:1200px) {
+      .grid-kpi {
+        grid-template-columns: repeat(3, 1fr)
+      }
+
+      .cards2 {
+        grid-template-columns: 1fr
+      }
+
+      .cards3,
+      .cards4 {
+        grid-template-columns: repeat(2, 1fr)
+      }
+    }
+
+    @media(max-width:820px) {
+      .app {
+        grid-template-columns: 78px 1fr
+      }
+
+      .sidebar {
+        padding: 14px 9px
+      }
+
+      .brand h1,
+      .brand p,
+      .nav-item span,
+      .nav-title {
+        display: none
+      }
+
+      .brand {
+        justify-content: center
+      }
+
+      .nav-item {
+        justify-content: center
+      }
+
+      .content {
+        padding: 16px
+      }
+
+      .topbar {
+        padding: 0 14px
+      }
+
+      .grid-kpi {
+        grid-template-columns: repeat(2, 1fr)
+      }
+
+      .cards3,
+      .cards4 {
+        grid-template-columns: 1fr
+      }
+
+      .form-grid {
+        grid-template-columns: 1fr
+      }
+
+      .field.full {
+        grid-column: auto
+      }
+    }
+
+    
+  button, [role=button] {
+    cursor: pointer;
+}
+*, :before, :after {
+    box-sizing: border-box;
+    border-width: 0;
+    border-style: solid;
+    border-color: #e5e7eb;
+}
+*, :before, :after {
+    --tw-border-spacing-x: 0;
+    --tw-border-spacing-y: 0;
+    --tw-translate-x: 0;
+    --tw-translate-y: 0;
+    --tw-rotate: 0;
+    --tw-skew-x: 0;
+    --tw-skew-y: 0;
+    --tw-scale-x: 1;
+    --tw-scale-y: 1;
+    --tw-pan-x: ;
+    --tw-pan-y: ;
+    --tw-pinch-zoom: ;
+    --tw-scroll-snap-strictness: proximity;
+    --tw-gradient-from-position: ;
+    --tw-gradient-via-position: ;
+    --tw-gradient-to-position: ;
+    --tw-ordinal: ;
+    --tw-slashed-zero: ;
+    --tw-numeric-figure: ;
+    --tw-numeric-spacing: ;
+    --tw-numeric-fraction: ;
+    --tw-ring-inset: ;
+    --tw-ring-offset-width: 0px;
+    --tw-ring-offset-color: #fff;
+    --tw-ring-color: rgb(59 130 246 / .5);
+    --tw-ring-offset-shadow: 0 0 #0000;
+    --tw-ring-shadow: 0 0 #0000;
+    --tw-shadow: 0 0 #0000;
+    --tw-shadow-colored: 0 0 #0000;
+    --tw-blur: ;
+    --tw-brightness: ;
+    --tw-contrast: ;
+    --tw-grayscale: ;
+    --tw-hue-rotate: ;
+    --tw-invert: ;
+    --tw-saturate: ;
+    --tw-sepia: ;
+    --tw-drop-shadow: ;
+    --tw-backdrop-blur: ;
+    --tw-backdrop-brightness: ;
+    --tw-backdrop-contrast: ;
+    --tw-backdrop-grayscale: ;
+    --tw-backdrop-hue-rotate: ;
+    --tw-backdrop-invert: ;
+    --tw-backdrop-opacity: ;
+    --tw-backdrop-saturate: ;
+    --tw-backdrop-sepia: ;
+    --tw-contain-size: ;
+    --tw-contain-layout: ;
+    --tw-contain-paint: ;
+}
+.w-5 {
+    width: 1.25rem;
+}
+
+.h-5 {
+    height: 1.25rem;
+}
+
+  .transition-all {
+    transition-property: all;
+    transition-timing-function: cubic-bezier(.4, 0, .2, 1);
+    transition-duration: .15s;
+}
+
+.shadow-md {
+    --tw-shadow: 0 4px 6px -1px rgb(0 0 0 / .1), 0 2px 4px -2px rgb(0 0 0 / .1);
+    --tw-shadow-colored: 0 4px 6px -1px var(--tw-shadow-color), 0 2px 4px -2px var(--tw-shadow-color);
+    box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
+}
+.text-white {
+    --tw-text-opacity: 1;
+    color: rgb(255 255 255 / var(--tw-text-opacity, 1));
+}
+.py-3 {
+    padding-top: .75rem;
+    padding-bottom: .75rem;
+}
+.px-6 {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+}
+.to-cyan-500 {
+    --tw-gradient-to: #06b6d4 var(--tw-gradient-to-position);
+}
+.from-blue-600 {
+    --tw-gradient-from: #2563eb var(--tw-gradient-from-position);
+    --tw-gradient-to: #06b6d4 var(--tw-gradient-to-position);
+    --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to);
+}
+.bg-gradient-to-r {
+    background-image: linear-gradient(to right, var(--tw-gradient-stops));
+}
+.rounded-xl {
+    border-radius: .75rem;
+}
+.justify-center {
+    justify-content: center;
+}
+.items-center {
+    align-items: center;
+}
+.w-full {
+    width: 100%;
+}
+.flex {
+    display: flex;
+}
+  </style>
+</head>
+
+<body>
+  <div class="app">
+    <aside class="sidebar">
+      <div class="brand">
+        <!-- <div class="logo">智</div> -->
+        <img style="width:32px;" src='https://static.szaccord.org.cn/logo.png' alt="Logo"
+          className="w-10 h-10 rounded-lg object-cover" />
+        <div>
+          <h1>培训与活动管理系统</h1>
+          <p>Training &amp; Activity OS</p>
+        </div>
+      </div>
+      <div class="nav-title">业务中心</div>
+      <div class="nav-item active" data-module="dashboard">
+        <div class="ico">⌂</div><span>运营总览</span>
+      </div>
+      <div class="nav-item" data-module="plans">
+        <div class="ico">▣</div><span>培训计划管理</span>
+      </div>
+      <div class="nav-item" data-module="activities">
+        <div class="ico">◉</div><span>培训活动管理</span>
+      </div>
+      <div class="nav-item" data-module="enterprise">
+        <div class="ico">▤</div><span>企业培训服务</span>
+      </div>
+      <div class="nav-item" data-module="analysis">
+        <div class="ico">⌁</div><span>培训效果分析</span>
+      </div>
+      <div class="nav-title">基础管理</div>
+
+      <div class="nav-item" data-module="learners">
+        <div class="ico">♙</div><span>学员管理</span>
+      </div>
+      <div class="nav-item" data-module="instructors">
+        <div class="ico">✦</div><span>讲师管理</span>
+      </div>
+    </aside>
+    <main class="main">
+      <header class="topbar">
+        <div class="crumb"><strong id="pageTitle">运营总览</strong></div>
+        <div class="top-actions">
+
+
+          <button onclick="(function(){window.location.href='/'})()"
+            class="w-full px-6 py-3 rounded-xl transition-all bg-gradient-to-r from-blue-600 to-cyan-500 hover:from-blue-600 hover:to-cyan-500 text-white flex items-center justify-center space-x-2 shadow-md hover:shadow-lg"><svg
+              class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6">
+              </path>
+            </svg></button>
+
+          <!-- <div class="avatar">管</div> -->
+        </div>
+      </header>
+      <div class="content">
+        <section class="module active" id="dashboard">
+          <div class="hero">
+            <div>
+              <h2>培训运营驾驶舱</h2>
+              <p>覆盖培训计划、活动执行、企业定制服务、学员过程数据与效果分析的全流程闭环管理。</p>
+            </div>
+            <div class="hero-actions">
+              <button class="btn btn-light" onclick="openPlanForm()">＋ 新建培训计划</button>
+              <button class="btn btn-light" onclick="openActivityForm()">＋ 发布培训活动</button>
+            </div>
+          </div>
+          <div class="grid-kpi" id="dashboardKpis"></div>
+          <div class="cards2">
+            <div class="section">
+              <div class="section-head">
+                <div>
+                  <h3>培训执行趋势</h3>
+                  <div class="sub">计划完成率 / 学员完课率（月度）</div>
+                </div>
+                <div class="legend"><span><i style="background:#2563eb"></i>计划完成率</span><span><i
+                      style="background:#93c5fd"></i>完课率</span></div>
+              </div>
+              <div class="section-body">
+                <div class="chart" id="trendChart"></div>
+              </div>
+            </div>
+            <div class="section">
+              <div class="section-head">
+                <div>
+                  <h3>本周活动日程</h3>
+                  <div class="sub">直播课程、互动答疑、案例研讨</div>
+                </div><button class="btn btn-ghost" onclick="switchModule('activities')">查看全部</button>
+              </div>
+              <div class="section-body activity-list" id="weekActivities"></div>
+            </div>
+          </div>
+          <div class="cards3" style="margin-top:16px">
+            <div class="section">
+              <div class="section-head">
+                <div>
+                  <h3>重点计划执行</h3>
+                  <div class="sub">目标、进度、交付同步跟踪</div>
+                </div>
+              </div>
+              <div class="section-body" id="focusPlans"></div>
+            </div>
+            <div class="section">
+              <div class="section-head">
+                <div>
+                  <h3>能力提升 TOP 5</h3>
+                  <div class="sub">按前后测平均提升值</div>
+                </div>
+              </div>
+              <div class="section-body" id="abilityBars"></div>
+            </div>
+            <div class="section">
+              <div class="section-head">
+                <div>
+                  <h3>最新反馈</h3>
+                  <div class="sub">活动评价与改进意见</div>
+                </div>
+              </div>
+              <div class="section-body" id="recentFeedback"></div>
+            </div>
+          </div>
+        </section>
+        <section class="module" id="plans">
+          <div class="section">
+            <div class="section-head">
+              <div>
+                <h3>培训计划管理</h3>
+                <div class="sub">支持培训计划创建、阶段设置、目标与考核指标管理</div>
+              </div>
+              <div class="helper">
+                <button class="btn btn-ghost" onclick="exportTableCSV('plans')">导出计划</button>
+                <button class="btn btn-primary" onclick="openPlanForm()">＋ 新建计划</button>
+              </div>
+            </div>
+            <div class="section-body">
+              <div class="tabs" id="planTabs"></div>
+              <div class="filters" style="margin:12px 0">
+                <input id="planSearch" placeholder="搜索计划名称" />
+                <select id="planTypeFilter">
+                  <option value="">全部类型</option>
+                  <option>企业定制</option>
+                  <option>公开培训</option>
+                  <option>内部培训</option>
+                </select>
+                <select id="planStatusFilter">
+                  <option value="">全部状态</option>
+                  <option>进行中</option>
+                  <option>待启动</option>
+                  <option>已完成</option>
+                </select>
+                <button class="btn btn-ghost" onclick="renderPlans()">查询</button>
+              </div>
+              <div style="overflow:auto">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>计划名称</th>
+                      <th>类型</th>
+                      <th>覆盖人群</th>
+                      <th>周期</th>
+                      <th>目标达成</th>
+                      <th>状态</th>
+                      <th>操作</th>
+                    </tr>
+                  </thead>
+                  <tbody id="planTable"></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </section>
+        <section class="module" id="activities">
+          <div class="section">
+            <div class="section-head">
+              <div>
+                <h3>培训活动管理</h3>
+                <div class="sub">支持活动创建、审核发布、通知邀请、签到、互动记录、反馈与活动归档</div>
+              </div>
+              <div class="helper">
+                <button class="btn btn-ghost" onclick="exportTableCSV('activities')">导出活动</button>
+                <button class="btn btn-primary" onclick="openActivityForm()">＋ 创建活动</button>
+              </div>
+            </div>
+            <div class="section-body">
+              <div class="tabs" id="activityTabs"></div>
+              <div class="filters" style="margin:12px 0">
+                <input id="activitySearch" placeholder="搜索活动主题" />
+                <select id="activityStatusFilter">
+                  <option value="">全部状态</option>
+                  <option>待审核</option>
+                  <option>报名中</option>
+                  <option>进行中</option>
+                  <option>已结束</option>
+                </select>
+                <select id="activityFormatFilter">
+                  <option value="">全部形式</option>
+                  <option>直播课程</option>
+                  <option>互动答疑</option>
+                  <option>案例研讨</option>
+                </select>
+                <button class="btn btn-ghost" onclick="renderActivities()">筛选</button>
+              </div>
+              <div style="overflow:auto">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>活动主题</th>
+                      <th>形式</th>
+                      <th>时间</th>
+                      <th>讲师</th>
+                      <th>报名/容量</th>
+                      <th>参与率</th>
+                      <th>反馈评分</th>
+                      <th>状态</th>
+                      <th>操作</th>
+                    </tr>
+                  </thead>
+                  <tbody id="activityTable"></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </section>
+        <section class="module" id="enterprise">
+          <div class="cards4" id="enterpriseKpis"></div>
+          <div class="section">
+            <div class="section-head">
+              <div>
+                <h3>企业培训需求对接</h3>
+                <div class="sub">围绕企业需求对接、企业学员管理与培训效果报告进行全过程管理</div>
+              </div>
+              <div class="helper">
+                <button class="btn btn-ghost" onclick="exportTableCSV('enterprise')">导出企业数据</button>
+                <button class="btn btn-primary" onclick="openNeedForm()">＋ 新建企业需求</button>
+              </div>
+            </div>
+            <div class="section-body">
+              <div class="cards3" id="enterpriseNeeds"></div>
+            </div>
+          </div>
+          <div class="section">
+            <div class="section-head">
+              <div>
+                <h3>企业学员与项目进度</h3>
+                <div class="sub">跟踪企业学员学习进度、测评成绩、能力提升与项目状态</div>
+              </div>
+            </div>
+            <div class="section-body">
+              <div style="overflow:auto">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>企业</th>
+                      <th>项目</th>
+                      <th>学员</th>
+                      <th>完课率</th>
+                      <th>平均测评</th>
+                      <th>能力提升</th>
+                      <th>项目负责人</th>
+                      <th>状态</th>
+                    </tr>
+                  </thead>
+                  <tbody id="enterpriseTable"></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </section>
+        <section class="module" id="analysis">
+          <div class="grid-kpi" id="analysisKpis"></div>
+          <div class="cards2">
+            <div class="section">
+              <div class="section-head">
+                <div>
+                  <h3>能力提升趋势</h3>
+                  <div class="sub">按月对比培训前 / 培训后平均测评</div>
+                </div>
+              </div>
+              <div class="section-body">
+                <div class="chart" id="abilityTrendChart"></div>
+              </div>
+            </div>
+            <div class="section">
+              <div class="section-head">
+                <div>
+                  <h3>培训活动参与结构</h3>
+                  <div class="sub">直播课程 / 互动答疑 / 案例研讨</div>
+                </div>
+              </div>
+              <div class="section-body"
+                style="display:grid;grid-template-columns:150px 1fr;align-items:center;gap:24px">
+                <div class="ring" data-label="88%" id="participationRing" style="--p:88"></div>
+                <div id="participationBars"></div>
+              </div>
+            </div>
+          </div>
+          <div class="cards3" style="margin-top:16px">
+            <div class="section">
+              <div class="section-head">
+                <div>
+                  <h3>培训机构分析</h3>
+                  <div class="sub">质量 / 交付 / 成本</div>
+                </div>
+              </div>
+              <div class="section-body" id="providerAnalysis"></div>
+            </div>
+            <div class="section">
+              <div class="section-head">
+                <div>
+                  <h3>企业客户分析</h3>
+                  <div class="sub">活跃度与成效</div>
+                </div>
+              </div>
+              <div class="section-body" id="customerAnalysis"></div>
+            </div>
+            <div class="section">
+              <div class="section-head">
+                <div>
+                  <h3>改进建议</h3>
+                  <div class="sub">基于执行过程与效果数据生成</div>
+                </div>
+              </div>
+              <div class="section-body" id="recommendations"></div>
+            </div>
+          </div>
+        </section>
+
+        <section class="module" id="learners">
+          <div class="section">
+            <div class="section-head">
+              <div>
+                <h3>学员管理</h3>
+                <div class="sub">企业学员、内部学员与公开报名学员统一管理</div>
+              </div>
+              <div class="helper">
+                <button class="btn btn-ghost" onclick="exportTableCSV('learners')">导出学员</button>
+                <button class="btn btn-primary" onclick="openLearnerForm()">＋ 新增学员</button>
+              </div>
+            </div>
+            <div class="section-body">
+              <div style="overflow:auto">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>姓名</th>
+                      <th>企业 / 组织</th>
+                      <th>岗位</th>
+                      <th>学习计划</th>
+                      <th>完成课程</th>
+                      <th>平均测评</th>
+                      <th>学习状态</th>
+                      <th>操作</th>
+                    </tr>
+                  </thead>
+                  <tbody id="learnerTable"></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </section>
+        <section class="module" id="instructors">
+          <div class="section">
+            <div class="section-head">
+              <div>
+                <h3>讲师管理</h3>
+                <div class="sub">管理内部讲师、行业专家与企业导师，支持活动与项目排课</div>
+              </div>
+              <button class="btn btn-primary" onclick="openInstructorForm()">＋ 新增讲师</button>
+            </div>
+            <div class="section-body">
+              <div class="cards3" id="instructorCards"></div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </main>
+  </div>
+  <div class="drawer" id="drawer" onclick="closeDrawerBg(event)">
+    <div class="drawer-panel">
+      <div class="panel-head">
+        <div>
+          <h3 id="drawerTitle">表单</h3>
+          <div class="sub" id="drawerSub"></div>
+        </div><button class="close" onclick="closeDrawer()">✕</button>
+      </div>
+      <div class="panel-body" id="drawerBody"></div>
+    </div>
+  </div>
+  <div class="modal-mask" id="modal" onclick="closeModalBg(event)">
+    <div class="modal-card">
+      <div class="panel-head">
+        <div>
+          <h3 id="modalTitle">详情</h3>
+          <div class="sub" id="modalSub"></div>
+        </div><button class="close" onclick="closeModal()">✕</button>
+      </div>
+      <div class="panel-body" id="modalBody"></div>
+    </div>
+  </div>
+  <div class="confirm-mask" id="confirmMask" onclick="closeConfirmBg(event)">
+    <div class="confirm-card">
+      <div class="panel-head">
+        <div>
+          <h3 id="confirmTitle">确认</h3>
+        </div><button class="close" onclick="closeConfirm()">✕</button>
+      </div>
+      <div class="panel-body">
+        <div id="confirmMessage" style="line-height:1.7"></div>
+        <div class="panel-foot">
+          <button class="btn btn-ghost" onclick="closeConfirm()">取消</button>
+          <button class="btn btn-danger" id="confirmOkBtn">确认</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="toast" id="toast"></div>
+  <script>
+    const STORAGE_KEY = 'training_activity_management_system_state_v2';
+
+    const seed = {
+      plans: [
+        { id: 'P2026-018', name: '新能源汽车智能诊断技术提升计划', type: '企业定制', audience: '售后技术工程师 120人', periodStart: '2026-09-01', periodEnd: '2026-11-30', progress: 68, status: '进行中', goal: '技能认证通过率≥90%', owner: '李浩', company: '北汽新能源' },
+        { id: 'P2026-017', name: '工业机器人运维工程师能力提升', type: '公开培训', audience: '制造业技术人员 85人', periodStart: '2026-08-15', periodEnd: '2026-10-20', progress: 82, status: '进行中', goal: '实操平均分≥85', owner: '王楠', company: '公开班' },
+        { id: 'P2026-016', name: 'AI赋能产品经理训练营', type: '内部培训', audience: '产品与研发 64人', periodStart: '2026-09-20', periodEnd: '2026-12-15', progress: 24, status: '进行中', goal: '项目结业率≥92%', owner: '周琳', company: '内部' },
+        { id: 'P2026-015', name: '智能网联汽车传感器融合专题', type: '企业定制', audience: '算法工程师 52人', periodStart: '2026-10-10', periodEnd: '2026-11-28', progress: 0, status: '待启动', goal: '核心技能提升≥15分', owner: '赵峰', company: '小鹏汽车' },
+        { id: 'P2026-014', name: '一线班组长精益生产能力提升', type: '企业定制', audience: '生产班组长 180人', periodStart: '2026-10-18', periodEnd: '2026-12-30', progress: 0, status: '待启动', goal: '现场改善项目≥40个', owner: '陈静', company: '京东方' },
+        { id: 'P2026-012', name: '数字化教学能力提升计划', type: '公开培训', audience: '职业院校教师 240人', periodStart: '2026-06-01', periodEnd: '2026-08-31', progress: 100, status: '已完成', goal: '优秀率≥80%', owner: '张璇', company: '公开班' },
+        { id: 'P2026-011', name: '企业数据分析师岗位训练', type: '企业定制', audience: '数据岗位 96人', periodStart: '2026-05-18', periodEnd: '2026-07-31', progress: 100, status: '已完成', goal: '证书通过率≥88%', owner: '高宁', company: '用友网络' },
+        { id: 'P2026-010', name: '大模型应用开发专项训练', type: '内部培训', audience: '研发工程师 78人', periodStart: '2026-07-01', periodEnd: '2026-10-30', progress: 76, status: '进行中', goal: '项目验收率≥85%', owner: '刘畅', company: '内部' }
+      ],
+      activities: [
+        { id: 'A26092201', name: '新能源汽车故障诊断：高压系统实战', type: '直播课程', planName: '新能源汽车智能诊断技术提升计划', datetime: '2026-09-22T19:30', teacher: '李明｜高级技师', signup: 186, capacity: 200, participation: 93, score: 4.8, status: '报名中', feedback: '案例非常贴近一线实际，故障树分析很实用。', notify: ['站内消息', '短信', '企业微信'] },
+        { id: 'A26092302', name: 'ROS2移动机器人开发答疑专场', type: '互动答疑', planName: '工业机器人运维工程师能力提升', datetime: '2026-09-23T20:00', teacher: '陈昊｜机器人专家', signup: 74, capacity: 100, participation: 88, score: 4.7, status: '报名中', feedback: '希望增加Nav2导航栈的实操时间。', notify: ['站内消息', '短信'] },
+        { id: 'A26092403', name: '智能驾驶感知融合项目复盘会', type: '案例研讨', planName: '智能网联汽车传感器融合专题', datetime: '2026-09-24T14:00', teacher: '王哲｜算法负责人', signup: 52, capacity: 60, participation: 90, score: 4.9, status: '报名中', feedback: '项目复盘很系统，代码讲解清楚。', notify: ['站内消息', '邮件'] },
+        { id: 'A26092004', name: '生成式AI在企业知识管理中的落地', type: '直播课程', planName: 'AI赋能产品经理训练营', datetime: '2026-09-20T19:00', teacher: '周远｜AI架构师', signup: 232, capacity: 250, participation: 89, score: 4.6, status: '已结束', feedback: '建议增加更多企业知识库落地案例。', notify: ['站内消息', '短信', '邮件'] },
+        { id: 'A26091805', name: '一线管理者绩效辅导方法', type: '案例研讨', planName: '一线班组长精益生产能力提升', datetime: '2026-09-18T15:30', teacher: '林雅｜管理顾问', signup: 96, capacity: 120, participation: 84, score: 4.7, status: '已结束', feedback: '工具方法清晰，能直接用于改善项目。', notify: ['站内消息'] },
+        { id: 'A26092606', name: '企业数据治理常见问题答疑', type: '互动答疑', planName: '企业数据分析师岗位训练', datetime: '2026-09-26T20:00', teacher: '赵凯｜数据专家', signup: 38, capacity: 80, participation: 0, score: 0, status: '待审核', feedback: '', notify: ['站内消息', '短信'] }
+      ],
+      enterpriseNeeds: [
+        { id: 'N-001', company: '北汽新能源', title: '新能源汽车售后技术能力提升', industry: '汽车制造', people: 120, cycle: '12周', budget: '¥38万', priority: '高', stage: '实施中', tags: ['高压系统', '故障诊断', '智能座舱'], manager: '李浩' },
+        { id: 'N-002', company: '京东方科技', title: '一线班组长精益生产训练', industry: '电子制造', people: 180, cycle: '10周', budget: '¥42万', priority: '高', stage: '方案确认', tags: ['精益生产', '现场改善', '班组管理'], manager: '陈静' },
+        { id: 'N-003', company: '小鹏汽车', title: '传感器融合与智能驾驶算法', industry: '智能汽车', people: 52, cycle: '7周', budget: '¥29万', priority: '高', stage: '需求分析', tags: ['Python', '深度学习', '传感器融合'], manager: '赵峰' },
+        { id: 'N-004', company: '用友网络', title: '企业数据分析师岗位训练', industry: '软件服务', people: 96, cycle: '8周', budget: '¥31万', priority: '中', stage: '已结项', tags: ['SQL', 'BI', '业务分析'], manager: '高宁' },
+        { id: 'N-005', company: '施耐德电气', title: '工业数字化项目经理训练营', industry: '工业自动化', people: 68, cycle: '9周', budget: '¥35万', priority: '中', stage: '课程配置', tags: ['工业数字化', '项目管理', 'OT/IT'], manager: '王楠' },
+        { id: 'N-006', company: '顺丰科技', title: 'AI智能客服运营能力提升', industry: '物流科技', people: 110, cycle: '6周', budget: '¥26万', priority: '中', stage: '待对接', tags: ['大模型', '知识库', '质检'], manager: '周琳' }
+      ],
+      enterpriseProjects: [
+        { company: '北汽新能源', project: '新能源汽车智能诊断技术提升', learners: '120', completion: 86, score: '84.6', improvement: '+19.8', manager: '李浩', status: '实施中' },
+        { company: '京东方科技', project: '一线班组长精益生产能力提升', learners: '180', completion: 35, score: '79.2', improvement: '+8.4', manager: '陈静', status: '实施中' },
+        { company: '小鹏汽车', project: '智能网联汽车传感器融合专题', learners: '52', completion: 0, score: '—', improvement: '—', manager: '赵峰', status: '待启动' },
+        { company: '用友网络', project: '企业数据分析师岗位训练', learners: '96', completion: 100, score: '88.7', improvement: '+21.2', manager: '高宁', status: '已结项' },
+        { company: '施耐德电气', project: '工业数字化项目经理训练营', learners: '68', completion: 44, score: '82.1', improvement: '+12.6', manager: '王楠', status: '实施中' }
+      ],
+      learners: [
+        { id: 'L-001', name: '张强', company: '北汽新能源', role: '售后技术工程师', plan: '智能诊断技术提升', finished: '7/8', score: '86.2', status: '学习中' },
+        { id: 'L-002', name: '李雪', company: '北汽新能源', role: '服务站技术主管', plan: '智能诊断技术提升', finished: '8/8', score: '91.4', status: '已完成' },
+        { id: 'L-003', name: '周凯', company: '京东方科技', role: '生产班组长', plan: '精益生产能力提升', finished: '3/7', score: '78.6', status: '学习中' },
+        { id: 'L-004', name: '王浩', company: '用友网络', role: '数据分析师', plan: '数据分析师岗位训练', finished: '8/8', score: '93.1', status: '已完成' },
+        { id: 'L-005', name: '陈晨', company: '小鹏汽车', role: '感知算法工程师', plan: '传感器融合专题', finished: '0/5', score: '—', status: '待开始' }
+      ],
+      instructors: [
+        { id: 'T-001', name: '李明', title: '新能源汽车高级技师', skills: '高压系统 / 故障诊断', score: '4.9', sessions: '36场', type: '企业导师' },
+        { id: 'T-002', name: '陈昊', title: '机器人系统专家', skills: 'ROS2 / 机器人运维', score: '4.8', sessions: '28场', type: '行业专家' },
+        { id: 'T-003', name: '王哲', title: '智能驾驶算法负责人', skills: '感知融合 / 深度学习', score: '4.9', sessions: '21场', type: '企业导师' },
+        { id: 'T-004', name: '周远', title: 'AI解决方案架构师', skills: '大模型 / Agent', score: '4.7', sessions: '42场', type: '行业专家' },
+        { id: 'T-005', name: '林雅', title: '组织发展顾问', skills: '绩效 / 班组管理', score: '4.8', sessions: '31场', type: '外聘讲师' },
+        { id: 'T-006', name: '赵凯', title: '数据治理专家', skills: '数据治理 / BI', score: '4.7', sessions: '25场', type: '内部讲师' }
+      ]
+    };
+
+    let state = loadState();
+    let currentModule = 'dashboard';
+    let planTabFilter = 'all';
+    let activityTabFilter = 'all';
+    let confirmCallback = null;
+
+    function deepClone(obj) { return JSON.parse(JSON.stringify(obj)); }
+    function loadState() {
+      try {
+        const saved = localStorage.getItem(STORAGE_KEY);
+        if (saved) return JSON.parse(saved);
+      } catch (e) { }
+      return deepClone(seed);
+    }
+    function saveState() { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }
+    function toast(msg) {
+      const el = document.getElementById('toast');
+      el.textContent = msg;
+      el.classList.add('show');
+      setTimeout(() => el.classList.remove('show'), 2200);
+    }
+    function openConfirm(message, callback, title = '确认操作') {
+      confirmCallback = callback;
+      document.getElementById('confirmTitle').textContent = title;
+      document.getElementById('confirmMessage').innerHTML = message;
+      document.getElementById('confirmMask').classList.add('open');
+    }
+    function closeConfirm() { document.getElementById('confirmMask').classList.remove('open'); confirmCallback = null; }
+    function closeConfirmBg(e) { if (e.target === e.currentTarget) closeConfirm(); }
+    document.getElementById('confirmOkBtn').addEventListener('click', () => { if (confirmCallback) confirmCallback(); closeConfirm(); });
+
+    function statusBadge(s) {
+      const m = { '进行中': 'b-blue', '待启动': 'b-gray', '已完成': 'b-green', '报名中': 'b-green', '已结束': 'b-gray', '待审核': 'b-orange', '实施中': 'b-blue', '方案确认': 'b-purple', '需求分析': 'b-orange', '已结项': 'b-green', '课程配置': 'b-purple', '待对接': 'b-gray', '学习中': 'b-blue', '待开始': 'b-gray', '已发布': 'b-blue' };
+      return `<span class="badge ${m[s] || 'b-gray'}"><span class="dot"></span>${s}</span>`;
+    }
+    function fmtDate(dateStr) {
+      if (!dateStr) return '';
+      const d = new Date(dateStr);
+      if (isNaN(d)) return dateStr;
+      const y = d.getFullYear(), m = String(d.getMonth() + 1).padStart(2, '0'), da = String(d.getDate()).padStart(2, '0');
+      return `${y}-${m}-${da}`;
+    }
+    function fmtDateTime(dt) {
+      if (!dt) return '';
+      const d = new Date(dt);
+      if (isNaN(d)) return dt;
+      const m = String(d.getMonth() + 1).padStart(2, '0'), da = String(d.getDate()).padStart(2, '0'),
+        hh = String(d.getHours()).padStart(2, '0'), mm = String(d.getMinutes()).padStart(2, '0');
+      return `${m}-${da} ${hh}:${mm}`;
+    }
+    function periodText(p) { return `${fmtDate(p.periodStart).slice(5)} - ${fmtDate(p.periodEnd).slice(5)}`; }
+
+    function switchModule(id) {
+      currentModule = id;
+      document.querySelectorAll('.module').forEach(x => x.classList.remove('active'));
+      document.getElementById(id).classList.add('active');
+      document.querySelectorAll('.nav-item').forEach(x => x.classList.toggle('active', x.dataset.module === id));
+      const map = { dashboard: '运营总览', plans: '培训计划管理', activities: '培训活动管理', enterprise: '企业培训服务', analysis: '培训效果分析', learners: '学员管理', instructors: '讲师管理' };
+      document.getElementById('pageTitle').textContent = map[id] || '培训与活动管理系统';
+      if (id === 'analysis') renderAnalysis();
+    }
+    document.querySelectorAll('.nav-item').forEach(n => n.addEventListener('click', () => switchModule(n.dataset.module)));
+
+    function getKpis() {
+      const plans = state.plans;
+      const activities = state.activities;
+      const enterpriseProjects = state.enterpriseProjects;
+      const totalPlans = plans.length;
+      const totalLearners = enterpriseProjects.reduce((a, b) => a + (parseInt(b.learners) || 0), 0);
+      const avgComplete = average(enterpriseProjects.map(x => +x.completion || 0)).toFixed(1);
+      const avgImprove = average(enterpriseProjects.map(x => parseFloat(String(x.improvement).replace('+', ''))).filter(x => !isNaN(x))).toFixed(1);
+      const totalCustomers = new Set(state.enterpriseNeeds.map(x => x.company)).size;
+      return { totalPlans, totalLearners, avgComplete, avgImprove, totalCustomers };
+    }
+    function average(arr) { if (!arr.length) return 0; return arr.reduce((a, b) => a + b, 0) / arr.length; }
+
+    function lineChart(target, labels, s1, s2, min = 50, max = 100, unit = '%') {
+      const w = 720, h = 200, p = 28;
+      const x = i => p + (w - 2 * p) * i / Math.max(1, (labels.length - 1));
+      const y = v => h - p - (h - 2 * p) * (v - min) / (max - min || 1);
+      let grid = '';
+      for (let v = min; v <= max; v += Math.max(1, Math.round((max - min) / 5))) {
+        grid += `<line x1="${p}" y1="${y(v)}" x2="${w - p}" y2="${y(v)}" stroke="#edf2f7"/><text x="2" y="${y(v) + 4}" font-size="10" fill="#98a2b3">${v}${unit}</text>`;
+      }
+      const path = arr => arr.map((v, i) => (i ? 'L' : 'M') + x(i) + ',' + y(v)).join(' ');
+      const dots = (arr, c) => arr.map((v, i) => `<circle cx="${x(i)}" cy="${y(v)}" r="3.6" fill="${c}" stroke="white" stroke-width="2"/>`).join('');
+      const xlabels = labels.map((l, i) => `<text x="${x(i)}" y="${h - 5}" text-anchor="middle" font-size="10" fill="#98a2b3">${l}</text>`).join('');
+      document.getElementById(target).innerHTML = `<svg viewBox="0 0 ${w} ${h}" preserveAspectRatio="none">${grid}<path d="${path(s1)}" fill="none" stroke="#2563eb" stroke-width="3"/><path d="${path(s2)}" fill="none" stroke="#93c5fd" stroke-width="3"/>${dots(s1, '#2563eb')}${dots(s2, '#93c5fd')}${xlabels}</svg>`;
+    }
+    function renderDashboard() {
+      const k = getKpis();
+      document.getElementById('dashboardKpis').innerHTML = `
+    <div class="kpi"><div class="label">年度培训计划</div><div class="value">${k.totalPlans}</div><div class="trend up">已覆盖企业培训、公开培训、内部培训</div></div>
+    <div class="kpi"><div class="label">累计参训人次</div><div class="value">${k.totalLearners}</div><div class="trend up">学员数据按项目自动汇总</div></div>
+    <div class="kpi"><div class="label">平均完课率</div><div class="value">${k.avgComplete}%</div><div class="trend up">来源：企业项目与学员学习进度</div></div>
+    <div class="kpi"><div class="label">平均能力提升</div><div class="value">+${k.avgImprove}</div><div class="trend">分（前后测）</div></div>
+    <div class="kpi"><div class="label">企业客户</div><div class="value">${k.totalCustomers}</div><div class="trend up">支持定制需求与项目跟踪</div></div>`;
+
+      lineChart('trendChart', ['4月', '5月', '6月', '7月', '8月', '9月'], [74, 78, 81, 84, 87, 90], [80, 82, 84, 86, 90, 92]);
+      const week = [...state.activities].sort((a, b) => new Date(a.datetime) - new Date(b.datetime)).slice(0, 4);
+      document.getElementById('weekActivities').innerHTML = week.map(a => {
+        const d = new Date(a.datetime), day = String(d.getDate()).padStart(2, '0');
+        return `<div class="activity">
+      <div class="datebox"><span>${String(d.getMonth() + 1).padStart(2, '0')}月</span><b>${day}</b></div>
+      <div><h4>${a.name}</h4><p>${fmtDateTime(a.datetime)} · ${a.type} · ${a.teacher}</p>
+      <div class="avatar-stack" style="margin-top:8px"><span>张</span><span>李</span><span>王</span><span>+${Math.max(a.signup - 3, 0)}</span></div></div>
+      ${statusBadge(a.status)}
+    </div>`;
+      }).join('') || `<div class="empty">暂无活动数据</div>`;
+
+      document.getElementById('focusPlans').innerHTML = state.plans.slice(0, 4).map(p => `
+    <div style="margin-bottom:14px">
+      <div style="display:flex;justify-content:space-between;gap:12px;margin-bottom:6px"><span style="font-weight:600">${p.name}</span><b>${p.progress}%</b></div>
+      <div class="progress"><span style="width:${p.progress}%"></span></div>
+      <div class="sub" style="margin-top:5px">${p.company} · ${p.goal}</div>
+    </div>`).join('');
+
+      const abs = [['传感器融合', 23.4], ['新能源汽车诊断', 21.8], ['企业数据分析', 20.1], ['ROS2开发', 18.9], ['精益生产', 16.6]];
+      document.getElementById('abilityBars').innerHTML = abs.map(x => `<div class="barrow"><span>${x[0]}</span><div class="bar"><span style="width:${Math.min(100, x[1] * 3.8)}%"></span></div><b>+${x[1]}</b></div>`).join('');
+
+      const latestFeedback = state.activities.filter(x => x.feedback).slice(0, 3);
+      document.getElementById('recentFeedback').innerHTML = latestFeedback.map(x => `
+    <div class="feedback"><div><b>${x.name}</b><div class="sub" style="margin-top:5px">${x.feedback}</div></div><div><div class="stars">★★★★★</div><b>${x.score || '—'}</b></div></div>
+  `).join('') || `<div class="empty">暂无反馈数据</div>`;
+    }
+
+    function renderPlanTabs() {
+      const counts = {
+        all: state.plans.length,
+        '进行中': state.plans.filter(x => x.status === '进行中').length,
+        '待启动': state.plans.filter(x => x.status === '待启动').length,
+        '已完成': state.plans.filter(x => x.status === '已完成').length
+      };
+      document.getElementById('planTabs').innerHTML = `
+    <button class="tab ${planTabFilter === 'all' ? 'active' : ''}" data-val="all">全部 ${counts.all}</button>
+    <button class="tab ${planTabFilter === '进行中' ? 'active' : ''}" data-val="进行中">进行中 ${counts['进行中']}</button>
+    <button class="tab ${planTabFilter === '待启动' ? 'active' : ''}" data-val="待启动">待启动 ${counts['待启动']}</button>
+    <button class="tab ${planTabFilter === '已完成' ? 'active' : ''}" data-val="已完成">已完成 ${counts['已完成']}</button>`;
+    }
+    document.getElementById('planTabs').addEventListener('click', e => {
+      if (e.target.classList.contains('tab')) { planTabFilter = e.target.dataset.val; renderPlanTabs(); renderPlans(); }
+    });
+
+    function renderPlans() {
+      renderPlanTabs();
+      const q = (document.getElementById('planSearch').value || '').trim().toLowerCase();
+      const type = (document.getElementById('planTypeFilter').value || '').trim();
+      const status = (document.getElementById('planStatusFilter').value || '').trim();
+      let arr = state.plans.filter(p =>
+        (planTabFilter === 'all' || p.status === planTabFilter) &&
+        (!type || p.type === type) &&
+        (!status || p.status === status) &&
+        (!q || [p.name, p.company, p.audience].join(' ').toLowerCase().includes(q))
+      );
+      document.getElementById('planTable').innerHTML = arr.map(p => `
+    <tr>
+      <td><b>${p.name}</b><div class="sub">${p.id} · ${p.company}</div></td>
+      <td>${p.type}</td>
+      <td>${p.audience}</td>
+      <td>${periodText(p)}</td>
+      <td><div class="metric-inline"><div class="progress" style="width:110px"><span style="width:${p.progress}%"></span></div><b>${p.progress}%</b></div></td>
+      <td>${statusBadge(p.status)}</td>
+      <td class="action-cell">
+        <button class="iconbtn" onclick="showPlan('${p.id}')">详情</button>
+        <button class="iconbtn" onclick="openPlanForm('${p.id}')">编辑</button>
+        <button class="iconbtn" onclick="copyPlan('${p.id}')">复制</button>
+        <button class="iconbtn" onclick="removePlan('${p.id}')">删除</button>
+      </td>
+    </tr>`).join('') || `<tr><td colspan="7"><div class="empty">没有符合条件的培训计划</div></td></tr>`;
+    }
+
+    function renderActivityTabs() {
+      const types = ['all', '直播课程', '互动答疑', '案例研讨'];
+      document.getElementById('activityTabs').innerHTML = types.map(t => {
+        const count = t === 'all' ? state.activities.length : state.activities.filter(x => x.type === t).length;
+        return `<button class="tab ${activityTabFilter === t ? 'active' : ''}" data-val="${t}">${t === 'all' ? '全部活动' : t} ${count}</button>`;
+      }).join('');
+    }
+    document.getElementById('activityTabs').addEventListener('click', e => {
+      if (e.target.classList.contains('tab')) { activityTabFilter = e.target.dataset.val; renderActivityTabs(); renderActivities(); }
+    });
+
+    function renderActivities() {
+      renderActivityTabs();
+      const q = (document.getElementById('activitySearch').value || '').trim().toLowerCase();
+      const status = (document.getElementById('activityStatusFilter').value || '').trim();
+      const format = (document.getElementById('activityFormatFilter').value || '').trim();
+      const arr = state.activities.filter(a =>
+        (activityTabFilter === 'all' || a.type === activityTabFilter) &&
+        (!status || a.status === status) &&
+        (!format || a.type === format) &&
+        (!q || [a.name, a.teacher, a.planName].join(' ').toLowerCase().includes(q))
+      );
+      document.getElementById('activityTable').innerHTML = arr.map(a => `
+    <tr>
+      <td><b>${a.name}</b><div class="sub">${a.id} · ${a.planName || '未关联计划'}</div></td>
+      <td>${a.type}</td>
+      <td>${fmtDateTime(a.datetime)}</td>
+      <td>${a.teacher}</td>
+      <td>${a.signup}/${a.capacity}</td>
+      <td>${a.participation ? a.participation + '%' : '—'}</td>
+      <td>${a.score ? '★ ' + a.score : '—'}</td>
+      <td>${statusBadge(a.status)}</td>
+      <td class="action-cell">
+        <button class="iconbtn" onclick="showActivity('${a.id}')">详情</button>
+        <button class="iconbtn" onclick="openActivityForm('${a.id}')">编辑</button>
+        ${a.status === '待审核' ? `<button class="iconbtn" onclick="approveActivity('${a.id}')">审核通过</button>` : ''}
+        <button class="iconbtn" onclick="finishActivity('${a.id}')">结束归档</button>
+        <button class="iconbtn" onclick="removeActivity('${a.id}')">删除</button>
+      </td>
+    </tr>`).join('') || `<tr><td colspan="9"><div class="empty">没有符合条件的培训活动</div></td></tr>`;
+    }
+
+    function renderEnterprise() {
+      const customers = new Set(state.enterpriseNeeds.map(x => x.company)).size;
+      const pending = state.enterpriseNeeds.filter(x => ['待对接', '需求分析'].includes(x.stage)).length;
+      const inlearn = state.enterpriseProjects.reduce((a, b) => a + (parseInt(b.learners) || 0), 0);
+      const avgSat = '94.2';
+      document.getElementById('enterpriseKpis').innerHTML = `
+    <div class="mini-card"><div class="mini-title">企业客户数</div><div class="mini-value">${customers}</div><div class="trend up">支持企业个性化定制培训</div></div>
+    <div class="mini-card"><div class="mini-title">待对接需求</div><div class="mini-value">${pending}</div><div class="trend">按阶段自动识别</div></div>
+    <div class="mini-card"><div class="mini-title">在训企业学员</div><div class="mini-value">${inlearn}</div><div class="trend up">来源于企业项目数据</div></div>
+    <div class="mini-card"><div class="mini-title">企业满意度</div><div class="mini-value">${avgSat}%</div><div class="trend up">由活动与结项反馈计算</div></div>
+  `;
+
+      document.getElementById('enterpriseNeeds').innerHTML = state.enterpriseNeeds.map((n, i) => `
+    <div class="needs-card">
+      <div class="top"><div><h4>${n.company}</h4><p>${n.title}</p></div>${statusBadge(n.stage)}</div>
+      <div class="tags">${(n.tags || []).map(t => `<span class="tag">${t}</span>`).join('')}</div>
+      <div class="split-stat">
+        <div><b>${n.people}</b><span>计划人数</span></div>
+        <div><b>${n.cycle}</b><span>培训周期</span></div>
+        <div><b>${n.budget}</b><span>项目预算</span></div>
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-top:12px">
+        <span class="sub">${n.industry} · 负责人：${n.manager}</span>
+        <div class="helper">
+          <span class="badge ${n.priority === '高' ? 'b-red' : 'b-orange'}">${n.priority}优先级</span>
+        </div>
+      </div>
+      <div class="panel-foot">
+        <button class="btn btn-ghost" onclick="showNeed('${n.id}')">查看方案</button>
+        <button class="btn btn-ghost" onclick="openNeedForm('${n.id}')">编辑</button>
+        <button class="btn btn-danger" onclick="removeNeed('${n.id}')">删除</button>
+      </div>
+    </div>
+  `).join('') || `<div class="empty">暂无企业需求</div>`;
+
+      document.getElementById('enterpriseTable').innerHTML = state.enterpriseProjects.map(r => `
+    <tr>
+      <td><b>${r.company}</b></td>
+      <td><b>${r.project}</b></td>
+      <td>${r.learners}</td>
+      <td>${r.completion}%</td>
+      <td>${r.score}</td>
+      <td>${r.improvement}</td>
+      <td>${r.manager}</td>
+      <td>${statusBadge(r.status)}</td>
+    </tr>`).join('');
+    }
+
+    function renderAnalysis() {
+      const completionRates = state.enterpriseProjects.map(x => +x.completion || 0);
+      const finishedRates = state.activities.filter(x => x.participation).map(x => +x.participation || 0);
+      const improvementRates = state.enterpriseProjects.map(x => parseFloat(String(x.improvement).replace('+', ''))).filter(x => !isNaN(x));
+      const k1 = average(completionRates).toFixed(1);
+      const k2 = average(finishedRates).toFixed(1);
+      const k3 = average(state.activities.filter(x => x.signup > 0).map(x => Math.min(100, Math.round(x.signup / x.capacity * 100)))).toFixed(1);
+      const k4 = average(improvementRates).toFixed(1);
+      const k5 = 62;
+      document.getElementById('analysisKpis').innerHTML = `
+    <div class="kpi"><div class="label">计划按期完成率</div><div class="value">${k1}%</div><div class="trend up">来源：企业项目完课进度</div></div>
+    <div class="kpi"><div class="label">平均学习完成率</div><div class="value">${k2}%</div><div class="trend up">来源：活动参与与学习完成</div></div>
+    <div class="kpi"><div class="label">活动平均参与度</div><div class="value">${k3}%</div><div class="trend up">报名与容量综合测算</div></div>
+    <div class="kpi"><div class="label">平均能力提升</div><div class="value">${k4}</div><div class="trend">分</div></div>
+    <div class="kpi"><div class="label">NPS 推荐值</div><div class="value">${k5}</div><div class="trend up">由结项反馈汇总</div></div>
+  `;
+      lineChart('abilityTrendChart', ['4月', '5月', '6月', '7月', '8月', '9月'], [61, 63, 64, 66, 65, 67], [76, 79, 80, 82, 84, 86], 40, 100, '');
+      const data = [['直播课程', 92], ['互动答疑', 86], ['案例研讨', 84]];
+      const overall = Math.round(average(data.map(x => x[1])));
+      const ring = document.getElementById('participationRing');
+      ring.style.setProperty('--p', overall);
+      ring.setAttribute('data-label', overall + '%');
+      document.getElementById('participationBars').innerHTML = data.map(x => `<div class="barrow" style="grid-template-columns:90px 1fr 44px"><span>${x[0]}</span><div class="bar"><span style="width:${x[1]}%"></span></div><b>${x[1]}%</b></div>`).join('');
+      document.getElementById('providerAnalysis').innerHTML = [
+        ['智造研修中心', 94, '交付稳定 · 汽车 / 智能制造'],
+        ['AI产业学院', 91, '内容前沿 · AI / 数据'],
+        ['卓越管理学院', 88, '组织管理 · 项目管理']
+      ].map(x => `<div style="display:grid;grid-template-columns:1fr auto;gap:8px;margin-bottom:14px"><div><b>${x[0]}</b><div class="sub">${x[2]}</div><div class="progress" style="margin-top:7px"><span style="width:${x[1]}%"></span></div></div><div class="score">${x[1]}</div></div>`).join('');
+      document.getElementById('customerAnalysis').innerHTML = [
+        ['北汽新能源', '活跃度 96% · 能力提升 +19.8'],
+        ['用友网络', '活跃度 93% · 能力提升 +21.2'],
+        ['京东方科技', '活跃度 88% · 能力提升 +8.4']
+      ].map(x => `<div class="feedback"><div><b>${x[0]}</b><div class="sub">${x[1]}</div></div><span class="badge b-green">健康</span></div>`).join('');
+      document.getElementById('recommendations').innerHTML = `
+    <div class="hint"><b>① 京东方项目阶段性风险</b><br>当前完课率 35%，低于同期计划目标，建议增加分班辅导与学习提醒。</div>
+    <div class="hint" style="margin-top:10px"><b>② 互动答疑需求上升</b><br>近三个月互动答疑参与率持续提升，建议在企业项目中固定设置周度答疑机制。</div>
+    <div class="hint" style="margin-top:10px"><b>③ 传感器融合课程效果突出</b><br>前后测平均提升 23.4 分，建议沉淀为智能驾驶方向核心标准课程。</div>
+  `;
+    }
+
+    function renderLearners() {
+      document.getElementById('learnerTable').innerHTML = state.learners.map(r => `
+    <tr>
+      <td><b>${r.name}</b></td>
+      <td>${r.company}</td>
+      <td>${r.role}</td>
+      <td>${r.plan}</td>
+      <td>${r.finished}</td>
+      <td>${r.score}</td>
+      <td>${statusBadge(r.status)}</td>
+      <td class="action-cell">
+        <button class="iconbtn" onclick="openLearnerForm('${r.id}')">编辑</button>
+        <button class="iconbtn" onclick="removeLearner('${r.id}')">删除</button>
+      </td>
+    </tr>
+  `).join('');
+    }
+    function renderInstructors() {
+      document.getElementById('instructorCards').innerHTML = state.instructors.map(i => `
+    <div class="mini-card">
+      <div style="display:flex;align-items:center;gap:12px">
+        <div class="avatar" style="width:46px;height:46px">${i.name[0]}</div>
+        <div><h4 style="margin:0 0 4px">${i.name}</h4><div class="sub">${i.title}</div></div>
+      </div>
+      <div class="tags"><span class="tag">${i.type}</span><span class="tag">${i.skills}</span></div>
+      <div style="display:flex;justify-content:space-between"><b>★ ${i.score}</b><span class="sub">${i.sessions}</span></div>
+      <div class="panel-foot">
+        <button class="btn btn-ghost" onclick="openInstructorForm('${i.id}')">编辑</button>
+        <button class="btn btn-danger" onclick="removeInstructor('${i.id}')">删除</button>
+      </div>
+    </div>
+  `).join('');
+    }
+
+    function renderAll() {
+      renderDashboard();
+      renderPlans();
+      renderActivities();
+      renderEnterprise();
+      renderLearners();
+      renderInstructors();
+      renderAnalysis();
+    }
+    function openDrawer(title, sub, content) {
+      document.getElementById('drawerTitle').textContent = title;
+      document.getElementById('drawerSub').textContent = sub || '';
+      document.getElementById('drawerBody').innerHTML = content;
+      document.getElementById('drawer').classList.add('open');
+    }
+    function closeDrawer() { document.getElementById('drawer').classList.remove('open'); }
+    function closeDrawerBg(e) { if (e.target === e.currentTarget) closeDrawer(); }
+    function openModal(title, sub, html) {
+      document.getElementById('modalTitle').textContent = title;
+      document.getElementById('modalSub').textContent = sub || '';
+      document.getElementById('modalBody').innerHTML = html;
+      document.getElementById('modal').classList.add('open');
+    }
+    function closeModal() { document.getElementById('modal').classList.remove('open'); }
+    function closeModalBg(e) { if (e.target === e.currentTarget) closeModal(); }
+
+    function getPlanSelectOptions(selected = '') {
+      return `<option value="">请选择</option>` + state.plans.map(p => `<option ${selected === p.name ? 'selected' : ''}>${p.name}</option>`).join('');
+    }
+    function getInstructorOptions(selected = '') {
+      return state.instructors.map(t => `<option ${selected === `${t.name}｜${t.title}` || selected === `${t.name}｜${t.title.replace(/\s/g, '')}` ? 'selected' : ''}>${t.name}｜${t.title}</option>`).join('');
+    }
+
+    function openPlanForm(id = '') {
+      const item = state.plans.find(x => x.id === id);
+      openDrawer(item ? '编辑培训计划' : '新建培训计划', '设置培训目标、覆盖人群、阶段与考核指标', `
+    <form id="planForm">
+      <div class="form-grid">
+        <div class="field full"><label>培训计划名称 *</label><input name="name" value="${item?.name || ''}" required></div>
+        <div class="field"><label>计划类型</label><select name="type"><option ${item?.type === '企业定制' ? 'selected' : ''}>企业定制</option><option ${item?.type === '公开培训' ? 'selected' : ''}>公开培训</option><option ${item?.type === '内部培训' ? 'selected' : ''}>内部培训</option></select></div>
+        <div class="field"><label>所属企业/组织</label><input name="company" value="${item?.company || ''}"></div>
+        <div class="field full"><label>覆盖人群</label><input name="audience" value="${item?.audience || ''}"></div>
+        <div class="field"><label>开始日期</label><input type="date" name="periodStart" value="${item?.periodStart || ''}"></div>
+        <div class="field"><label>结束日期</label><input type="date" name="periodEnd" value="${item?.periodEnd || ''}"></div>
+        <div class="field"><label>执行进度（0-100）</label><input type="number" name="progress" min="0" max="100" value="${item?.progress ?? 0}"></div>
+        <div class="field"><label>状态</label><select name="status"><option ${item?.status === '待启动' ? 'selected' : ''}>待启动</option><option ${item?.status === '进行中' ? 'selected' : ''}>进行中</option><option ${item?.status === '已完成' ? 'selected' : ''}>已完成</option></select></div>
+        <div class="field"><label>负责人</label><input name="owner" value="${item?.owner || ''}"></div>
+        <div class="field full"><label>培训目标</label><textarea name="goal">${item?.goal || ''}</textarea></div>
+        <div class="field full"><label>考核指标</label><div class="checkrow">
+          <label><input type="checkbox" checked> 完课率</label>
+          <label><input type="checkbox" checked> 技能测评</label>
+          <label><input type="checkbox" checked> 实训项目</label>
+          <label><input type="checkbox" checked> 满意度</label>
+        </div></div>
+      </div>
+      <div class="panel-foot"><button type="button" class="btn btn-ghost" onclick="closeDrawer()">取消</button><button type="submit" class="btn btn-primary">${item ? '保存修改' : '保存计划'}</button></div>
+    </form>
+  `);
+      document.getElementById('planForm').addEventListener('submit', e => {
+        e.preventDefault();
+        const fd = new FormData(e.target);
+        const payload = {
+          id: item?.id || `P${new Date().getFullYear()}-${String(Date.now()).slice(-3)}`,
+          name: fd.get('name').trim(),
+          type: fd.get('type'),
+          company: fd.get('company').trim() || '未填写',
+          audience: fd.get('audience').trim() || '未填写',
+          periodStart: fd.get('periodStart'),
+          periodEnd: fd.get('periodEnd'),
+          progress: Math.max(0, Math.min(100, +(fd.get('progress') || 0))),
+          status: fd.get('status'),
+          owner: fd.get('owner').trim() || '未填写',
+          goal: fd.get('goal').trim() || '未填写',
+          courses
+        };
+        if (!payload.name) { toast('请填写培训计划名称'); return; }
+        if (item) {
+          const index = state.plans.findIndex(x => x.id === item.id);
+          state.plans[index] = payload;
+        } else {
+          state.plans.unshift(payload);
+        }
+        saveState(); renderAll(); closeDrawer(); switchModule('plans'); toast(item ? '培训计划已更新' : '培训计划已创建');
+      });
+    }
+
+    function openActivityForm(id = '') {
+      const item = state.activities.find(x => x.id === id);
+      openDrawer(item ? '编辑培训活动' : '创建培训活动', '支持活动创建、审核发布、通知学员、记录互动与反馈', `
+    <form id="activityForm">
+      <div class="form-grid">
+        <div class="field full"><label>活动主题 *</label><input name="name" value="${item?.name || ''}" required></div>
+        <div class="field"><label>活动形式</label><select name="type"><option ${item?.type === '直播课程' ? 'selected' : ''}>直播课程</option><option ${item?.type === '互动答疑' ? 'selected' : ''}>互动答疑</option><option ${item?.type === '案例研讨' ? 'selected' : ''}>案例研讨</option></select></div>
+        <div class="field"><label>关联培训计划</label><select name="planName">${getPlanSelectOptions(item?.planName || '')}</select></div>
+        <div class="field"><label>活动时间</label><input type="datetime-local" name="datetime" value="${item?.datetime || ''}"></div>
+        <div class="field"><label>讲师</label><select name="teacher">${getInstructorOptions(item?.teacher || '')}</select></div>
+        <div class="field"><label>活动容量</label><input type="number" name="capacity" min="1" value="${item?.capacity || 100}"></div>
+        <div class="field"><label>报名人数</label><input type="number" name="signup" min="0" value="${item?.signup || 0}"></div>
+        <div class="field"><label>参与率（%）</label><input type="number" name="participation" min="0" max="100" value="${item?.participation || 0}"></div>
+        <div class="field"><label>评分（0-5）</label><input type="number" name="score" min="0" max="5" step="0.1" value="${item?.score || 0}"></div>
+        <div class="field"><label>状态</label><select name="status"><option ${item?.status === '待审核' ? 'selected' : ''}>待审核</option><option ${item?.status === '报名中' ? 'selected' : ''}>报名中</option><option ${item?.status === '进行中' ? 'selected' : ''}>进行中</option><option ${item?.status === '已结束' ? 'selected' : ''}>已结束</option></select></div>
+        <div class="field full"><label>通知方式</label><div class="checkrow">
+          ${['站内消息', '短信', '邮件', '企业微信'].map(v => `<label><input type="checkbox" value="${v}" ${(item?.notify || ['站内消息', '短信']).includes(v) ? 'checked' : ''}> ${v}</label>`).join('')}
+        </div></div>
+        <div class="field full"><label>活动反馈</label><textarea name="feedback">${item?.feedback || ''}</textarea></div>
+      </div>
+      <div class="panel-foot"><button type="button" class="btn btn-ghost" onclick="closeDrawer()">取消</button><button type="submit" class="btn btn-primary">${item ? '保存修改' : '提交活动'}</button></div>
+    </form>
+  `);
+      document.getElementById('activityForm').addEventListener('submit', e => {
+        e.preventDefault();
+        const fd = new FormData(e.target);
+        const notify = [...e.target.querySelectorAll('input[type=checkbox][value]:checked')].map(x => x.value);
+        const payload = {
+          id: item?.id || `A${String(Date.now()).slice(-8)}`,
+          name: fd.get('name').trim(),
+          type: fd.get('type'),
+          planName: fd.get('planName'),
+          datetime: fd.get('datetime'),
+          teacher: fd.get('teacher'),
+          signup: +(fd.get('signup') || 0),
+          capacity: +(fd.get('capacity') || 0),
+          participation: +(fd.get('participation') || 0),
+          score: +(fd.get('score') || 0),
+          status: fd.get('status'),
+          feedback: fd.get('feedback').trim(),
+          notify
+        };
+        if (!payload.name) { toast('请填写活动主题'); return; }
+        if (item) {
+          const index = state.activities.findIndex(x => x.id === item.id);
+          state.activities[index] = payload;
+        } else {
+          state.activities.unshift(payload);
+        }
+        saveState(); renderAll(); closeDrawer(); switchModule('activities'); toast(item ? '活动已更新' : '活动已创建');
+      });
+    }
+
+    function openNeedForm(id = '') {
+      const item = state.enterpriseNeeds.find(x => x.id === id);
+      openDrawer(item ? '编辑企业培训需求' : '新增企业培训需求', '采集企业需求并形成定制化培训方案', `
+    <form id="needForm">
+      <div class="form-grid">
+        <div class="field"><label>企业名称 *</label><input name="company" value="${item?.company || ''}" required></div>
+        <div class="field"><label>行业</label><input name="industry" value="${item?.industry || ''}"></div>
+        <div class="field full"><label>需求主题 *</label><input name="title" value="${item?.title || ''}" required></div>
+        <div class="field"><label>计划人数</label><input type="number" name="people" min="1" value="${item?.people || 50}"></div>
+        <div class="field"><label>预算</label><input name="budget" value="${item?.budget || '¥20万'}"></div>
+        <div class="field"><label>培训周期</label><input name="cycle" value="${item?.cycle || '8周'}"></div>
+        <div class="field"><label>优先级</label><select name="priority"><option ${item?.priority === '高' ? 'selected' : ''}>高</option><option ${item?.priority === '中' ? 'selected' : ''}>中</option><option ${item?.priority === '低' ? 'selected' : ''}>低</option></select></div>
+        <div class="field"><label>阶段</label><select name="stage"><option ${item?.stage === '待对接' ? 'selected' : ''}>待对接</option><option ${item?.stage === '需求分析' ? 'selected' : ''}>需求分析</option><option ${item?.stage === '方案确认' ? 'selected' : ''}>方案确认</option><option ${item?.stage === '课程配置' ? 'selected' : ''}>课程配置</option><option ${item?.stage === '实施中' ? 'selected' : ''}>实施中</option><option ${item?.stage === '已结项' ? 'selected' : ''}>已结项</option></select></div>
+        <div class="field"><label>负责人</label><input name="manager" value="${item?.manager || ''}"></div>
+        <div class="field full"><label>培训标签（用逗号分隔）</label><input name="tags" value="${(item?.tags || []).join('，')}"></div>
+      </div>
+      <div class="panel-foot"><button type="button" class="btn btn-ghost" onclick="closeDrawer()">取消</button><button type="submit" class="btn btn-primary">${item ? '保存修改' : '保存需求'}</button></div>
+    </form>
+  `);
+      document.getElementById('needForm').addEventListener('submit', e => {
+        e.preventDefault();
+        const fd = new FormData(e.target);
+        const payload = {
+          id: item?.id || `N-${String(Date.now()).slice(-3)}`,
+          company: fd.get('company').trim(),
+          industry: fd.get('industry').trim() || '未填写',
+          title: fd.get('title').trim(),
+          people: +(fd.get('people') || 0),
+          budget: fd.get('budget').trim() || '未填写',
+          cycle: fd.get('cycle').trim() || '未填写',
+          priority: fd.get('priority'),
+          stage: fd.get('stage'),
+          manager: fd.get('manager').trim() || '未填写',
+          tags: String(fd.get('tags') || '').split(/[,，]/).map(x => x.trim()).filter(Boolean)
+        };
+        if (!payload.company || !payload.title) { toast('请填写企业名称和需求主题'); return; }
+        if (item) {
+          const index = state.enterpriseNeeds.findIndex(x => x.id === item.id);
+          state.enterpriseNeeds[index] = payload;
+        } else {
+          state.enterpriseNeeds.unshift(payload);
+        }
+        saveState(); renderAll(); closeDrawer(); switchModule('enterprise'); toast(item ? '企业需求已更新' : '企业需求已创建');
+      });
+    }
+
+    function openLearnerForm(id = '') {
+      const item = state.learners.find(x => x.id === id);
+      openDrawer(item ? '编辑学员' : '新增学员', '维护学员基本信息、学习计划、完成情况与学习状态', `
+    <form id="learnerForm">
+      <div class="form-grid">
+        <div class="field"><label>学员编号 *</label><input name="id" value="${item?.id || ''}" ${item ? 'readonly' : ''}></div>
+        <div class="field"><label>姓名 *</label><input name="name" value="${item?.name || ''}" required></div>
+        <div class="field"><label>企业 / 组织</label><input name="company" value="${item?.company || ''}"></div>
+        <div class="field"><label>岗位</label><input name="role" value="${item?.role || ''}"></div>
+        <div class="field"><label>学习计划</label><input name="plan" value="${item?.plan || ''}"></div>
+        <div class="field"><label>完成课程</label><input name="finished" value="${item?.finished || '0/0'}"></div>
+        <div class="field"><label>平均测评</label><input name="score" value="${item?.score || '—'}"></div>
+        <div class="field"><label>学习状态</label><select name="status"><option ${item?.status === '待开始' ? 'selected' : ''}>待开始</option><option ${item?.status === '学习中' ? 'selected' : ''}>学习中</option><option ${item?.status === '已完成' ? 'selected' : ''}>已完成</option></select></div>
+      </div>
+      <div class="panel-foot"><button type="button" class="btn btn-ghost" onclick="closeDrawer()">取消</button><button type="submit" class="btn btn-primary">${item ? '保存修改' : '保存学员'}</button></div>
+    </form>
+  `);
+      document.getElementById('learnerForm').addEventListener('submit', e => {
+        e.preventDefault();
+        const fd = new FormData(e.target);
+        const payload = {
+          id: fd.get('id').trim(),
+          name: fd.get('name').trim(),
+          company: fd.get('company').trim() || '未填写',
+          role: fd.get('role').trim() || '未填写',
+          plan: fd.get('plan').trim() || '未填写',
+          finished: fd.get('finished').trim() || '0/0',
+          score: fd.get('score').trim() || '—',
+          status: fd.get('status')
+        };
+        if (!payload.id || !payload.name) { toast('请填写学员编号和姓名'); return; }
+        if (item) {
+          const index = state.learners.findIndex(x => x.id === item.id);
+          state.learners[index] = payload;
+        } else {
+          if (state.learners.some(x => x.id === payload.id)) { toast('学员编号已存在'); return; }
+          state.learners.unshift(payload);
+        }
+        saveState(); renderAll(); closeDrawer(); switchModule('learners'); toast(item ? '学员已更新' : '学员已新增');
+      });
+    }
+
+    function openInstructorForm(id = '') {
+      const item = state.instructors.find(x => x.id === id);
+      openDrawer(item ? '编辑讲师' : '新增讲师', '维护讲师信息、专业方向、授课场次与讲师类型', `
+    <form id="instructorForm">
+      <div class="form-grid">
+        <div class="field"><label>讲师编号 *</label><input name="id" value="${item?.id || ''}" ${item ? 'readonly' : ''}></div>
+        <div class="field"><label>姓名 *</label><input name="name" value="${item?.name || ''}" required></div>
+        <div class="field full"><label>头衔</label><input name="title" value="${item?.title || ''}"></div>
+        <div class="field full"><label>专长方向</label><input name="skills" value="${item?.skills || ''}"></div>
+        <div class="field"><label>评分</label><input type="number" name="score" min="0" max="5" step="0.1" value="${item?.score || '0'}"></div>
+        <div class="field"><label>授课场次</label><input name="sessions" value="${item?.sessions || '0场'}"></div>
+        <div class="field"><label>讲师类型</label><select name="type"><option ${item?.type === '内部讲师' ? 'selected' : ''}>内部讲师</option><option ${item?.type === '行业专家' ? 'selected' : ''}>行业专家</option><option ${item?.type === '企业导师' ? 'selected' : ''}>企业导师</option><option ${item?.type === '外聘讲师' ? 'selected' : ''}>外聘讲师</option></select></div>
+      </div>
+      <div class="panel-foot"><button type="button" class="btn btn-ghost" onclick="closeDrawer()">取消</button><button type="submit" class="btn btn-primary">${item ? '保存修改' : '保存讲师'}</button></div>
+    </form>
+  `);
+      document.getElementById('instructorForm').addEventListener('submit', e => {
+        e.preventDefault();
+        const fd = new FormData(e.target);
+        const payload = {
+          id: fd.get('id').trim(),
+          name: fd.get('name').trim(),
+          title: fd.get('title').trim() || '未填写',
+          skills: fd.get('skills').trim() || '未填写',
+          score: fd.get('score').trim() || '0',
+          sessions: fd.get('sessions').trim() || '0场',
+          type: fd.get('type')
+        };
+        if (!payload.id || !payload.name) { toast('请填写讲师编号和姓名'); return; }
+        if (item) {
+          const index = state.instructors.findIndex(x => x.id === item.id);
+          state.instructors[index] = payload;
+        } else {
+          if (state.instructors.some(x => x.id === payload.id)) { toast('讲师编号已存在'); return; }
+          state.instructors.unshift(payload);
+        }
+        saveState(); renderAll(); closeDrawer(); switchModule('instructors'); toast(item ? '讲师已更新' : '讲师已新增');
+      });
+    }
+
+    function copyPlan(id) {
+      const item = state.plans.find(x => x.id === id);
+      const copy = deepClone(item);
+      copy.id = `P${new Date().getFullYear()}-${String(Date.now()).slice(-3)}`;
+      copy.name += '（复制）';
+      copy.progress = 0;
+      copy.status = '待启动';
+      state.plans.unshift(copy);
+      saveState(); renderAll(); toast('计划已复制');
+    }
+    function approveActivity(id) {
+      const item = state.activities.find(x => x.id === id);
+      if (item) { item.status = '报名中'; saveState(); renderAll(); toast('活动已审核通过并发布'); }
+    }
+    function finishActivity(id) {
+      const item = state.activities.find(x => x.id === id);
+      if (item) { item.status = '已结束'; saveState(); renderAll(); toast('活动已结束并归档'); }
+    }
+
+    function removePlan(id) {
+      openConfirm('确定删除该培训计划吗？删除后不可恢复。', () => {
+        state.plans = state.plans.filter(x => x.id !== id); saveState(); renderAll(); toast('培训计划已删除');
+      }, '删除培训计划');
+    }
+    function removeActivity(id) {
+      openConfirm('确定删除该培训活动吗？删除后不可恢复。', () => {
+        state.activities = state.activities.filter(x => x.id !== id); saveState(); renderAll(); toast('培训活动已删除');
+      }, '删除培训活动');
+    }
+    function removeNeed(id) {
+      openConfirm('确定删除该企业需求吗？删除后不可恢复。', () => {
+        state.enterpriseNeeds = state.enterpriseNeeds.filter(x => x.id !== id); saveState(); renderAll(); toast('企业需求已删除');
+      }, '删除企业需求');
+    }
+    function removeLearner(id) {
+      openConfirm('确定删除该学员吗？删除后不可恢复。', () => {
+        state.learners = state.learners.filter(x => x.id !== id); saveState(); renderAll(); toast('学员已删除');
+      }, '删除学员');
+    }
+    function removeInstructor(id) {
+      openConfirm('确定删除该讲师吗？删除后不可恢复。', () => {
+        state.instructors = state.instructors.filter(x => x.id !== id); saveState(); renderAll(); toast('讲师已删除');
+      }, '删除讲师');
+    }
+
+    function showPlan(id) {
+      const p = state.plans.find(x => x.id === id);
+      openModal(p.name, `${p.id} · ${p.company}`, `
+    <div class="cards3">
+      <div class="mini-card"><div class="mini-title">覆盖人群</div><b>${p.audience}</b></div>
+      <div class="mini-card"><div class="mini-title">执行进度</div><b>${p.progress}%</b></div>
+      <div class="mini-card"><div class="mini-title">负责人</div><b>${p.owner}</b></div>
+    </div>
+    <h4>计划周期</h4><div class="hint">${fmtDate(p.periodStart)} 至 ${fmtDate(p.periodEnd)}</div>
+    <h4>培训目标</h4><div class="hint">${p.goal}</div>
+    <h4>执行阶段</h4>
+    <div class="timeline">
+      <div class="stage done"><div class="node"></div><div class="name">需求分析</div><div class="date">已完成</div></div>
+      <div class="stage done"><div class="node"></div><div class="name">课程配置</div><div class="date">已完成</div></div>
+      <div class="stage current"><div class="node"></div><div class="name">培训实施</div><div class="date">当前阶段</div></div>
+      <div class="stage"><div class="node"></div><div class="name">测评认证</div><div class="date">待执行</div></div>
+    </div>
+    <h4>关键指标</h4>
+    <div class="barrow"><span>学习完成率</span><div class="bar"><span style="width:${Math.min(100, p.progress + 15)}%"></span></div><b>${Math.min(100, p.progress + 15)}%</b></div>
+    <div class="barrow"><span>活动参与率</span><div class="bar"><span style="width:${Math.min(100, p.progress + 10)}%"></span></div><b>${Math.min(100, p.progress + 10)}%</b></div>
+    <div class="barrow"><span>目标达成度</span><div class="bar"><span style="width:${p.progress}%"></span></div><b>${p.progress}%</b></div>
+    <div class="panel-foot"><button class="btn btn-ghost" onclick="exportSinglePlan('${p.id}')">导出详情</button><button class="btn btn-primary" onclick="openPlanForm('${p.id}');closeModal();">编辑计划</button></div>
+  `);
+    }
+
+    function showActivity(id) {
+      const a = state.activities.find(x => x.id === id);
+      openModal(a.name, `${a.id} · ${a.type}`, `
+    <div class="cards4">
+      <div class="mini-card"><div class="mini-title">报名人数</div><div class="mini-value">${a.signup}</div></div>
+      <div class="mini-card"><div class="mini-title">活动容量</div><div class="mini-value">${a.capacity}</div></div>
+      <div class="mini-card"><div class="mini-title">参与率</div><div class="mini-value">${a.participation || '—'}${a.participation ? '%' : ''}</div></div>
+      <div class="mini-card"><div class="mini-title">活动评分</div><div class="mini-value">${a.score || '—'}</div></div>
+    </div>
+    <h4>活动信息</h4>
+    <div class="hint">活动时间：${fmtDateTime(a.datetime)}<br>讲师：${a.teacher}<br>关联计划：${a.planName || '未关联'}<br>状态：${a.status}</div>
+    <h4>通知方式</h4>
+    <div class="tags">${(a.notify || []).map(v => `<span class="tag">${v}</span>`).join('') || '<span class="tag">未设置</span>'}</div>
+    <h4>过程数据</h4>
+    <div class="barrow"><span>签到率</span><div class="bar"><span style="width:${Math.min(100, (a.participation || 0) + 2)}%"></span></div><b>${Math.min(100, (a.participation || 0) + 2)}%</b></div>
+    <div class="barrow"><span>互动率</span><div class="bar"><span style="width:${Math.max(0, (a.participation || 0) - 12)}%"></span></div><b>${Math.max(0, (a.participation || 0) - 12)}%</b></div>
+    <div class="barrow"><span>反馈提交率</span><div class="bar"><span style="width:${Math.max(0, (a.participation || 0) - 7)}%"></span></div><b>${Math.max(0, (a.participation || 0) - 7)}%</b></div>
+    <h4>反馈意见</h4>
+    <div class="hint">${a.feedback || '暂无反馈'}</div>
+    <div class="panel-foot"><button class="btn btn-primary" onclick="openActivityForm('${a.id}');closeModal();">编辑活动</button></div>
+  `);
+    }
+
+    function showNeed(id) {
+      const n = state.enterpriseNeeds.find(x => x.id === id);
+      openModal(`${n.company}｜${n.title}`, `${n.industry} · ${n.people}人 · ${n.budget}`, `
+    <div class="cards4">
+      <div class="mini-card"><div class="mini-title">需求优先级</div><div class="mini-value">${n.priority}</div></div>
+      <div class="mini-card"><div class="mini-title">培训周期</div><div class="mini-value">${n.cycle}</div></div>
+      <div class="mini-card"><div class="mini-title">计划人数</div><div class="mini-value">${n.people}</div></div>
+      <div class="mini-card"><div class="mini-title">项目负责人</div><div class="mini-value">${n.manager}</div></div>
+    </div>
+    <h4>定制流程</h4>
+    <div class="timeline">
+      <div class="stage done"><div class="node"></div><div class="name">需求对接</div><div class="date">完成</div></div>
+      <div class="stage done"><div class="node"></div><div class="name">能力诊断</div><div class="date">完成</div></div>
+      <div class="stage current"><div class="node"></div><div class="name">方案设计</div><div class="date">当前</div></div>
+      <div class="stage"><div class="node"></div><div class="name">培训实施</div><div class="date">待开始</div></div>
+      <div class="stage"><div class="node"></div><div class="name">效果报告</div><div class="date">待输出</div></div>
+    </div>
+    <h4>培训标签</h4><div class="tags">${(n.tags || []).map(t => `<span class="tag">${t}</span>`).join('')}</div>
+    <h4>交付项</h4>
+    <div class="hint">① 培训需求分析报告　② 个性化培训方案　③ 课程与讲师配置表　④ 学员过程数据　⑤ 前后测对比分析　⑥ 培训效果报告</div>
+    <div class="panel-foot"><button class="btn btn-primary" onclick="openNeedForm('${n.id}');closeModal();">编辑需求</button></div>
+  `);
+    }
+
+
+    function toCsv(rows) {
+      return rows.map(row => row.map(v => `"${String(v ?? '').replace(/"/g, '""')}"`).join(',')).join('\n');
+    }
+    function downloadFile(name, content, type = 'text/plain;charset=utf-8') {
+      const blob = new Blob([content], { type });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url; a.download = name; a.click();
+      URL.revokeObjectURL(url);
+    }
+    function exportTableCSV(type) {
+      let rows = [];
+      if (type === 'plans') {
+        rows = [['计划ID', '计划名称', '类型', '企业/组织', '覆盖人群', '开始日期', '结束日期', '进度', '状态', '负责人', '目标']];
+        state.plans.forEach(p => rows.push([p.id, p.name, p.type, p.company, p.audience, p.periodStart, p.periodEnd, p.progress, p.status, p.owner, p.goal]));
+      } else if (type === 'activities') {
+        rows = [['活动ID', '活动主题', '形式', '关联计划', '时间', '讲师', '报名人数', '容量', '参与率', '评分', '状态', '反馈']];
+        state.activities.forEach(a => rows.push([a.id, a.name, a.type, a.planName, a.datetime, a.teacher, a.signup, a.capacity, a.participation, a.score, a.status, a.feedback]));
+      } else if (type === 'enterprise') {
+        rows = [['企业', '需求主题', '行业', '人数', '预算', '周期', '优先级', '阶段', '负责人', '标签']];
+        state.enterpriseNeeds.forEach(n => rows.push([n.company, n.title, n.industry, n.people, n.budget, n.cycle, n.priority, n.stage, n.manager, (n.tags || []).join('|')]));
+      } else if (type === 'learners') {
+        rows = [['学员编号', '姓名', '企业/组织', '岗位', '学习计划', '完成课程', '平均测评', '学习状态']];
+        state.learners.forEach(l => rows.push([l.id, l.name, l.company, l.role, l.plan, l.finished, l.score, l.status]));
+      } else return;
+      downloadFile(`${type}_${new Date().toISOString().slice(0, 10)}.csv`, '\ufeff' + toCsv(rows), 'text/csv;charset=utf-8');
+      toast('导出成功');
+    }
+    function exportSinglePlan(id) {
+      const p = state.plans.find(x => x.id === id);
+      const rows = [
+        ['字段', '内容'],
+        ['计划ID', p.id], ['计划名称', p.name], ['类型', p.type], ['企业/组织', p.company], ['覆盖人群', p.audience],
+        ['开始日期', p.periodStart], ['结束日期', p.periodEnd], ['进度', p.progress + '%'], ['状态', p.status], ['负责人', p.owner], ['目标', p.goal]
+      ];
+      downloadFile(`${p.id}_${p.name}.csv`, '\ufeff' + toCsv(rows), 'text/csv;charset=utf-8');
+      toast('计划详情已导出');
+    }
+
+    renderAll();
+  </script>
+</body>
+
+</html>

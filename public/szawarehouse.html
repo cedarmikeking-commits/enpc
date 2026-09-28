@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>深圳协议｜职业仓 Career Warehouse</title>
+<style>
+  :root{
+    --bg:#f5f8fc; --card:#ffffff; --text:#172033; --muted:#667085;
+    --line:#e7edf5; --primary:#1769e0; --primary2:#4b8df8; --nav:#0f2450;
+    --good:#12a36d; --warn:#d88700; --bad:#d9475c; --purple:#6d5ce7;
+    --shadow:0 12px 35px rgba(30,68,120,.08); --radius:18px;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:Inter,"PingFang SC","Microsoft YaHei",system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--text)}
+  button,input,select,textarea{font:inherit}
+  button{cursor:pointer}
+  .app{min-height:100vh;display:grid;grid-template-columns:260px 1fr}
+  .sidebar{background:linear-gradient(180deg,#0d224d,#102a60 62%,#0a1d43);color:#fff;padding:22px 18px;position:sticky;top:0;height:100vh}
+  .brand{display:flex;align-items:center;gap:12px;padding:4px 8px 22px;border-bottom:1px solid rgba(255,255,255,.12)}
+  .mark{width:40px;height:40px;border:2px solid #8bb9ff;border-radius:50%;display:grid;place-items:center;position:relative}
+  .mark:before,.mark:after{content:"";position:absolute;border:1px solid #8bb9ff;border-radius:50%;inset:8px}
+  .mark:after{inset:15px;background:#8bb9ff}
+  .brand strong{font-size:16px;display:block}
+  .brand span{font-size:11px;opacity:.7}
+  .nav{margin-top:18px;display:flex;flex-direction:column;gap:6px}
+  .nav button{border:0;background:transparent;color:#cbd9f5;text-align:left;padding:11px 12px;border-radius:12px;display:flex;align-items:center;gap:10px}
+  .nav button:hover,.nav button.active{background:rgba(255,255,255,.10);color:#fff}
+  .nav .ico{width:22px;text-align:center}
+  .side-note{position:absolute;bottom:18px;left:18px;right:18px;padding:13px;border:1px solid rgba(255,255,255,.12);border-radius:14px;background:rgba(255,255,255,.05);font-size:12px;line-height:1.7;color:#c7d6f4}
+  .main{min-width:0}
+  .topbar{height:72px;background:rgba(255,255,255,.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 28px;position:sticky;top:0;z-index:20}
+  .crumb{font-size:14px;color:var(--muted)} .crumb b{color:var(--text)}
+  .admin{display:flex;gap:10px;align-items:center}
+
+  .user-menu-wrap{position:relative}
+  .avatar-btn{
+    border:0;cursor:pointer;padding:0;
+    transition:.18s ease;
+  }
+  .avatar-btn:hover{transform:translateY(-1px);box-shadow:0 6px 16px rgba(18,56,115,.18)}
+  .user-dropdown{
+    position:absolute;right:0;top:44px;min-width:132px;
+    background:#fff;border:1px solid #e1e8f1;border-radius:12px;
+    box-shadow:0 16px 38px rgba(15,35,70,.16);
+    padding:6px;display:none;z-index:80;
+  }
+  .user-dropdown.show{display:block}
+  .user-dropdown:before{
+    content:"";position:absolute;right:11px;top:-6px;width:10px;height:10px;
+    background:#fff;border-left:1px solid #e1e8f1;border-top:1px solid #e1e8f1;
+    transform:rotate(45deg);
+  }
+  .user-dropdown-item{
+    width:100%;display:flex;align-items:center;gap:8px;
+    border:0;background:#fff;color:#334155;padding:10px 11px;
+    border-radius:8px;text-align:left;font-weight:700;
+  }
+  .user-dropdown-item:hover{background:#f3f7fc;color:#1769e0}
+  .logout-icon{font-size:16px;line-height:1}
+
+  .pill{padding:7px 10px;border-radius:999px;background:#eef5ff;color:var(--primary);font-size:12px}
+  .avatar{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;background:#123873;color:#fff;font-weight:700}
+  .content{padding:28px;max-width:1600px;margin:0 auto}
+  .page{display:none}.page.active{display:block}
+  .hero{display:flex;justify-content:space-between;gap:22px;align-items:flex-start;margin-bottom:22px}
+  .hero h1{margin:0;font-size:28px;letter-spacing:-.5px}.hero p{margin:8px 0 0;color:var(--muted);line-height:1.75}
+  .badge{display:inline-flex;align-items:center;gap:7px;padding:8px 11px;border-radius:10px;background:#edf7f3;color:#087753;font-size:12px;font-weight:700}
+  .grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+  .kpi{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:18px;box-shadow:var(--shadow)}
+  .kpi .label{font-size:13px;color:var(--muted)} .kpi .num{font-size:30px;font-weight:800;margin:9px 0 4px}.trend{font-size:12px;color:var(--good)}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:20px}
+  .card + .card{margin-top:16px}
+  .card-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:16px}
+  .card-head h3{margin:0;font-size:17px}.sub{font-size:12px;color:var(--muted);margin-top:4px}
+  .btn{border:1px solid #d7e2f0;background:#fff;color:#334155;padding:9px 13px;border-radius:10px;font-weight:650}
+  .btn:hover{background:#f8fbff}.btn.primary{background:var(--primary);border-color:var(--primary);color:#fff}.btn.good{background:#0d9a68;border-color:#0d9a68;color:#fff}.btn.danger{color:#c93249;background:#fff7f8;border-color:#ffd5dc}.btn.small{padding:6px 9px;font-size:12px}
+  .toolbar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px}
+  .field{display:flex;flex-direction:column;gap:6px;min-width:150px;flex:1}
+  .field label{font-size:12px;color:#526173;font-weight:650}
+  input,select,textarea{width:100%;border:1px solid #d9e3ef;background:#fff;border-radius:10px;padding:10px 11px;outline:none;color:var(--text)}
+  input:focus,select:focus,textarea:focus{border-color:#7eaff5;box-shadow:0 0 0 3px rgba(23,105,224,.10)}
+  textarea{min-height:88px;resize:vertical}
+  table{width:100%;border-collapse:collapse} th,td{text-align:left;padding:12px 10px;border-bottom:1px solid #edf1f5;font-size:13px;vertical-align:top} th{font-size:12px;color:#667085;background:#fafbfd}
+  .status{display:inline-flex;padding:5px 8px;border-radius:999px;font-size:11px;font-weight:700}.approved{background:#e9f8f2;color:#087753}.pending{background:#fff4d8;color:#946200}.rejected{background:#ffecef;color:#bd3147}.draft{background:#eef2f7;color:#667085}
+  .tag{display:inline-block;padding:4px 7px;margin:2px 4px 2px 0;border-radius:7px;background:#f1f6fc;color:#35516f;font-size:11px}
+  .two{display:grid;grid-template-columns:1fr 1fr;gap:16px}.three{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+  .coverage{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+  .cover{border:1px solid #e2eaf3;border-radius:14px;padding:15px;background:linear-gradient(180deg,#fff,#fbfdff)}
+  .cover .n{width:28px;height:28px;border-radius:9px;background:#eaf3ff;color:var(--primary);display:grid;place-items:center;font-weight:800;font-size:12px}
+  .cover b{display:block;margin:10px 0 5px}.cover span{color:var(--muted);font-size:12px;line-height:1.6}
+  .searchbox{padding:18px;border-radius:16px;background:linear-gradient(135deg,#edf5ff,#f6f9ff);border:1px solid #dfeafa}
+  .searchrow{display:flex;gap:10px}.searchrow input{font-size:15px;padding:13px}.result{padding:15px 0;border-bottom:1px solid #edf1f5}.result:last-child{border-bottom:0}
+  .result-top{display:flex;justify-content:space-between;gap:12px}.score{font-weight:800;color:var(--primary)}.snippet{font-size:13px;color:#556275;line-height:1.65;margin-top:7px}
+  mark{background:#fff1a9;padding:0 2px;border-radius:3px}
+  .compare-head{display:grid;grid-template-columns:190px 1fr 1fr;border:1px solid #e7edf5;border-bottom:0;border-radius:14px 14px 0 0;overflow:hidden}
+  .compare-head > div{padding:14px;background:#f8fbff;font-weight:750}
+  .compare-table{display:grid;grid-template-columns:190px 1fr 1fr;border-left:1px solid #e7edf5;border-top:1px solid #e7edf5}
+  .compare-table > div{padding:13px;border-right:1px solid #e7edf5;border-bottom:1px solid #e7edf5;font-size:13px;line-height:1.6}
+  .compare-table .label{background:#fbfcfe;color:#687588;font-weight:650}.diff{background:#fff8ea !important}
+  .skill-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}.bars{display:flex;flex-direction:column;gap:12px}.barline{display:grid;grid-template-columns:110px 1fr 48px;align-items:center;gap:10px;font-size:12px}.bar{height:9px;background:#eef2f7;border-radius:999px;overflow:hidden}.bar i{display:block;height:100%;background:linear-gradient(90deg,#4b8df8,#1769e0);border-radius:999px}
+  canvas{max-width:100%;background:#fff}
+  .recommend-list{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}.course{border:1px solid #e4ebf4;border-radius:14px;padding:14px;position:relative}.course .match{position:absolute;right:12px;top:12px;color:var(--good);font-size:12px;font-weight:800}.course h4{margin:0 70px 8px 0}.course p{font-size:12px;color:var(--muted);line-height:1.6;margin:0}
+  .timeline{position:relative;padding-left:26px}.timeline:before{content:"";position:absolute;left:8px;top:4px;bottom:4px;width:2px;background:#dbe7f7}.stage{position:relative;margin-bottom:16px;padding:15px;border:1px solid #e3eaf3;border-radius:14px;background:#fff}.stage:before{content:"";position:absolute;left:-24px;top:18px;width:12px;height:12px;border-radius:50%;background:#fff;border:3px solid var(--primary)}.stage h4{margin:0 0 7px}.stage .meta{font-size:12px;color:var(--muted);margin-bottom:8px}
+  .preview{padding:12px;border-radius:10px;background:#f8fafc;font-size:12px;line-height:1.7;color:#4b5565}
+  .audit-item{display:grid;grid-template-columns:1.1fr .7fr .8fr 1fr;gap:12px;align-items:center;padding:13px;border-bottom:1px solid #edf1f5}.audit-item:last-child{border-bottom:0}
+  .empty{text-align:center;padding:34px;color:var(--muted)}
+  .modal{position:fixed;inset:0;background:rgba(15,23,42,.42);display:none;align-items:center;justify-content:center;z-index:100;padding:18px}.modal.show{display:flex}
+  .modalbox{width:min(760px,96vw);max-height:90vh;overflow:auto;background:#fff;border-radius:20px;box-shadow:0 30px 80px rgba(0,0,0,.2);padding:22px}.modal-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}.modal-head h3{margin:0}.x{border:0;background:#f2f5f8;border-radius:9px;width:32px;height:32px}
+  .formgrid{display:grid;grid-template-columns:1fr 1fr;gap:13px}.span2{grid-column:1/-1}
+  .toast{position:fixed;right:28px;bottom:28px;background:#14233d;color:#fff;padding:12px 16px;border-radius:12px;box-shadow:0 12px 30px rgba(0,0,0,.18);opacity:0;transform:translateY(12px);pointer-events:none;transition:.22s;z-index:200}.toast.show{opacity:1;transform:translateY(0)}
+  .mobile-toggle{display:none}
+  @media(max-width:1000px){
+    .app{grid-template-columns:1fr}.sidebar{position:fixed;left:-280px;z-index:60;width:260px;transition:.2s}.sidebar.open{left:0}.mobile-toggle{display:inline-flex}
+    .grid4,.coverage,.three{grid-template-columns:1fr 1fr}.two,.skill-grid{grid-template-columns:1fr}
+    .content{padding:18px}.topbar{padding:0 18px}.compare-head,.compare-table{grid-template-columns:120px 1fr 1fr}
+  }
+  @media(max-width:640px){
+    .grid4,.coverage,.three,.recommend-list,.formgrid{grid-template-columns:1fr}.span2{grid-column:auto}.hero{flex-direction:column}.searchrow{flex-direction:column}
+
+    .compare-wrap{overflow:auto}.compare-head,.compare-table{min-width:700px}.topbar{height:62px}.content{padding:14px}.kpi .num{font-size:26px}.skill-grid{display:block}.card{padding:15px}
+  }
+
+
+  button, [role=button] {
+    cursor: pointer;
+}
+*, :before, :after {
+    box-sizing: border-box;
+    border-width: 0;
+    border-style: solid;
+    border-color: #e5e7eb;
+}
+*, :before, :after {
+    --tw-border-spacing-x: 0;
+    --tw-border-spacing-y: 0;
+    --tw-translate-x: 0;
+    --tw-translate-y: 0;
+    --tw-rotate: 0;
+    --tw-skew-x: 0;
+    --tw-skew-y: 0;
+    --tw-scale-x: 1;
+    --tw-scale-y: 1;
+    --tw-pan-x: ;
+    --tw-pan-y: ;
+    --tw-pinch-zoom: ;
+    --tw-scroll-snap-strictness: proximity;
+    --tw-gradient-from-position: ;
+    --tw-gradient-via-position: ;
+    --tw-gradient-to-position: ;
+    --tw-ordinal: ;
+    --tw-slashed-zero: ;
+    --tw-numeric-figure: ;
+    --tw-numeric-spacing: ;
+    --tw-numeric-fraction: ;
+    --tw-ring-inset: ;
+    --tw-ring-offset-width: 0px;
+    --tw-ring-offset-color: #fff;
+    --tw-ring-color: rgb(59 130 246 / .5);
+    --tw-ring-offset-shadow: 0 0 #0000;
+    --tw-ring-shadow: 0 0 #0000;
+    --tw-shadow: 0 0 #0000;
+    --tw-shadow-colored: 0 0 #0000;
+    --tw-blur: ;
+    --tw-brightness: ;
+    --tw-contrast: ;
+    --tw-grayscale: ;
+    --tw-hue-rotate: ;
+    --tw-invert: ;
+    --tw-saturate: ;
+    --tw-sepia: ;
+    --tw-drop-shadow: ;
+    --tw-backdrop-blur: ;
+    --tw-backdrop-brightness: ;
+    --tw-backdrop-contrast: ;
+    --tw-backdrop-grayscale: ;
+    --tw-backdrop-hue-rotate: ;
+    --tw-backdrop-invert: ;
+    --tw-backdrop-opacity: ;
+    --tw-backdrop-saturate: ;
+    --tw-backdrop-sepia: ;
+    --tw-contain-size: ;
+    --tw-contain-layout: ;
+    --tw-contain-paint: ;
+}
+.w-5 {
+    width: 1.25rem;
+}
+
+.h-5 {
+    height: 1.25rem;
+}
+
+  .transition-all {
+    transition-property: all;
+    transition-timing-function: cubic-bezier(.4, 0, .2, 1);
+    transition-duration: .15s;
+}
+
+.shadow-md {
+    --tw-shadow: 0 4px 6px -1px rgb(0 0 0 / .1), 0 2px 4px -2px rgb(0 0 0 / .1);
+    --tw-shadow-colored: 0 4px 6px -1px var(--tw-shadow-color), 0 2px 4px -2px var(--tw-shadow-color);
+    box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
+}
+.text-white {
+    --tw-text-opacity: 1;
+    color: rgb(255 255 255 / var(--tw-text-opacity, 1));
+}
+.py-3 {
+    padding-top: .75rem;
+    padding-bottom: .75rem;
+}
+.px-6 {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+}
+.to-cyan-500 {
+    --tw-gradient-to: #06b6d4 var(--tw-gradient-to-position);
+}
+.from-blue-600 {
+    --tw-gradient-from: #2563eb var(--tw-gradient-from-position);
+    --tw-gradient-to: #06b6d4 var(--tw-gradient-to-position);
+    --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to);
+}
+.bg-gradient-to-r {
+    background-image: linear-gradient(to right, var(--tw-gradient-stops));
+}
+.rounded-xl {
+    border-radius: .75rem;
+}
+.justify-center {
+    justify-content: center;
+}
+.items-center {
+    align-items: center;
+}
+.w-full {
+    width: 100%;
+}
+.flex {
+    display: flex;
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar" id="sidebar">
+    <div class="brand">
+      <!-- <div class="mark"></div> -->
+       <img style="width:32px;" src='https://static.szaccord.org.cn/logo.png' alt="Logo" className="w-10 h-10 rounded-lg object-cover" />
+      <div><strong>深圳协议 · 职业仓</strong><span>Career Warehouse / IVEL</span></div>
+    </div>
+    <div class="nav">
+      <!-- <button class="active" data-page="overview"><span class="ico">⌂</span>验收总览</button> -->
+      <button class="active" data-page="jobs"><span class="ico">▦</span>职业基础信息</button>
+      <button data-page="search"><span class="ico">⌕</span>智能检索</button>
+      <button data-page="compare"><span class="ico">⇄</span>职业对比分析</button>
+      <button data-page="match"><span class="ico">◉</span>能力匹配可视化</button>
+      <button data-page="recommend"><span class="ico">✦</span>智能推荐</button>
+      <button data-page="path"><span class="ico">↗</span>职业路径规划</button>
+      <button data-page="audit"><span class="ico">✓</span>管理员审核</button>
+    </div>
+  </aside>
+
+  <main class="main">
+    <header class="topbar">
+      <div style="display:flex;align-items:center;gap:10px">
+        <button class="btn mobile-toggle" onclick="document.getElementById('sidebar').classList.toggle('open')">☰</button>
+        <div class="crumb">深圳协议 / <b id="pageTitle">职业仓验收总览</b></div>
+      </div>
+      <div class="admin user-menu-wrap">
+        <button onclick="(function(){window.location.href='/'})()" class="w-full px-6 py-3 rounded-xl transition-all bg-gradient-to-r from-blue-600 to-cyan-500 hover:from-blue-600 hover:to-cyan-500 text-white flex items-center justify-center space-x-2 shadow-md hover:shadow-lg"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg></button>
+        <!-- <button class="avatar avatar-btn" id="userMenuBtn" onclick="toggleUserMenu(event)" title="管理员菜单">管</button>
+        <div class="user-dropdown" id="userDropdown">
+          <button class="user-dropdown-item" onclick="secureLogout()">
+            <span class="logout-icon">↪</span>
+            <span>安全退出</span>
+          </button>
+        </div> -->
+      </div>
+    </header>
+
+    <div class="content">
+      <section class="page" id="overview">
+        <div class="hero">
+          <div>
+            <h1>职业仓 Career Warehouse</h1>
+            <p>围绕职业基础数据、智能检索、职业对比、能力匹配、课程推荐和职业路径规划构建的一体化职业能力服务模块。</p>
+          </div>
+          <div class="badge">● 六项招标要求已覆盖</div>
+        </div>
+        <div class="grid4">
+          <div class="kpi"><div class="label">职业条目</div><div class="num" id="kpiJobs">12</div><div class="trend">含审核流程与状态留痕</div></div>
+          <div class="kpi"><div class="label">已审核发布</div><div class="num" id="kpiApproved">9</div><div class="trend">仅审核通过数据正式展示</div></div>
+          <div class="kpi"><div class="label">技能模型</div><div class="num">28</div><div class="trend">岗位技能与课程知识点关联</div></div>
+          <div class="kpi"><div class="label">职业路径模板</div><div class="num">16</div><div class="trend">支持阶段目标与实践预估</div></div>
+        </div>
+        <div class="card" style="margin-top:16px">
+          <div class="card-head"><div><h3>招标验收覆盖矩阵</h3><div class="sub">逐条对应“实施方案——4.2.2.2.职业仓”</div></div></div>
+          <div class="coverage">
+            <div class="cover"><div class="n">01</div><b>基础信息管理</b><span>新增、修改、删除确认、提交审核、审核意见/状态、审核通过后正式展示。</span></div>
+            <div class="cover"><div class="n">02</div><b>智能检索</b><span>支持关键词复合查询与模拟语义检索，按相关度排序并高亮命中内容。</span></div>
+            <div class="cover"><div class="n">03</div><b>职业对比分析</b><span>双栏对比岗位职责、核心技能、能力等级、课程要求等，差异项自动高亮。</span></div>
+            <div class="cover"><div class="n">04</div><b>能力匹配可视化</b><span>技能匹配模型、匹配度、能力雷达/条形图、差距建议及CSV导出。</span></div>
+            <div class="cover"><div class="n">05</div><b>智能推荐</b><span>基于岗位技能与课程知识点关联，形成课程推荐得分与推荐理由。</span></div>
+            <div class="cover"><div class="n">06</div><b>职业路径规划</b><span>职业目标选择、阶段目标设定、能力缺口、学习任务与实践结果预估。</span></div>
+          </div>
+        </div>
+        <div class="two" style="margin-top:16px">
+          <div class="card">
+            <div class="card-head"><div><h3>最近审核动态</h3><div class="sub">用于体现“审核意见 + 审核状态 + 发布控制”</div></div></div>
+            <div id="overviewAudit"></div>
+          </div>
+          <div class="card">
+            <div class="card-head"><div><h3>系统说明</h3><div class="sub">当前为单文件HTML验收演示版</div></div></div>
+            <div class="preview">
+              ① 数据保存在浏览器 localStorage，可刷新保留；<br>
+              ② 所有新增、修改操作提交后进入“待审核”；<br>
+              ③ 搜索、对比、匹配、推荐、路径规划默认仅使用“已通过”职业；<br>
+              ④ 可用“重置演示数据”恢复初始状态，便于多轮验收演示。
+            </div>
+            <div style="margin-top:12px"><button class="btn" onclick="resetData()">重置演示数据</button></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="page active" id="jobs">
+        <div class="hero"><div><h1>职业基础信息管理</h1><p>职业岗位编号、名称、职责、技能等核心数据的增删改审与发布控制。</p></div><button class="btn primary" onclick="openJobModal()">＋ 新增职业</button></div>
+        <div class="card">
+          <div class="toolbar">
+            <div class="field"><label>关键词</label><input id="jobKeyword" placeholder="职业编号 / 名称 / 关键词" oninput="renderJobs()"></div>
+            <div class="field"><label>审核状态</label><select id="jobStatus" onchange="renderJobs()"><option value="">全部</option><option>已通过</option><option>待审核</option><option>已驳回</option></select></div>
+            <div class="field"><label>职业领域</label><select id="jobDomain" onchange="renderJobs()"><option value="">全部领域</option></select></div>
+          </div>
+          <div style="overflow:auto">
+            <table>
+              <thead><tr><th>职业编号</th><th>职业名称</th><th>职业领域</th><th>核心技能</th><th>审核状态</th><th>最近意见</th><th>操作</th></tr></thead>
+              <tbody id="jobRows"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <section class="page" id="search">
+        <div class="hero"><div><h1>智能检索</h1><p>支持复合条件查询与语义化意图匹配，返回匹配职业、相关度及命中内容。</p></div></div>
+        <div class="searchbox">
+          <div class="searchrow"><input id="searchText" placeholder="例如：会Python、数据分析、人工智能方向的职业；或输入“新能源设备维护”" value="Python 数据分析 人工智能"><button class="btn primary" onclick="smartSearch()">智能检索</button></div>
+          <div class="toolbar" style="margin:12px 0 0">
+            <select id="searchDomain"><option value="">所有职业领域</option></select>
+            <select id="searchLevel"><option value="">全部能力等级</option><option>IVEL 2</option><option>IVEL 3</option><option>IVEL 4</option><option>IVEL 5</option></select>
+            <label class="pill" style="display:flex;align-items:center;gap:6px"><input id="semanticToggle" type="checkbox" checked style="width:auto"> 语义扩展</label>
+          </div>
+        </div>
+        <div class="card" style="margin-top:16px">
+          <div class="card-head"><div><h3>检索结果</h3><div class="sub" id="resultCount">输入条件后执行查询</div></div></div>
+          <div id="searchResults"></div>
+        </div>
+      </section>
+
+      <section class="page" id="compare">
+        <div class="hero"><div><h1>职业对比分析</h1><p>双栏对比职业信息，并对差异项自动高亮标记。</p></div></div>
+        <div class="card">
+          <div class="toolbar">
+            <div class="field"><label>职业 A</label><select id="compareA" onchange="renderCompare()"></select></div>
+            <div class="field"><label>职业 B</label><select id="compareB" onchange="renderCompare()"></select></div>
+          </div>
+          <div class="compare-wrap"><div id="compareBox"></div></div>
+        </div>
+      </section>
+
+      <section class="page" id="match">
+        <div class="hero"><div><h1>能力匹配可视化</h1><p>根据个人技能自评与目标职业技能模型计算匹配度，形成可视化结果及能力缺口。</p></div><button class="btn" onclick="exportMatch()">导出匹配结果 CSV</button></div>
+        <div class="card">
+          <div class="toolbar">
+            <div class="field"><label>目标职业</label><select id="matchJob" onchange="loadSkillInputs()"></select></div>
+            <div class="field"><label>算法模型</label><select><option>加权技能匹配模型 v1.0</option><option>岗位能力向量模型（演示）</option></select></div>
+          </div>
+          <div class="skill-grid">
+            <div>
+              <h3 style="font-size:15px">个人能力自评（1-5）</h3>
+              <div id="skillInputs" class="bars"></div>
+              <button class="btn primary" style="margin-top:14px" onclick="calcMatch()">计算匹配度</button>
+            </div>
+            <div>
+              <div class="card" style="box-shadow:none;background:#fbfdff">
+                <div style="display:flex;align-items:center;justify-content:space-between"><div><div class="sub">综合匹配度</div><div id="matchScore" style="font-size:40px;font-weight:850;color:var(--primary)">--%</div></div><div class="badge" id="matchLevel">等待计算</div></div>
+                <canvas id="radar" width="520" height="310"></canvas>
+                <div id="gapAdvice" class="preview">选择目标职业并完成技能自评后，可获得能力差距与提升建议。</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="page" id="recommend">
+        <div class="hero"><div><h1>课程智能推荐</h1><p>通过“岗位核心技能 → 课程知识点”关联度计算推荐得分，并给出推荐依据。</p></div></div>
+        <div class="card">
+          <div class="toolbar">
+            <div class="field"><label>目标职业</label><select id="recJob" onchange="recommendCourses()"></select></div>
+            <div class="field"><label>学习偏好</label><select id="recPref" onchange="recommendCourses()"><option>技能优先</option><option>理论+实践均衡</option><option>项目实践优先</option></select></div>
+          </div>
+          <div id="recommendInfo" class="preview" style="margin-bottom:14px"></div>
+          <div id="courseList" class="recommend-list"></div>
+        </div>
+      </section>
+
+      <section class="page" id="path">
+        <div class="hero"><div><h1>职业路径规划</h1><p>按职业目标生成阶段性目标、学习任务、实践任务与结果预估。</p></div><button class="btn" onclick="exportPath()">导出规划 JSON</button></div>
+        <div class="card">
+          <div class="toolbar">
+            <div class="field"><label>目标职业</label><select id="pathJob" onchange="renderPath()"></select></div>
+            <div class="field"><label>当前阶段</label><select id="pathStage" onchange="renderPath()"><option>入门学习者</option><option>在校专业学生</option><option>初级从业者</option></select></div>
+            <div class="field"><label>规划周期</label><select id="pathCycle" onchange="renderPath()"><option>12个月</option><option>18个月</option><option>24个月</option></select></div>
+          </div>
+          <div class="two">
+            <div><div class="timeline" id="pathTimeline"></div></div>
+            <div>
+              <div class="card" style="box-shadow:none;background:#fbfdff">
+                <div class="card-head"><div><h3>实践结果预估</h3><div class="sub">基于阶段任务完成度的演示性测算</div></div></div>
+                <div id="pathForecast"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="page" id="audit">
+        <div class="hero"><div><h1>管理员审核中心</h1><p>记录审核意见与状态。只有审核通过的数据才进入正式职业仓查询、对比与推荐。</p></div></div>
+        <div class="card">
+          <div class="card-head"><div><h3>待审核任务</h3><div class="sub">审核操作会自动留痕并更新发布状态</div></div></div>
+          <div id="auditList"></div>
+        </div>
+      </section>
+    </div>
+  </main>
+</div>
+
+<div class="modal" id="jobModal">
+  <div class="modalbox">
+    <div class="modal-head"><h3 id="jobModalTitle">新增职业</h3><button class="x" onclick="closeModal('jobModal')">×</button></div>
+    <div class="formgrid">
+      <div class="field"><label>职业编号 *</label><input id="fCode" placeholder="例：CW-ICT-001"></div>
+      <div class="field"><label>职业名称 *</label><input id="fName" placeholder="例：人工智能工程技术人员"></div>
+      <div class="field"><label>职业领域 *</label><input id="fDomain" placeholder="例：数字技术"></div>
+      <div class="field"><label>能力等级</label><select id="fLevel"><option>IVEL 2</option><option selected>IVEL 3</option><option>IVEL 4</option><option>IVEL 5</option></select></div>
+      <div class="field span2"><label>主要职责 *</label><textarea id="fDuties" placeholder="描述该职业的主要工作职责"></textarea></div>
+      <div class="field span2"><label>核心技能（逗号分隔）*</label><input id="fSkills" placeholder="Python, 数据分析, 机器学习, 模型部署"></div>
+      <div class="field span2"><label>推荐课程（逗号分隔）</label><input id="fCourses" placeholder="Python程序设计, 数据分析基础, 机器学习"></div>
+      <div class="field span2"><label>提交说明</label><textarea id="fSubmitNote" placeholder="本次新增/修改说明，提交后进入管理员审核"></textarea></div>
+    </div>
+    <div style="display:flex;justify-content:flex-end;gap:10px;margin-top:18px">
+      <button class="btn" onclick="closeModal('jobModal')">取消</button>
+      <button class="btn primary" onclick="saveJob()">提交审核</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal" id="deleteModal">
+  <div class="modalbox" style="width:min(480px,96vw)">
+    <div class="modal-head"><h3>确认删除</h3><button class="x" onclick="closeModal('deleteModal')">×</button></div>
+    <p style="line-height:1.7;color:#596579">删除操作不可恢复。为符合验收要求，系统在执行删除前必须进行二次确认。</p>
+    <div style="display:flex;justify-content:flex-end;gap:10px;margin-top:18px">
+      <button class="btn" onclick="closeModal('deleteModal')">取消</button><button class="btn danger" onclick="confirmDelete()">确认删除</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+
+
+function toggleUserMenu(event){
+  if(event) event.stopPropagation();
+  document.getElementById('userDropdown').classList.toggle('show');
+}
+document.addEventListener('click', function(event){
+  const wrap = document.querySelector('.user-menu-wrap');
+  const menu = document.getElementById('userDropdown');
+  if(wrap && menu && !wrap.contains(event.target)) menu.classList.remove('show');
+});
+
+function secureLogout(){
+  // Clear any transient session-style data used by this single-file page,
+  // but retain career warehouse business data in localStorage for acceptance use.
+  try{
+    sessionStorage.clear();
+  }catch(e){}
+  window.location.href='https://www.szaccord.org.cn/';
+}
+
+const seedJobs = [
+{id:1,code:'CW-DT-001',name:'人工智能工程技术人员',domain:'数字技术',level:'IVEL 4',duties:'从事人工智能算法设计、模型训练、应用开发、部署优化与技术支持。',skills:['Python','机器学习','深度学习','数据分析','模型部署'],courses:['Python程序设计','机器学习基础','深度学习','数据分析与可视化','MLOps工程实践'],status:'已通过',opinion:'内容完整，审核通过',updated:'2026-09-12'},
+{id:2,code:'CW-DT-002',name:'大数据工程技术人员',domain:'数字技术',level:'IVEL 4',duties:'负责大规模数据采集、存储、治理、计算、分析平台建设与数据服务。',skills:['SQL','Python','数据治理','Spark','数据仓库'],courses:['Python程序设计','SQL与数据库','大数据技术','数据治理','数据仓库建模'],status:'已通过',opinion:'通过',updated:'2026-09-10'},
+{id:3,code:'CW-DT-003',name:'数据分析师',domain:'数字技术',level:'IVEL 3',duties:'基于业务目标完成数据获取、清洗、分析、可视化，并形成决策洞察。',skills:['Excel','SQL','Python','统计分析','数据可视化'],courses:['数据分析基础','SQL与数据库','Python程序设计','统计学基础','BI可视化'],status:'已通过',opinion:'通过',updated:'2026-09-08'},
+{id:4,code:'CW-SM-001',name:'智能制造工程技术人员',domain:'智能制造',level:'IVEL 4',duties:'开展智能产线规划、工业网络集成、设备数据采集与制造系统优化。',skills:['PLC','工业网络','MES','设备集成','工业数据'],courses:['PLC控制技术','工业网络','MES系统','智能产线集成','工业数据分析'],status:'已通过',opinion:'通过',updated:'2026-09-06'},
+{id:5,code:'CW-NE-001',name:'新能源设备运维工程师',domain:'新能源',level:'IVEL 3',duties:'负责新能源发电与储能设备巡检、故障诊断、维护保养及运行优化。',skills:['设备巡检','故障诊断','电气控制','安全规范','运维数据'],courses:['电工电子技术','新能源设备','故障诊断技术','安全生产','智能运维'],status:'已通过',opinion:'通过',updated:'2026-09-03'},
+{id:6,code:'CW-AU-001',name:'工业机器人系统操作员',domain:'智能制造',level:'IVEL 3',duties:'负责工业机器人编程、示教、工作站调试、日常维护及生产协同。',skills:['机器人编程','示教调试','PLC','设备维护','安全操作'],courses:['工业机器人编程','PLC控制技术','机器人工作站集成','设备维护','安全规范'],status:'已通过',opinion:'通过',updated:'2026-09-02'},
+{id:7,code:'CW-DT-004',name:'云计算工程技术人员',domain:'数字技术',level:'IVEL 4',duties:'负责云平台架构设计、资源管理、自动化部署、运维与安全保障。',skills:['Linux','容器','Kubernetes','云平台','自动化运维'],courses:['Linux系统','容器技术','Kubernetes','云计算平台','DevOps'],status:'已通过',opinion:'通过',updated:'2026-08-29'},
+{id:8,code:'CW-EC-001',name:'跨境电子商务运营师',domain:'现代服务',level:'IVEL 3',duties:'开展跨境电商平台运营、商品策划、数字营销、数据分析与客户增长。',skills:['平台运营','数字营销','数据分析','内容策划','跨文化沟通'],courses:['跨境电商运营','数字营销','商务数据分析','内容运营','商务英语'],status:'已通过',opinion:'通过',updated:'2026-08-27'},
+{id:9,code:'CW-CS-001',name:'网络安全工程技术人员',domain:'数字技术',level:'IVEL 4',duties:'开展信息系统安全评估、漏洞分析、安全加固、应急响应与安全运营。',skills:['网络安全','漏洞分析','安全运维','应急响应','Linux'],courses:['网络安全基础','渗透测试','安全运维','Linux系统','应急响应'],status:'已通过',opinion:'通过',updated:'2026-08-25'},
+{id:10,code:'CW-DT-005',name:'生成式AI应用开发工程师',domain:'数字技术',level:'IVEL 4',duties:'基于大语言模型开展知识库、智能体、工作流及行业应用开发。',skills:['Python','大语言模型','RAG','智能体','Prompt工程'],courses:['Python程序设计','大语言模型原理','RAG应用开发','智能体开发','Prompt工程'],status:'待审核',opinion:'待管理员审核',updated:'2026-09-15'},
+{id:11,code:'CW-NE-002',name:'储能系统技术员',domain:'新能源',level:'IVEL 3',duties:'开展储能系统安装调试、运行监测、故障排查与维护。',skills:['储能系统','电气控制','故障诊断','安全规范','数据监测'],courses:['储能技术','电气控制','故障诊断技术','安全生产','能源数据分析'],status:'待审核',opinion:'技能项需复核',updated:'2026-09-14'},
+{id:12,code:'CW-DS-001',name:'数字孪生应用技术员',domain:'数字技术',level:'IVEL 3',duties:'开展数字孪生场景建模、数据接入、可视化与仿真应用配置。',skills:['三维建模','数据接入','可视化','仿真','物联网'],courses:['三维建模','物联网技术','数字孪生基础','可视化开发','系统仿真'],status:'已驳回',opinion:'职责描述需补充应用边界',updated:'2026-09-13'}
+];
+const courses = [
+{name:'Python程序设计',points:['Python','数据处理','自动化'],type:'理论+实训'},
+{name:'机器学习基础',points:['机器学习','统计分析','模型评估'],type:'理论+项目'},
+{name:'深度学习',points:['深度学习','神经网络','模型训练'],type:'理论+项目'},
+{name:'数据分析与可视化',points:['数据分析','数据可视化','Python','Excel'],type:'项目实践'},
+{name:'SQL与数据库',points:['SQL','数据库','数据仓库'],type:'理论+实训'},
+{name:'大数据技术',points:['Spark','Hadoop','数据计算'],type:'理论+项目'},
+{name:'数据治理',points:['数据治理','数据质量','元数据'],type:'项目实践'},
+{name:'PLC控制技术',points:['PLC','电气控制','自动化'],type:'实训'},
+{name:'工业网络',points:['工业网络','设备集成','通信协议'],type:'实训'},
+{name:'MES系统',points:['MES','生产管理','设备集成'],type:'项目实践'},
+{name:'新能源设备',points:['设备巡检','新能源','设备维护'],type:'实训'},
+{name:'故障诊断技术',points:['故障诊断','设备维护','运维数据'],type:'项目实践'},
+{name:'Linux系统',points:['Linux','安全运维','自动化运维'],type:'实训'},
+{name:'容器技术',points:['容器','Docker','自动化部署'],type:'项目实践'},
+{name:'Kubernetes',points:['Kubernetes','容器','云平台'],type:'项目实践'},
+{name:'网络安全基础',points:['网络安全','安全运维','应急响应'],type:'理论+实训'},
+{name:'跨境电商运营',points:['平台运营','内容策划','跨文化沟通'],type:'项目实践'},
+{name:'数字营销',points:['数字营销','内容策划','用户增长'],type:'项目实践'}
+];
+let jobs = JSON.parse(localStorage.getItem('careerWarehouseJobs')||'null') || seedJobs;
+let editId=null, deleteId=null, lastMatch=null, lastPath=null;
+const semanticMap = {
+  'AI':['人工智能','机器学习','深度学习','大语言模型','智能体'],
+  '人工智能':['AI','机器学习','深度学习','大语言模型','智能体'],
+  '数据':['数据分析','SQL','Python','数据治理','大数据'],
+  '开发':['Python','应用开发','编程','部署'],
+  '运维':['设备维护','故障诊断','自动化运维','安全运维','巡检'],
+  '新能源':['储能','设备巡检','电气控制','运维数据'],
+  '制造':['智能制造','PLC','工业网络','机器人','MES'],
+  '安全':['网络安全','安全运维','应急响应','漏洞分析']
+};
+function save(){localStorage.setItem('careerWarehouseJobs',JSON.stringify(jobs))}
+function approvedJobs(){return jobs.filter(j=>j.status==='已通过')}
+function esc(s=''){return String(s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]))}
+function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),1800)}
+function closeModal(id){document.getElementById(id).classList.remove('show')}
+function statusClass(s){return s==='已通过'?'approved':s==='待审核'?'pending':s==='已驳回'?'rejected':'draft'}
+function refreshAll(){
+  renderDomains();renderJobs();populateApprovedSelects();renderAudit();renderOverview();smartSearch();renderCompare();loadSkillInputs();recommendCourses();renderPath();
+}
+document.querySelectorAll('.nav button').forEach(btn=>btn.onclick=()=>{
+  document.querySelectorAll('.nav button').forEach(b=>b.classList.remove('active'));btn.classList.add('active');
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));document.getElementById(btn.dataset.page).classList.add('active');
+  document.getElementById('pageTitle').textContent=btn.textContent.trim();
+  document.getElementById('sidebar').classList.remove('open');
+});
+function renderDomains(){
+  const domains=[...new Set(jobs.map(j=>j.domain))].sort();
+  ['jobDomain','searchDomain'].forEach(id=>{
+    const el=document.getElementById(id), cur=el.value, first=id==='jobDomain'?'全部领域':'所有职业领域';
+    el.innerHTML=`<option value="">${first}</option>`+domains.map(d=>`<option>${esc(d)}</option>`).join('');
+    el.value=domains.includes(cur)?cur:'';
+  });
+}
+function renderOverview(){
+  document.getElementById('kpiJobs').textContent=jobs.length;
+  document.getElementById('kpiApproved').textContent=approvedJobs().length;
+  const recent=jobs.slice().sort((a,b)=>b.updated.localeCompare(a.updated)).slice(0,4);
+  document.getElementById('overviewAudit').innerHTML=recent.map(j=>`<div class="result"><div class="result-top"><b>${esc(j.name)}</b><span class="status ${statusClass(j.status)}">${j.status}</span></div><div class="snippet">${esc(j.updated)} · ${esc(j.opinion||'—')}</div></div>`).join('');
+}
+function renderJobs(){
+  const kw=(document.getElementById('jobKeyword')?.value||'').toLowerCase(), st=document.getElementById('jobStatus')?.value||'', dom=document.getElementById('jobDomain')?.value||'';
+  const list=jobs.filter(j=>(!kw||[j.code,j.name,j.domain,j.duties,...j.skills].join(' ').toLowerCase().includes(kw))&&(!st||j.status===st)&&(!dom||j.domain===dom));
+  document.getElementById('jobRows').innerHTML=list.map(j=>`<tr>
+    <td><b>${esc(j.code)}</b><div class="sub">${esc(j.level)}</div></td><td>${esc(j.name)}</td><td>${esc(j.domain)}</td>
+    <td>${j.skills.slice(0,4).map(s=>`<span class="tag">${esc(s)}</span>`).join('')}</td>
+    <td><span class="status ${statusClass(j.status)}">${j.status}</span></td><td style="max-width:220px">${esc(j.opinion||'—')}</td>
+    <td style="white-space:nowrap"><button class="btn small" onclick="openJobModal(${j.id})">修改</button> <button class="btn small danger" onclick="askDelete(${j.id})">删除</button></td>
+  </tr>`).join('') || `<tr><td colspan="7"><div class="empty">暂无符合条件的数据</div></td></tr>`;
+}
+function openJobModal(id){
+  editId=id||null;
+  const j=id?jobs.find(x=>x.id===id):null;
+  document.getElementById('jobModalTitle').textContent=id?'修改职业并提交审核':'新增职业并提交审核';
+  ['fCode','fName','fDomain','fDuties','fSkills','fCourses','fSubmitNote'].forEach(x=>document.getElementById(x).value='');
+  document.getElementById('fLevel').value='IVEL 3';
+  if(j){fCode.value=j.code;fName.value=j.name;fDomain.value=j.domain;fLevel.value=j.level;fDuties.value=j.duties;fSkills.value=j.skills.join(', ');fCourses.value=(j.courses||[]).join(', ');}
+  document.getElementById('jobModal').classList.add('show');
+}
+function saveJob(){
+  const code=fCode.value.trim(),name=fName.value.trim(),domain=fDomain.value.trim(),duties=fDuties.value.trim(),skills=fSkills.value.split(/[,，]/).map(x=>x.trim()).filter(Boolean), cs=fCourses.value.split(/[,，]/).map(x=>x.trim()).filter(Boolean);
+  if(!code||!name||!domain||!duties||!skills.length){toast('请填写所有必填项');return}
+  if(jobs.some(j=>j.code===code&&j.id!==editId)){toast('职业编号已存在');return}
+  const now=new Date().toISOString().slice(0,10);
+  if(editId){
+    const j=jobs.find(x=>x.id===editId);Object.assign(j,{code,name,domain,level:fLevel.value,duties,skills,courses:cs,status:'待审核',opinion:'修改后待管理员审核',updated:now,submitNote:fSubmitNote.value.trim()});
+  }else{
+    jobs.push({id:Date.now(),code,name,domain,level:fLevel.value,duties,skills,courses:cs,status:'待审核',opinion:'新增后待管理员审核',updated:now,submitNote:fSubmitNote.value.trim()});
+  }
+  save();closeModal('jobModal');refreshAll();toast('已提交管理员审核');
+}
+function askDelete(id){deleteId=id;document.getElementById('deleteModal').classList.add('show')}
+function confirmDelete(){jobs=jobs.filter(j=>j.id!==deleteId);save();closeModal('deleteModal');refreshAll();toast('删除成功')}
+function populateApprovedSelects(){
+  const a=approvedJobs();
+  const ids=['compareA','compareB','matchJob','recJob','pathJob'];
+  ids.forEach((id,idx)=>{
+    const el=document.getElementById(id),cur=el.value;
+    el.innerHTML=a.map(j=>`<option value="${j.id}">${esc(j.name)}（${esc(j.code)}）</option>`).join('');
+    if(a.some(j=>String(j.id)===cur))el.value=cur;
+    else if(id==='compareB'&&a[1])el.value=a[1].id;
+  });
+}
+function highlight(text,qs){
+  let out=esc(text); qs.filter(x=>x.length>1).sort((a,b)=>b.length-a.length).slice(0,8).forEach(q=>{const r=new RegExp(q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'),'ig');out=out.replace(r,m=>`<mark>${m}</mark>`)});return out;
+}
+function smartSearch(){
+  const text=(document.getElementById('searchText')?.value||'').trim(), dom=document.getElementById('searchDomain')?.value||'', lvl=document.getElementById('searchLevel')?.value||'', semantic=document.getElementById('semanticToggle')?.checked;
+  let qs=text.split(/[\s,，、;；]+/).filter(Boolean);
+  if(semantic){Object.entries(semanticMap).forEach(([k,v])=>{if(text.includes(k))qs.push(...v)});}
+  qs=[...new Set(qs)];
+  const list=approvedJobs().filter(j=>(!dom||j.domain===dom)&&(!lvl||j.level===lvl)).map(j=>{
+    const name=j.name,skills=j.skills.join(' '),all=[j.code,name,j.domain,j.duties,skills,j.level].join(' ');
+    let score=0,hits=[];qs.forEach(q=>{if(name.includes(q)){score+=18;hits.push(q)};if(skills.includes(q)){score+=13;hits.push(q)};if(j.duties.includes(q)){score+=8;hits.push(q)};if(all.toLowerCase().includes(q.toLowerCase()))score+=3});
+    if(!text)score=10;
+    return {j,score:Math.min(99,score),hits:[...new Set(hits)]};
+  }).filter(x=>x.score>0).sort((a,b)=>b.score-a.score);
+  document.getElementById('resultCount').textContent=`找到 ${list.length} 个已审核职业 · 语义扩展${semantic?'已开启':'已关闭'}`;
+  document.getElementById('searchResults').innerHTML=list.map(x=>`<div class="result"><div class="result-top"><div><b>${highlight(x.j.name,qs)}</b> <span class="tag">${esc(x.j.domain)}</span> <span class="tag">${esc(x.j.level)}</span></div><span class="score">${x.score}% 相关</span></div><div class="snippet">${highlight(x.j.duties,qs)}</div><div style="margin-top:6px">${x.j.skills.map(s=>`<span class="tag">${highlight(s,qs)}</span>`).join('')}</div></div>`).join('')||'<div class="empty">未找到匹配结果，可尝试更换关键词或开启语义扩展。</div>';
+}
+function renderCompare(){
+  const A=approvedJobs().find(j=>String(j.id)===String(compareA.value)),B=approvedJobs().find(j=>String(j.id)===String(compareB.value));if(!A||!B)return;
+  const rows=[['职业编号',A.code,B.code],['职业领域',A.domain,B.domain],['能力等级',A.level,B.level],['主要职责',A.duties,B.duties],['核心技能',A.skills.join('、'),B.skills.join('、')],['推荐课程',(A.courses||[]).join('、'),(B.courses||[]).join('、')]];
+  compareBox.innerHTML=`<div class="compare-head"><div>对比维度</div><div>${esc(A.name)}</div><div>${esc(B.name)}</div></div><div class="compare-table">`+rows.map(r=>`<div class="label">${r[0]}</div><div class="${r[1]!==r[2]?'diff':''}">${esc(r[1])}</div><div class="${r[1]!==r[2]?'diff':''}">${esc(r[2])}</div>`).join('')+`</div><div class="preview" style="margin-top:12px">黄色背景表示差异项。当前两职业共同技能：${esc(A.skills.filter(x=>B.skills.includes(x)).join('、')||'暂无明显重合技能')}。</div>`;
+}
+function loadSkillInputs(){
+  const j=approvedJobs().find(x=>String(x.id)===String(matchJob.value));if(!j)return;
+  skillInputs.innerHTML=j.skills.map((s,i)=>`<div class="barline"><span>${esc(s)}</span><input type="range" min="1" max="5" value="${i<2?4:3}" step="1" data-skill="${esc(s)}" oninput="this.nextElementSibling.textContent=this.value"><b>${i<2?4:3}</b></div>`).join('');
+  matchScore.textContent='--%';matchLevel.textContent='等待计算';gapAdvice.textContent='完成自评后点击“计算匹配度”。';drawRadar(j.skills,Array(j.skills.length).fill(0),Array(j.skills.length).fill(5));
+}
+function calcMatch(){
+  const j=approvedJobs().find(x=>String(x.id)===String(matchJob.value));if(!j)return;
+  const vals=[...skillInputs.querySelectorAll('input')].map(x=>+x.value), targets=j.skills.map((_,i)=>i<2?5:4);
+  const weights=j.skills.map((_,i)=>i<2?1.25:1), total=weights.reduce((a,b)=>a+b,0);
+  const score=Math.round(vals.reduce((s,v,i)=>s+Math.min(v/targets[i],1)*weights[i],0)/total*100);
+  const gaps=j.skills.map((s,i)=>({s,g:targets[i]-vals[i]})).filter(x=>x.g>0).sort((a,b)=>b.g-a.g);
+  matchScore.textContent=score+'%';matchLevel.textContent=score>=85?'高度匹配':score>=70?'较高匹配':score>=55?'中度匹配':'需要提升';
+  gapAdvice.innerHTML=gaps.length?`主要能力缺口：<b>${gaps.slice(0,3).map(x=>x.s+'（差'+x.g+'级）').join('、')}</b>。建议优先补齐差距最大的技能，并结合推荐课程与项目实践完成验证。`:'核心技能已达到目标基线，可继续通过综合项目提升熟练度。';
+  lastMatch={job:j.name,score,skills:j.skills.map((s,i)=>({skill:s,self:vals[i],target:targets[i],gap:Math.max(0,targets[i]-vals[i])}))};drawRadar(j.skills,vals,targets);
+}
+function drawRadar(labels,vals,targets){
+  const c=document.getElementById('radar'),ctx=c.getContext('2d'),w=c.width,h=c.height,cx=w/2,cy=h/2+5,R=108,n=labels.length;ctx.clearRect(0,0,w,h);
+  ctx.strokeStyle='#e3e9f2';ctx.fillStyle='#6b7280';ctx.font='12px sans-serif';
+  for(let r=1;r<=5;r++){ctx.beginPath();for(let i=0;i<n;i++){let a=-Math.PI/2+i*2*Math.PI/n,x=cx+Math.cos(a)*R*r/5,y=cy+Math.sin(a)*R*r/5;i?ctx.lineTo(x,y):ctx.moveTo(x,y)}ctx.closePath();ctx.stroke()}
+  for(let i=0;i<n;i++){let a=-Math.PI/2+i*2*Math.PI/n;ctx.beginPath();ctx.moveTo(cx,cy);ctx.lineTo(cx+Math.cos(a)*R,cy+Math.sin(a)*R);ctx.stroke();ctx.fillText(labels[i],cx+Math.cos(a)*(R+24)-20,cy+Math.sin(a)*(R+24)+4)}
+  function poly(arr,fill,stroke){ctx.beginPath();arr.forEach((v,i)=>{let a=-Math.PI/2+i*2*Math.PI/n,x=cx+Math.cos(a)*R*v/5,y=cy+Math.sin(a)*R*v/5;i?ctx.lineTo(x,y):ctx.moveTo(x,y)});ctx.closePath();ctx.fillStyle=fill;ctx.fill();ctx.strokeStyle=stroke;ctx.lineWidth=2;ctx.stroke()}
+  poly(targets,'rgba(109,92,231,.08)','#6d5ce7');poly(vals,'rgba(23,105,224,.16)','#1769e0');
+}
+function exportMatch(){
+  if(!lastMatch){toast('请先计算匹配度');return}
+  let csv='\ufeff技能,个人等级,目标等级,差距\n'+lastMatch.skills.map(x=>`${x.skill},${x.self},${x.target},${x.gap}`).join('\n')+`\n\n综合匹配度,${lastMatch.score}%`;
+  downloadBlob(csv,`能力匹配_${lastMatch.job}.csv`,'text/csv;charset=utf-8');toast('已导出CSV');
+}
+function recommendCourses(){
+  const j=approvedJobs().find(x=>String(x.id)===String(recJob.value));if(!j)return;
+  const pref=recPref.value;
+  const scored=courses.map(c=>{
+    let hit=c.points.filter(p=>j.skills.some(s=>s.includes(p)||p.includes(s)));
+    let score=hit.length*24 + (j.courses||[]).includes(c.name)*18;
+    if(pref==='项目实践优先'&&c.type.includes('项目'))score+=10;if(pref==='理论+实践均衡'&&c.type.includes('理论'))score+=6;if(pref==='技能优先'&&c.type.includes('实训'))score+=8;
+    return {...c,hit,score:Math.min(98,score)};
+  }).filter(c=>c.score>=18).sort((a,b)=>b.score-a.score).slice(0,8);
+  recommendInfo.innerHTML=`推荐逻辑：以 <b>${esc(j.name)}</b> 的核心技能（${esc(j.skills.join('、'))}）为输入，计算课程知识点覆盖率，并叠加学习偏好权重。`;
+  courseList.innerHTML=scored.map(c=>`<div class="course"><div class="match">${c.score}% 关联</div><h4>${esc(c.name)}</h4><p>${esc(c.type)} · 命中知识点：${esc(c.hit.join('、')||'岗位课程映射')}</p><div style="margin-top:8px">${c.points.map(p=>`<span class="tag">${esc(p)}</span>`).join('')}</div></div>`).join('');
+}
+function renderPath(){
+  const j=approvedJobs().find(x=>String(x.id)===String(pathJob.value));if(!j)return;
+  const cycle=pathCycle.value,stage=pathStage.value;
+  const stages=[
+    {t:'阶段一：基础能力构建',m:'第1-3个月',goal:`掌握${j.skills.slice(0,2).join('、')}基础，完成职业认知与能力基线测评。`,task:`学习 ${(j.courses||[]).slice(0,2).join('、')||'专业基础课程'}；完成1个基础实训。`},
+    {t:'阶段二：核心技能强化',m:'第4-7个月',goal:`围绕${j.skills.slice(1,4).join('、')}进行项目化训练。`,task:`完成2个岗位任务型项目；核心技能达到 IVEL 3 预期水平。`},
+    {t:'阶段三：综合项目实践',m:'第8-10个月',goal:`完成面向真实业务场景的综合项目，形成可验证成果。`,task:`至少1个综合项目 + 过程文档 + 成果展示；接受导师/企业评价。`},
+    {t:'阶段四：职业胜任验证',m:'第11-12个月',goal:`针对${j.name}开展模拟岗位任务与综合能力评估。`,task:`完成职业能力测评、作品集整理和阶段复盘，形成下一阶段发展计划。`}
+  ];
+  pathTimeline.innerHTML=stages.map(s=>`<div class="stage"><h4>${s.t}</h4><div class="meta">${s.m} · ${stage} · ${cycle}</div><b>阶段目标</b><div class="snippet">${esc(s.goal)}</div><b style="display:block;margin-top:8px">学习/实践任务</b><div class="snippet">${esc(s.task)}</div></div>`).join('');
+  const forecast=[['核心技能覆盖率','82%'],['项目实践完成度','75%'],['岗位任务适配度','79%'],['预期综合胜任度','80%']];
+  pathForecast.innerHTML=forecast.map(([k,v])=>`<div class="barline" style="grid-template-columns:120px 1fr 44px;margin-bottom:14px"><span>${k}</span><div class="bar"><i style="width:${v}"></i></div><b>${v}</b></div>`).join('')+`<div class="preview">预估前提：阶段任务按计划完成率 ≥ 80%。该结果用于职业路径规划演示，不作为正式职业资格认定结果。</div>`;
+  lastPath={target:j.name,currentStage:stage,cycle,stages,forecast:Object.fromEntries(forecast)};
+}
+function exportPath(){if(!lastPath){toast('暂无规划可导出');return}downloadBlob(JSON.stringify(lastPath,null,2),`职业路径_${lastPath.target}.json`,'application/json');toast('已导出规划JSON')}
+function renderAudit(){
+  const list=jobs.filter(j=>j.status==='待审核');
+  auditList.innerHTML=list.length?list.map(j=>`<div class="audit-item"><div><b>${esc(j.name)}</b><div class="sub">${esc(j.code)} · ${esc(j.updated)}</div></div><div>${esc(j.domain)}<div class="sub">${esc(j.level)}</div></div><div><span class="status pending">待审核</span><div class="sub">${esc(j.submitNote||'无提交说明')}</div></div><div style="display:flex;gap:7px"><button class="btn small good" onclick="audit(${j.id},true)">通过</button><button class="btn small danger" onclick="audit(${j.id},false)">驳回</button></div></div>`).join(''):'<div class="empty">暂无待审核任务</div>';
+}
+function audit(id,pass){
+  const j=jobs.find(x=>x.id===id);if(!j)return;
+  const opinion=prompt(pass?'请输入审核通过意见：':'请输入驳回意见：',pass?'资料完整，符合职业仓发布规范。':'请补充或修正相关信息。');if(opinion===null)return;
+  j.status=pass?'已通过':'已驳回';j.opinion=opinion.trim()|| (pass?'审核通过':'审核驳回');j.updated=new Date().toISOString().slice(0,10);save();refreshAll();toast(pass?'审核通过，已正式发布':'已驳回并记录意见');
+}
+function downloadBlob(data,name,type){const b=new Blob([data],{type}),u=URL.createObjectURL(b),a=document.createElement('a');a.href=u;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(u),500)}
+function resetData(){if(confirm('确认重置为初始验收演示数据？本地修改将丢失。')){jobs=JSON.parse(JSON.stringify(seedJobs));save();refreshAll();toast('演示数据已重置')}}
+refreshAll();
+</script>
+</body>
+</html>
