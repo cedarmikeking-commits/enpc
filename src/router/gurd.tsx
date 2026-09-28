@@ -21,11 +21,11 @@ export default function AuthGuard({ children }: { children: JSX.Element }): JSX.
   console.log('当前路径：', location.pathname);
   if (whiteList.includes(location.pathname)) return children;
 
-  // 无 token 跳转登录
-  if (!token) {
-    toLogin({ redirect: encodeURIComponent(window.location.href) });
-    return null;
-  }
+  // 登录校验已关闭，直接进入应用
+  // if (!token) {
+  //   toLogin({ redirect: encodeURIComponent(window.location.href) });
+  //   return null;
+  // }
 
   // 加载中
   if (loading) {
