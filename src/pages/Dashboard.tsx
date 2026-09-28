@@ -217,11 +217,13 @@ export const Dashboard = () => {
         <p>© {new Date().getFullYear()} 中国高水平职业院校深圳协议联盟 版权所有</p>
       </Footer>
 
-      <EditProfileModal
-        open={editProfileOpen}
-        user={data!}
-        onCancel={() => setEditProfileOpen(false)}
-      />
+      {data && (
+        <EditProfileModal
+          open={editProfileOpen}
+          user={data}
+          onCancel={() => setEditProfileOpen(false)}
+        />
+      )}
 
       <ChangePasswordModal
         open={changePasswordOpen}
