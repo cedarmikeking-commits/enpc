@@ -1,5 +1,5 @@
 import { Layout, Button } from 'antd';
-import { LogOut, Grid3x3 } from 'lucide-react';
+import { LogOut } from 'lucide-react';
 //import weblogo from '@/img/logo.png';
 const weblogo = import.meta.env.VITE_STATIC_URL + "/logo.png";
 const { Header: AntHeader } = Layout;

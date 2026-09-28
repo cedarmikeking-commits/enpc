@@ -1,5 +1,5 @@
 import { Card, Avatar, Button, Space } from 'antd';
-import { Mail, Building2, Shield, Edit, Lock, UserIcon } from 'lucide-react';
+import { Mail, Building2, Shield, Lock, User } from 'lucide-react';
 import { UserRecord } from '@/api/user/type';
 
 interface UserProfileProps {
@@ -55,7 +55,7 @@ export default function UserProfile({ user, onViewProfile, onChangePassword }: U
             type="primary"
             block
             size="large"
-            icon={<UserIcon size={18} />}
+            icon={<User size={18} />}
             onClick={onViewProfile}
             className="h-12 font-medium"
           >

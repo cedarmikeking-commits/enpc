@@ -22,8 +22,10 @@ export default function AuthGuard({ children }: { children: JSX.Element }): JSX.
   if (whiteList.includes(location.pathname)) return children;
 
   // 无 token 跳转登录
-  // @ts-ignore
-  if (!token) return toLogin({ redirect: encodeURIComponent(window.location.href) });
+  if (!token) {
+    toLogin({ redirect: encodeURIComponent(window.location.href) });
+    return null;
+  }
 
   // 加载中
   if (loading) {

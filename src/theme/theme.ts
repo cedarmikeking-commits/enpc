@@ -14,7 +14,7 @@ const OverrideTheme: ThemeConfig = {
         },
         Table: {
             headerBg: '#eff6ff', // 表头背景色
-            headerColor: '333', // 表头文字颜色
+            headerColor: '#333', // 表头文字颜色
         },
     }
 }

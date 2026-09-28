@@ -21,6 +21,7 @@ export const RegisterForm: React.FC<{onSwitchToLogin: ()=>void}> = ({onSwitchToL
   const [form] = Form.useForm<RegisterFormValues>();
   const [submitting, setSubmitting] = useState(false);
   const navigate = useNavigate();
+  const category = Form.useWatch('category', form) || 'personal';
 
   const onFinish = async (values: RegisterFormValues) => {
     const role = values.category === 'personal' ? values.role : values.orgRole;
@@ -129,7 +130,7 @@ export const RegisterForm: React.FC<{onSwitchToLogin: ()=>void}> = ({onSwitchToL
             <Form.Item name="category" noStyle initialValue="personal">
               <Tabs
                 className="register-form__category-tabs"
-                activeKey={Form.useWatch('category', form) || 'personal'}
+                activeKey={category}
                 onChange={(key) => form.setFieldValue('category', key as Category)}
                 items={[
                   {

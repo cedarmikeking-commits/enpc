@@ -7,7 +7,7 @@ import AuthGuard from '@/router/gurd';
 import eventEmitter from '@/utils/event-emitter';
 import Header from '@/components/Header';
 import { useDispatch } from 'react-redux';
-import { logOut } from '@/store/modules/user';
+// import { logOut } from '@/store/modules/user';
 import { toLogin } from '@/utils/auth';
 import { logout } from '@/api/user';
 const LOGIN_URL = import.meta.env.VITE_LOGIN_URL;
@@ -29,7 +29,7 @@ const DefaultLayout = () => {
     console.log('触发未授权异常事件，跳转登录');
     console.log();
     try {
-      await logOut();
+      // await logOut();
       dispatch({ type: 'user/logOut' });
       // window.location.href = LOGIN_URL;
       const redirect = encodeURIComponent(window.location.href);

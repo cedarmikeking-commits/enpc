@@ -32,12 +32,11 @@ export interface Application {
 export type UserRecord = {
     id: string;
     name: string;
-    avatar?: string;
+    avatar: string;
     real_name: string;
     deptName: string;
     email: string;
     sexName: string;
-    avatar: string;
     status: Status;
     userCategory: number;
     createTime: string;
@@ -92,7 +91,6 @@ export type OrganizationType = {
     email: string;
     memberCount: number;
     status: Status;
-    parentId?: string
     createTime: string
     address: string
     remark: string

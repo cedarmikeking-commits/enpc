@@ -28,7 +28,7 @@ export default function EditProfileModal({ open, user, onCancel }: EditProfileMo
           <Avatar
             size={96}
             src={
-              user.avatar_url ||
+              user.avatar ||
               'https://images.pexels.com/photos/7092613/pexels-photo-7092613.jpeg?auto=compress&cs=tinysrgb&w=200'
             }
             className="mb-4"
@@ -71,7 +71,7 @@ export default function EditProfileModal({ open, user, onCancel }: EditProfileMo
               </span>
             }
           >
-            {user.username || '-'}
+            {user.account || '-'}
           </Descriptions.Item>
 
           <Descriptions.Item

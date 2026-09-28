@@ -6,7 +6,7 @@ import SystemStatus from '@/components/SystemStatus';
 import ApplicationCard from '@/components/ApplicationCard';
 import EditProfileModal from '@/components/EditProfileModal';
 import ChangePasswordModal from '@/components/ChangePasswordModal';
-import type { User, SystemStatus as SystemStatusType } from '../global';
+import type { SystemStatus as SystemStatusType } from '@/global';
 import { useQuery } from '@tanstack/react-query';
 import { getUserProfile, updateUserPassword } from '@/api/user';
 import { Application } from '@/api/user/type';
@@ -15,7 +15,7 @@ import { getToken } from '@/utils/auth';
 const { Content, Footer } = Layout;
 
 export const Dashboard = () => {
-  const [loading, setLoading] = useState(true);
+  // const [loading, setLoading] = useState(true);
   const [applications, setApplications] = useState<Application[]>([]);
 
   const [editProfileOpen, setEditProfileOpen] = useState(false);
@@ -94,12 +94,12 @@ export const Dashboard = () => {
         platformType: 'work',
       }]);
     }
-    return () => {
-      setApplications([]);
-    };
+    // return () => {
+    //   setApplications([]);
+    // };
   }, [data]);
 
-  const loadUserProfile = async () => { };
+  // const loadUserProfile = async () => { };
 
   const handleEnterApp = (app: Application) => {
     if (app.webServerRedirectUri) {
@@ -110,20 +110,20 @@ export const Dashboard = () => {
     }
   };
 
-  const handleLogout = async () => {
-    try {
-      message.success('已退出登录');
-    } catch (error) {
-      console.error('Error logging out:', error);
-      message.error('退出登录失败');
-    }
-  };
+  // const handleLogout = async () => {
+  //   try {
+  //     message.success('已退出登录');
+  //   } catch (error) {
+  //     console.error('Error logging out:', error);
+  //     message.error('退出登录失败');
+  //   }
+  // };
 
   const handleEditProfile = () => {
     setEditProfileOpen(true);
   };
 
-  const handleSaveProfile = async (values: Partial<User>) => { };
+  // const handleSaveProfile = async (values: Partial<User>) => { };
 
   const handleChangePassword = () => {
     setChangePasswordOpen(true);

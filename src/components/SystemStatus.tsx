@@ -1,6 +1,6 @@
 import { Card } from 'antd';
 import { Activity } from 'lucide-react';
-import type { SystemStatus } from '../types';
+import type { SystemStatus } from '@/global';
 
 interface SystemStatusProps {
   status: SystemStatus;
