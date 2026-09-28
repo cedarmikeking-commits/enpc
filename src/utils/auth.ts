@@ -22,7 +22,7 @@ export function removeToken() {
 }
 export function toLogin(params: { [key: string]: string }) {
     const loginUrl = import.meta.env.VITE_LOGIN_URL || '/login';
-    const url = new URL(loginUrl);
+    const url = new URL(loginUrl, window.location.origin);
     Object.keys(params).forEach(key => {
         url.searchParams.append(key, params[key]);
     });
