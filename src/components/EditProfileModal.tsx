@@ -4,11 +4,13 @@ import { UserRecord } from '@/api/user/type';
 
 interface EditProfileModalProps {
   open: boolean;
-  user: UserRecord;
+  user?: UserRecord;
   onCancel: () => void;
 }
 
 export default function EditProfileModal({ open, user, onCancel }: EditProfileModalProps) {
+  if (!user) return null;
+
   return (
     <Modal
       title={
